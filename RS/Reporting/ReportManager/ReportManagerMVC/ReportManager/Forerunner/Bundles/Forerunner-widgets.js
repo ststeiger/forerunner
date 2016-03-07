@@ -16848,54 +16848,60 @@ $(function () {
 
             $parent.removeClass("fr-param-cascadingtree-error").attr("cascadingTree", "");
 
-            for (var i in me._parameterDefinitions) {
-                if (me._parameterDefinitions.hasOwnProperty(i)) {
-                    param = me._parameterDefinitions[i];
+            //Get Parameter of tree
+            param = me._parameterDefinitions[$tree.children("ul").attr("name")];
+            while (param) {
 
-                    //set backend value
-                    if (param.isParent || param.isChild) {
-                        $targetElement = me.element.find(".fr-paramname-" + param.Name);
-                        backendValue = "";
+                //set backend value
+                if (param.isParent || param.isChild) {
+                    $targetElement = me.element.find(".fr-paramname-" + param.Name);
+                    backendValue = "";
 
-                        if (param.MultiValue) {
-                            temp = [];
+                    if (param.MultiValue) {
+                        temp = [];
 
-                            $.each($tree.find("ul[name=" + param.Name + "] > li.fr-param-tree-item-selected"), function (index, li) {
-                                temp.push($(li).attr("data-value"));
-                            });
+                        $.each($tree.find("ul[name=" + param.Name + "] > li.fr-param-tree-item-selected"), function (index, li) {
+                            temp.push($(li).attr("data-value"));
+                        });
 
-                            if (temp.length) {
-                                backendValue = JSON.stringify(temp);
-                            }
+                        if (temp.length) {
+                            backendValue = JSON.stringify(temp);
+                        }
+                    }
+                    else {
+                        var $selected = $tree.find("ul[name=" + param.Name + "] > li.fr-param-tree-item-selected");
+                        temp = $selected.attr("data-value");
+                        if (temp) {
+                            backendValue = temp;
+                        }
+                    }
+
+                    //if target parameter is required and backend value is empty, then it's not valid
+                    if ($targetElement.hasClass("fr-param-required") && Boolean(backendValue) === false) {
+                        invalidList = invalidList || [];
+                        invalidList.push(param.Prompt);
+                        isValid = false;
+                    }
+                    $targetElement.filter(".fr-param").attr("backendValue", backendValue);
+
+                    //set display text only for top parameter
+                    if (param.isParent && !param.isChild) {
+                        displayText = me._getTreeDisplayText($tree);
+                        if (displayText) {
+                            $targetElement.val(displayText);
                         }
                         else {
-                            var $selected = $tree.find("ul[name=" + param.Name + "] > li.fr-param-tree-item-selected");
-                            temp = $selected.attr("data-value");
-                            if (temp) {
-                                backendValue = temp;
-                            }
-                        }
-
-                        //if target parameter is required and backend value is empty, then it's not valid
-                        if ($targetElement.hasClass("fr-param-required") && Boolean(backendValue) === false) {
-                            invalidList = invalidList || [];
-                            invalidList.push(param.Prompt);
-                            isValid = false;
-                        }
-                        $targetElement.filter(".fr-param").attr("backendValue", backendValue);
-
-                        //set display text only for top parameter
-                        if (param.isParent && !param.isChild) {
-                            displayText = me._getTreeDisplayText($tree);
-                            if (displayText) {
-                                $targetElement.val(displayText);
-                            }
-                            else {
-                                $targetElement.val("");
-                            }
+                            $targetElement.val("");
                         }
                     }
                 }
+
+                //Do dependent params, trees can only have one child
+                if (me._dependencyList[param.Name])
+                    param = me._parameterDefinitions[me._dependencyList[param.Name][0]];
+                else
+                    param = null;
+
             }
 
             if (isValid === false) {

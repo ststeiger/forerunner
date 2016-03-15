@@ -13770,7 +13770,7 @@ $(function () {
 
             var row = $(element).parent().parent().parent();
 
-            //Handle image in talix
+            //Handle image in tablix
             if (row.is("td") === true) {
                 row = row.parent();
             }
@@ -14486,7 +14486,7 @@ $(function () {
                     // For some reason SSRS will have headers and body for the same cell
                     //If there was an empty RowHeader for same cell, remove and add body row
                     for (var lci = LastColIndex ; lci >= BRObj.ColumnIndex ; lci--) {
-                        $('td:last-child', $Row).remove();
+                        $("td:last-child", $Row).remove();
                     }
 
                     LastColIndex = BRObj.ColumnIndex;
@@ -16776,7 +16776,7 @@ $(function () {
             me._setTreeElementProperty(param, $hidden);
             me._setTreeDefaultValue(param, predefinedValue, $input, $hidden);
 
-            var $treeContainer = me._createDiv(["fr-param-tree", "ui-corner-all", "fr-param-not-close"]);
+            var $treeContainer = me._createDiv(["fr-param-tree", "ui-corner-all", "fr-param-not-close"]).css("z-index", 5);
             var $tree = me._getCascadingTree(param, nodeLevel);
             $treeContainer.append($tree);
 
@@ -16884,7 +16884,7 @@ $(function () {
         _getCascadingTreeItem: function (param, value, hasChild, isLast, isDefault, level) {
             var me = this;
             var $li = new $("<li/>");
-            $li.addClass("fr-param-tree-item").attr("value", value.Value);
+            $li.addClass("fr-param-tree-item").attr("data-value", value.Value);
 
             if (isLast) {
                 $li.addClass("fr-param-tree-item-last");
@@ -16968,7 +16968,7 @@ $(function () {
                     if (hasChild) {
                         siblings = me.element.find(".fr-param-tree-container ul[level='" + level + "']").children("li.fr-param-tree-item-open");
                         $.each(siblings, function (index, sibling) {
-                            if ($li.attr("value") === $(sibling).attr("value")) {
+                            if ($li.attr("data-value") === $(sibling).attr("data-value")) {
                                 return true;
                             }
 
@@ -16978,7 +16978,7 @@ $(function () {
                     else {
                         siblings = me.element.find(".fr-param-tree-container ul[level='" + level + "']").children("li.fr-param-tree-item-selected");
                         $.each(siblings, function (index, sibling) {
-                            if ($li.attr("value") === $(sibling).attr("value")) {
+                            if ($li.attr("data-value") === $(sibling).attr("data-value")) {
                                 return true;
                             }
 
@@ -17108,10 +17108,10 @@ $(function () {
             var $param = me.element.find(".fr-paramname-" + parentName);
             //set single selected item as backend value to load data dynamically
             if ($ul.attr("allowmultiple") === "true") {
-                $param.filter(".fr-param").val("#").attr("backendValue", "[\"" + $item.attr("value") + "\"]");
+                $param.filter(".fr-param").val("#").attr("backendValue", "[\"" + $item.attr("data-value") + "\"]");
             }
             else {
-                $param.filter(".fr-param").val("#").attr("backendValue", $item.attr("value"));
+                $param.filter(".fr-param").val("#").attr("backendValue", $item.attr("data-value"));
             }
 
             if ($ul.attr("parent")) {
@@ -17131,54 +17131,60 @@ $(function () {
 
             $parent.removeClass("fr-param-cascadingtree-error").attr("cascadingTree", "");
 
-            for (var i in me._parameterDefinitions) {
-                if (me._parameterDefinitions.hasOwnProperty(i)) {
-                    param = me._parameterDefinitions[i];
+            //Get Parameter of tree
+            param = me._parameterDefinitions[$tree.children("ul").attr("name")];
+            while (param) {
+                    
+                //set backend value
+                if (param.isParent || param.isChild) {
+                    $targetElement = me.element.find(".fr-paramname-" + param.Name);
+                    backendValue = "";
 
-                    //set backend value
-                    if (param.isParent || param.isChild) {
-                        $targetElement = me.element.find(".fr-paramname-" + param.Name);
-                        backendValue = "";
+                    if (param.MultiValue) {
+                        temp = [];
 
-                        if (param.MultiValue) {
-                            temp = [];
+                        $.each($tree.find("ul[name=" + param.Name + "] > li.fr-param-tree-item-selected"), function (index, li) {
+                            temp.push($(li).attr("data-value"));
+                        });
 
-                            $.each($tree.find("ul[name=" + param.Name + "] > li.fr-param-tree-item-selected"), function (index, li) {
-                                temp.push($(li).attr("value"));
-                            });
+                        if (temp.length) {
+                            backendValue = JSON.stringify(temp);
+                        }
+                    }
+                    else {
+                        var $selected = $tree.find("ul[name=" + param.Name + "] > li.fr-param-tree-item-selected");
+                        temp = $selected.attr("data-value");
+                        if (temp) {
+                            backendValue = temp;
+                        }
+                    }
 
-                            if (temp.length) {
-                                backendValue = JSON.stringify(temp);
-                            }
+                    //if target parameter is required and backend value is empty, then it's not valid
+                    if ($targetElement.hasClass("fr-param-required") && Boolean(backendValue) === false) {
+                        invalidList = invalidList || [];
+                        invalidList.push(param.Prompt);
+                        isValid = false;
+                    }
+                    $targetElement.filter(".fr-param").attr("backendValue", backendValue);
+
+                    //set display text only for top parameter
+                    if (param.isParent && !param.isChild) {
+                        displayText = me._getTreeDisplayText($tree);
+                        if (displayText) {
+                            $targetElement.val(displayText);
                         }
                         else {
-                            var $selected = $tree.find("ul[name=" + param.Name + "] > li.fr-param-tree-item-selected");
-                            temp = $selected.attr("value");
-                            if (temp) {
-                                backendValue = temp;
-                            }
-                        }
-
-                        //if target parameter is required and backend value is empty, then it's not valid
-                        if ($targetElement.hasClass("fr-param-required") && Boolean(backendValue) === false) {
-                            invalidList = invalidList || [];
-                            invalidList.push(param.Prompt);
-                            isValid = false;
-                        }
-                        $targetElement.filter(".fr-param").attr("backendValue", backendValue);
-
-                        //set display text only for top parameter
-                        if (param.isParent && !param.isChild) {
-                            displayText = me._getTreeDisplayText($tree);
-                            if (displayText) {
-                                $targetElement.val(displayText);
-                            }
-                            else {
-                                $targetElement.val("");
-                            }
+                            $targetElement.val("");
                         }
                     }
                 }
+
+                //Do dependent params, trees can only have one child
+                if (me._dependencyList[param.Name])
+                    param = me._parameterDefinitions[me._dependencyList[param.Name][0]];
+                else
+                    param = null;
+                    
             }
 
             if (isValid === false) {
@@ -17260,12 +17266,12 @@ $(function () {
             var $li = $parent.children("li");
             $.each($li, function (index, item) {
                 if (param.MultiValue) {
-                    if (me._contains(defaultParam, $(item).attr("value"))) {
+                    if (me._contains(defaultParam, $(item).attr("data-value"))) {
                         $(item).children(".fr-param-tree-anchor").trigger("click");
                     }
                 }
                 else {
-                    if ($(item).attr("value") === defaultParam) {
+                    if ($(item).attr("data-value") === defaultParam) {
                         $(item).children(".fr-param-tree-anchor").trigger("click");
                     }
                 }
@@ -17389,7 +17395,7 @@ $(function () {
             $multipleCheckBox.on("click", function () { me._popupDropDownPanel(param); });
 
             var $dropDownContainer = me._createDiv(["fr-param-dropdown", "fr-param-not-close", "fr-paramname-" + param.Name + "-dropdown-container"]);
-            $dropDownContainer.attr("value", param.Name);
+            $dropDownContainer.attr("data-value", param.Name);
 
             var $table = me._getDefaultHTMLTable();
             if (param.ValidValues.length && param.ValidValues[param.ValidValues.length - 1].Key !== "Select All")
@@ -17417,7 +17423,7 @@ $(function () {
 
                 var $span = new $("<Span />");
                 var $checkbox = me._createInput(param, "checkbox", false, ["fr-param-dropdown-checkbox", "fr-paramname-" + param.Name + "-dropdown-cb"]);
-                $checkbox.attr("value", value);
+                $checkbox.attr("data-value", value);
 
                 if (isSelectAllItem) {
                     $selectAllCheckbox = $checkbox;
@@ -17432,7 +17438,7 @@ $(function () {
                 }
 
                 $checkbox.on("click", function () {
-                    if (this.value === "Select All") {
+                    if ($(this).attr("data-value")  === "Select All") {
                         if (this.checked === true) {
                             $(".fr-paramname-" + param.Name + "-dropdown-cb", me.$params).each(function () {
                                 this.checked = true;
@@ -17446,10 +17452,10 @@ $(function () {
                     }
                     else {
                         var $parents = $(this).parents("table");
-                        var $selectAll = $parents.find("input[value='Select All']");
+                        var $selectAll = $parents.find("input[data-value='Select All']");
                         if (this.checked === true) {
                             // Being checked so we need to test if the select all needs to be checked
-                            var $notSelectAll = $parents.find("input[value!='Select All']");
+                            var $notSelectAll = $parents.find("input[data-value!='Select All']");
                             var isSelectAll = true;
                             $notSelectAll.each(function (index, element) {
                                 if (element.checked === false) {
@@ -17466,7 +17472,7 @@ $(function () {
 
                 var $label = me._createLabel(["fr-param-dropdown-label", "fr-paramname-" + param.Name + "-dropdown-" + i.toString() + "-label"]);
                 $label.attr("for", param.Name + "_DropDown_" + i.toString());
-                $label.attr("value", value).text(key);
+                $label.attr("data-value", value).text(key);
 
                 $span.append($checkbox).append($label);
                 $col.append($span);
@@ -17520,7 +17526,7 @@ $(function () {
             });
 
             var $dropDownContainer = me._createDiv(["fr-param-dropdown", "fr-param-not-close", "fr-paramname-" + param.Name + "-dropdown-container"]);
-            $dropDownContainer.attr("value", param.Name);
+            $dropDownContainer.attr("data-value", param.Name);
 
             var $textarea = new $("<textarea class='fr-param-dropdown-textarea fr-paramname-" + param.Name + "-dropdown-textArea' />");
 
@@ -17571,9 +17577,9 @@ $(function () {
                 var hiddenValue = [];
 
                 $(".fr-paramname-" + param.Name + "-dropdown-cb", me.$params).each(function (index) {
-                    if (this.checked && this.value !== "Select All") {
+                    if (this.checked && $(this).attr("data-value")  !== "Select All") {
                         showValue += $(".fr-paramname-" + param.Name + "-dropdown-" + index.toString() + "-label", me.$params).text() + ",";
-                        hiddenValue.push(this.value);
+                        hiddenValue.push($(this).attr("data-value"));
                     }
                 });
 
@@ -17636,7 +17642,7 @@ $(function () {
         _closeAllDropdown: function () {
             var me = this;
             $(".fr-param-dropdown-show", me.$params).filter(":visible").each(function (index, param) {
-                me._closeDropDownPanel({ Name: $(param).attr("value") });
+                me._closeDropDownPanel({ Name: $(param).attr("data-value") });
             });
             //close auto complete dropdown, it will be appended to the body so use $appContainer here to do select
             $(".ui-autocomplete", me.options.$appContainer).hide();

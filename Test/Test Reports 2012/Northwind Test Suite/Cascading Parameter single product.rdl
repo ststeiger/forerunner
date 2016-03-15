@@ -12,7 +12,7 @@
     <DataSet Name="Cat">
       <Query>
         <DataSourceName>DataSource1</DataSourceName>
-        <CommandText>SELECT        Categories.*
+        <CommandText>SELECT       *
 FROM            Categories</CommandText>
       </Query>
       <Fields>
@@ -535,7 +535,6 @@ WHERE        OrderID IN (@Orders)</CommandText>
           <LabelField>CategoryName</LabelField>
         </DataSetReference>
       </ValidValues>
-      <MultiValue>true</MultiValue>
     </ReportParameter>
     <ReportParameter Name="Product">
       <DataType>String</DataType>

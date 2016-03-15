@@ -304,8 +304,8 @@
       <FullPath>Video Test.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>City of Colorado Springs AutoExempt.rdl</Name>
-      <FullPath>City of Colorado Springs AutoExempt.rdl</FullPath>
+      <Name>Two Cascading params.rdl</Name>
+      <FullPath>Two Cascading params.rdl</FullPath>
     </ProjectItem>
   </Reports>
   <Configurations>

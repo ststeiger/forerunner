@@ -1384,7 +1384,7 @@ namespace Forerunner.SSRS.Manager
                 string SQL = @"DECLARE @UID uniqueidentifier
                                SELECT @UID = (SELECT  TOP 1 UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
                                SELECT DISTINCT Path, Name, ModifiedDate, f.ItemID, Description, MimeType, c.[Type], c.Hidden, f.SPSPath
-                               FROM ForerunnerFavorites f LEFT OUTER JOIN Catalog c ON f.ItemID = c.ItemID WHERE f.UserID = @UID";
+                               FROM ForerunnerFavorites f INNER JOIN Catalog c ON f.ItemID = c.ItemID WHERE f.UserID = @UID";
 
                 if (SeperateDB)
                 {

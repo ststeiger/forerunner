@@ -1257,7 +1257,7 @@ $(function () {
             me._setTreeElementProperty(param, $hidden);
             me._setTreeDefaultValue(param, predefinedValue, $input, $hidden);
 
-            var $treeContainer = me._createDiv(["fr-param-tree", "ui-corner-all", "fr-param-not-close"]).css("z-index", 5);;
+            var $treeContainer = me._createDiv(["fr-param-tree", "ui-corner-all", "fr-param-not-close"]).css("z-index", 5);
             var $tree = me._getCascadingTree(param, nodeLevel);
             $treeContainer.append($tree);
 

@@ -179,7 +179,7 @@ namespace Forerunner.SSRS.Viewer
                 if (GetServerInfo().ServerRendering)
                     format = "ForerunnerJSON";
                 else
-                    format = "RPL";
+                    format = "HTML4.0";
                 string devInfo = "";
                 //devInfo += @"<DeviceInfo><MeasureItems>true</MeasureItems><SecondaryStreams>Server</SecondaryStreams><StreamNames>true</StreamNames><RPLVersion>10.6</RPLVersion><ImageConsolidation>false</ImageConsolidation>";
                 //devInfo += @"<DpiX>296</DpiX><DpiY>296</DpiY>";

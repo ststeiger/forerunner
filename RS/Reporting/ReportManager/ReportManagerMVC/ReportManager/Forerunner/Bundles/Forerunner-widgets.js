@@ -2183,10 +2183,9 @@ $(function () {
                         me.saveScrollPosition();
 
                         var replay = me.pages[me.curPage].Replay;
-
+                        me.renderTime = new Date().getTime();
                         me.pages[me.curPage] = null;
-                        me._loadPage(me.curPage, false, undefined, undefined, undefined, replay, scrollID);
-                        
+                        me._loadPage(me.curPage, false, null, null, true, replay, scrollID);                        
                     }
                     else
                         me.lock = 0;

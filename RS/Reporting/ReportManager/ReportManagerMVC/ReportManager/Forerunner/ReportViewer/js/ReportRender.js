@@ -1111,6 +1111,10 @@ $(function () {
                     imageConsolidationOffset = RIContext.CurrObj.Elements.NonSharedElements.ImageConsolidationOffsets;
                     Style += "width:" + imageConsolidationOffset.Width + "px;height:" + imageConsolidationOffset.Height + "px";
                 }
+                else {
+                    Style += "width:" + RIContext.CurrLocation.Width + "mm;height:" + RIContext.CurrLocation.Height + "mm";
+                }
+
             }
 
             if (imageConsolidationOffset) {

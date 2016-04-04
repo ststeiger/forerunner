@@ -44,6 +44,7 @@ namespace Forerunner.SSRS.Viewer
         private byte[] imageResult = null;
         private AutoResetEvent waitHandle = new AutoResetEvent(false);
         static private string IsDebug = ConfigurationManager.AppSettings["Forerunner.Debug"];
+        static private bool EnableImageConsolidation = ForerunnerUtil.GetAppSetting("Forerunner.ImageConsolidation",false);
         static private Dictionary<string, SSRSServer> SSRSServers = new Dictionary<string, SSRSServer>();
 
         private class SSRSServer
@@ -186,13 +187,8 @@ namespace Forerunner.SSRS.Viewer
                 else
                     format = "RPL";
                 string devInfo = "";
-                //devInfo += @"<DeviceInfo><MeasureItems>true</MeasureItems><SecondaryStreams>Server</SecondaryStreams><StreamNames>true</StreamNames><RPLVersion>10.6</RPLVersion><ImageConsolidation>false</ImageConsolidation>";
-                //devInfo += @"<DpiX>296</DpiX><DpiY>296</DpiY>";
-                //End Device Info
-                //devInfo += @"</DeviceInfo>";
 
-
-                result = rs.RenderStream(format, ImageID,devInfo, out encoding, out mimeType);
+                result = rs.RenderStream(format, ImageID, devInfo, out encoding, out mimeType);
   
                 if (mimeType == null)
                     mimeType = JsonUtility.GetMimeTypeFromBytes(result);
@@ -436,7 +432,15 @@ namespace Forerunner.SSRS.Viewer
                         NewSession = SessionID;
 
                     //Device Info
-                    string devInfo = @"<DeviceInfo><MeasureItems>true</MeasureItems><SecondaryStreams>Server</SecondaryStreams><StreamNames>true</StreamNames><RPLVersion>10.6</RPLVersion><ImageConsolidation>true</ImageConsolidation>";
+
+                    //Image consolidation off becasue of SSRS bug:(
+                    string devInfo = @"<DeviceInfo><MeasureItems>true</MeasureItems><SecondaryStreams>Server</SecondaryStreams><StreamNames>true</StreamNames><RPLVersion>10.6</RPLVersion>";
+                    //EnableImageConsolidation
+                    if (EnableImageConsolidation)
+                        devInfo += "<ImageConsolidation>true</ImageConsolidation>";
+                    else
+                        devInfo += "<ImageConsolidation>false</ImageConsolidation>";
+
                     //Page number   
                     devInfo += @"<StartPage>" + PageNum + "</StartPage><EndPage>" + PageNum + "</EndPage>";
                     //End Device Info
@@ -484,7 +488,12 @@ namespace Forerunner.SSRS.Viewer
                         if (execInfo.NumPages != 0 && execInfo.NumPages < int.Parse(PageNum))
                         {
                             PageNum = numPages.ToString();
-                            devInfo = @"<DeviceInfo><MeasureItems>true</MeasureItems><SecondaryStreams>Server</SecondaryStreams><StreamNames>true</StreamNames><RPLVersion>10.6</RPLVersion><ImageConsolidation>true</ImageConsolidation>";
+                            devInfo = @"<DeviceInfo><MeasureItems>true</MeasureItems><SecondaryStreams>Server</SecondaryStreams><StreamNames>true</StreamNames><RPLVersion>10.6</RPLVersion>";
+                            //EnableImageConsolidation
+                            if (EnableImageConsolidation)
+                                devInfo += "<ImageConsolidation>true</ImageConsolidation>";
+                            else
+                                devInfo += "<ImageConsolidation>false</ImageConsolidation>";
                             //Page number   
                             devInfo += @"<StartPage>" + numPages + "</StartPage><EndPage>" + numPages + "</EndPage>";
                             //End Device Info
@@ -726,7 +735,7 @@ namespace Forerunner.SSRS.Viewer
                 w.WriteBoolean(result);
                 w.WriteMember("ToggleID");
                 w.WriteString(ToggleID);
-                w.WriteEndObject();
+                w.WriteEndObject();             
                 return w.ToString();
 
             }

@@ -62,6 +62,10 @@
       <Name>Store_Contacts_2008R2.rdl</Name>
       <FullPath>Store_Contacts_2008R2.rdl</FullPath>
     </ProjectItem>
+    <ProjectItem>
+      <Name>Employee_Sales_Summary_2008R2-2.rdl</Name>
+      <FullPath>Employee_Sales_Summary_2008R2-2.rdl</FullPath>
+    </ProjectItem>
   </Reports>
   <Configurations>
     <Configuration>

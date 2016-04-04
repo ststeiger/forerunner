@@ -2183,10 +2183,9 @@ $(function () {
                         me.saveScrollPosition();
 
                         var replay = me.pages[me.curPage].Replay;
-
+                        me.renderTime = new Date().getTime();
                         me.pages[me.curPage] = null;
-                        me._loadPage(me.curPage, false, undefined, undefined, undefined, replay, scrollID);
-                        
+                        me._loadPage(me.curPage, false, null, null, true, replay, scrollID);                        
                     }
                     else
                         me.lock = 0;
@@ -13564,6 +13563,10 @@ $(function () {
                     imageConsolidationOffset = RIContext.CurrObj.Elements.NonSharedElements.ImageConsolidationOffsets;
                     Style += "width:" + imageConsolidationOffset.Width + "px;height:" + imageConsolidationOffset.Height + "px";
                 }
+                else {
+                    Style += "width:" + RIContext.CurrLocation.Width + "mm;height:" + RIContext.CurrLocation.Height + "mm";
+                }
+
             }
 
             if (imageConsolidationOffset) {

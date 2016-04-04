@@ -570,7 +570,7 @@ $(function () {
 
                 for (var i = 0; i < Measurements.length; i++) {
                     var bottom = Measurements[i].Top + Measurements[i].Height;
-                    if (Obj.Top >= bottom) {
+                    if (Obj.Top >= bottom && i != Index) {
                         if (!curRI.IndexAbove) {
                             curRI.IndexAbove = i;
                             curRI.TopDelta = Obj.Top - bottom;

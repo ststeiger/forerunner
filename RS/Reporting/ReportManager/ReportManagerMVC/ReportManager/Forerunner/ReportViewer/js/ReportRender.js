@@ -472,6 +472,7 @@ $(function () {
         */
         layoutReport: function (isLoaded, force, RDLExt) {
             var me = this;
+           
             var renderWidth = me.options.reportViewer.element.width();
             if (RDLExt)
                 me.RDLExt = RDLExt;
@@ -569,7 +570,7 @@ $(function () {
 
                 for (var i = 0; i < Measurements.length; i++) {
                     var bottom = Measurements[i].Top + Measurements[i].Height;
-                    if (Obj.Top > bottom) {
+                    if (Obj.Top >= bottom && i != Index) {
                         if (!curRI.IndexAbove) {
                             curRI.IndexAbove = i;
                             curRI.TopDelta = Obj.Top - bottom;
@@ -890,6 +891,10 @@ $(function () {
 
                     if (textExt.InputReadOnly === true)
                         $TextObj.attr("readonly", "readonly");
+
+                    //removes the font height if there is no text.
+                    if (val.trim() === "")
+                        Style += "white-space:normal;";
 
                     Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
                     if (RIContext.CurrObj.Elements.NonSharedElements.TypeCode && (me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).TextAlign === 0 || me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Style.TextAlign === 0)) {
@@ -2039,7 +2044,9 @@ $(function () {
                     // For some reason SSRS will have headers and body for the same cell
                     //If there was an empty RowHeader for same cell, remove and add body row
                     for (var lci = LastColIndex ; lci >= BRObj.ColumnIndex ; lci--) {
-                        $("td:last-child", $Row).remove();
+                        var cell = $("td:last-child", $Row);
+                        //if (!cell.attr("rowspan")) 
+                            cell.remove();
                     }
 
                     LastColIndex = BRObj.ColumnIndex;
@@ -2143,12 +2150,11 @@ $(function () {
                     for ( ci2 = LastColIndex + 1; ci2 < Obj.ColumnIndex && Rowspans[ci2] === undefined  ; ci2++) {
                         $Row.append($("<TD/>").html("&nbsp;"));
                     }
-                    LastColIndex = Obj.ColumnIndex;                    
-                    if (Obj.ColSpan)
-                        LastColIndex += Obj.ColSpan - 1;
+                   
 
                     //Dont write cell if there is a row span unless this is the first row
-                    if (Rowspans[Obj.ColumnIndex] === undefined || Obj.RowSpan > 0 || Obj.ColSpan >0) {
+                    //SSRS can have mutiple RowHeaders for same cell
+                    if (LastColIndex !=Obj.ColumnIndex &&( Rowspans[Obj.ColumnIndex] === undefined || Obj.RowSpan > 0 || Obj.ColSpan > 0)) {
                         //Write empty cell           
                         var $td = $("<TD/>").html("&nbsp;");
                         //Add row span since not added in cell
@@ -2160,6 +2166,10 @@ $(function () {
                         }
                         $Row.append($td);
                     }
+
+                    LastColIndex = Obj.ColumnIndex;
+                    if (Obj.ColSpan)
+                        LastColIndex += Obj.ColSpan - 1;
                    
                 }
 

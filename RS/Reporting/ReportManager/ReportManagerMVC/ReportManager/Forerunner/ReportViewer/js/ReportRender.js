@@ -98,6 +98,7 @@ $(function () {
             me._tablixStream = {};
             me.RDLExt = RDLExt ? RDLExt : {};
 
+
             if (me.RDLExt.ForceResponsive !== undefined)
                 me.options.responsive = me.RDLExt.ForceResponsive;
 
@@ -140,12 +141,12 @@ $(function () {
 
             me.element.append(bgLayer);
         },
-        _getWatermark: function () {            
+        _getWatermark: function () {
             var wstyle = "opacity:0.30;color: #d0d0d0;font-size: 120pt;display: inline-block ;position: fixed; float: left;margin: 0;left:0px;top:40px;  pointer-events: none;";
 
             var postText = forerunner.config.getCustomSettingsValue("WatermarkPostText", "");
 
-            if (forerunner.device.isMSIE8() || forerunner.device.isAndroid()) {            
+            if (forerunner.device.isMSIE8() || forerunner.device.isAndroid()) {
                 var wtr = $("<DIV/>").html("Evaluation </br></br>" + postText);
                 wstyle += "z-index: -1;";
                 wtr.attr("style", wstyle);
@@ -205,7 +206,7 @@ $(function () {
                     "<div class='fr-render-error-license Page'>" +
                         "<div class='fr-render-error-license-container'>" +
                     "<p class='fr-render-error-license-title'></p><br/>" +
-                    "<p class='fr-render-error-license-content'></p>" +                            
+                    "<p class='fr-render-error-license-content'></p>" +
                         "</div>" +
                     "</div>"));
                 if (me.options.reportViewer) {
@@ -471,6 +472,7 @@ $(function () {
         */
         layoutReport: function (isLoaded, force, RDLExt) {
             var me = this;
+
             var renderWidth = me.options.reportViewer.element.width();
             if (RDLExt)
                 me.RDLExt = RDLExt;
@@ -568,7 +570,7 @@ $(function () {
 
                 for (var i = 0; i < Measurements.length; i++) {
                     var bottom = Measurements[i].Top + Measurements[i].Height;
-                    if (Obj.Top > bottom) {
+                    if (Obj.Top >= bottom && i !== Index) {
                         if (!curRI.IndexAbove) {
                             curRI.IndexAbove = i;
                             curRI.TopDelta = Obj.Top - bottom;
@@ -744,12 +746,12 @@ $(function () {
             //Handle EasySubmit
             if (Ext.EasySubmitURL && Ext.EasySubmitType) {
                 control.on("click", { reportViewer: me.options.reportViewer.element, element: control, getInputs: me._getInputsInRow, easySubmit: me._submitRow, veryEasySubmit: me._easySubmit, deleteCurrentRow: me._delCurrentRow, insertNewRow: me._insNewRow }, function (e) {
-                    e.data.veryEasySubmit(e, Ext.EasySubmitType, Ext.EasySubmitURL, Ext.EasySubmitDatatype, Ext.EasySubmitSuccess, Ext.EasySubmitFail,Ext.EasySubmitReportPath);
+                    e.data.veryEasySubmit(e, Ext.EasySubmitType, Ext.EasySubmitURL, Ext.EasySubmitDatatype, Ext.EasySubmitSuccess, Ext.EasySubmitFail, Ext.EasySubmitReportPath);
                 });
                 control.addClass("fr-core-cursorpointer");
             }
         },
-        
+
         _writeRichText: function (RIContext) {
             var Style = RIContext.Style;
             var $TextObj = $("<div/>");
@@ -869,15 +871,16 @@ $(function () {
 
             //
 
+            var val = null;
             if (RIContext.CurrObj.Paragraphs.length === 0) {
-                var val = me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Value ? me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Value : RIContext.CurrObj.Elements.NonSharedElements.Value;
-                
+                val = me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Value ? me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Value : RIContext.CurrObj.Elements.NonSharedElements.Value;
+
                 if (textExt && textExt.localize)
                     val = forerunner.localize.getLocalizedValue(val, textExt.localize);
 
                 if (val) {
                     val = me._getNewLineFormatText(val);
-                    
+
 
                     if (textExt.InputType) {
                         $TextObj.attr("data-origVal", val);
@@ -888,6 +891,10 @@ $(function () {
 
                     if (textExt.InputReadOnly === true)
                         $TextObj.attr("readonly", "readonly");
+
+                    //removes the font height if there is no text.
+                    if (val.trim() === "")
+                        Style += "white-space:normal;";
 
                     Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
                     if (RIContext.CurrObj.Elements.NonSharedElements.TypeCode && (me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).TextAlign === 0 || me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Style.TextAlign === 0)) {
@@ -1126,7 +1133,7 @@ $(function () {
             }
 
 
-            //NewImage.alt = me.options.reportViewer.locData.messages.imageNotDisplay;            
+            //NewImage.alt = me.options.reportViewer.locData.getLocData().messages.imageNotDisplay;            
             //NewImage.src = this._getImageURL(RIContext.RS, ImageName);
 
             NewImage.attr("alt", me.options.reportViewer.locData.messages.imageNotDisplay);
@@ -1166,7 +1173,10 @@ $(function () {
                 var strokeColor = forerunner.config.getCustomSettingsValue("ImageAreaHighlighBorderColor", "ff0000");
                 var strokeWidth = forerunner.config.getCustomSettingsValue("ImageAreaHighlighBorderWidth", "1");
 
-                $(imageContainer).FRmaphilight({ strokeColor: strokeColor, strokeWidth: strokeWidth });
+                //On chrome need to give time on cached image
+                window.setTimeout(function () {
+                    $(imageContainer).FRmaphilight({ strokeColor: strokeColor, strokeWidth: strokeWidth });
+                }, 200);
             }
 
             //Remove the blue border on ie 8,9,10
@@ -1231,8 +1241,8 @@ $(function () {
 
             $(row).remove();
         },
-        
-        _insNewRow: function (element,options) {
+
+        _insNewRow: function (element, options) {
             var me = this;
 
             var row = $(element).parent().parent().parent();
@@ -1254,7 +1264,7 @@ $(function () {
 
             //get main row
             if (row && !row.hasClass("fr-render-row")) {
-                row = row.next();         
+                row = row.next();
             }
 
             //copy the row and appy options
@@ -1262,7 +1272,7 @@ $(function () {
                 nextRow = row.next();
                 row.before(row.clone(true, true));
                 newRow = row.prev();
-                inputs =  newRow.find("*").filter(":input").not("input[type=button], :input[type=submit], :input[type=reset]");
+                inputs = newRow.find("*").filter(":input").not("input[type=button], :input[type=submit], :input[type=reset]");
                 if (options.indexOf("clearInputs") >= 0) {
                     inputs.val("");
                     inputs.attr("data-origval", "");
@@ -1286,10 +1296,10 @@ $(function () {
                 //hook up drill
                 var $Drilldown = newRow.prev().find(".fr-render-respIcon");
                 $Drilldown.off("click");
-                
+
                 $Drilldown.on("click", { icon: $Drilldown, ExtRow: newRow }, function (e) {
                     var show = !e.data.ExtRow.is(":visible");
-                  
+
                     if (show) {
                         e.data.ExtRow.show();
                         $(e.data.icon).addClass("fr-render-respTablix-collapse");
@@ -1300,13 +1310,13 @@ $(function () {
                         $(e.data.icon).removeClass("fr-render-respTablix-collapse");
                         $(e.data.icon).addClass("fr-render-respTablix-expand");
                     }
-            
+
                 });
 
 
             }
 
-                    
+
         },
 
         _getInputsInRow: function (element, filter) {
@@ -1318,7 +1328,7 @@ $(function () {
 
             var row = $(element).parent().parent().parent();
 
-            //Handle image in talix
+            //Handle image in tablix
             if (row.is("td") === true) {
                 row = row.parent();
             }
@@ -1331,7 +1341,7 @@ $(function () {
 
                 $.each(row.find("input, textarea"), function (index, input) {
                     var obj = {};
-                   
+
                     obj.name = $(input).attr("name");
                     obj.value = $(input).val();
                     obj.origionalValue = $(input).attr("data-origVal");
@@ -1387,11 +1397,11 @@ $(function () {
                     data = JSON.stringify(data);
             }
 
-            
+
 
             forerunner.ajax.ajax({
                 type: type,
-                
+
                 url: url,
                 data: data,
                 async: true
@@ -1404,16 +1414,16 @@ $(function () {
             }).fail(fail);
 
         },
-        _easySubmit: function (e, type, url, datatype, success, fail,reportPath) {
+        _easySubmit: function (e, type, url, datatype, success, fail, reportPath) {
             if (!success) success = "alert('Success');";
             if (!fail) fail = "alert('Failed');";
 
             var func;
             try {
-                func = new Function("e",success);
+                func = new Function("e", success);
                 success = func;
             }
-            catch(err){
+            catch (err) {
                 func = undefined;
             }
             try {
@@ -1425,15 +1435,15 @@ $(function () {
             }
 
             var successFun = function (data, textStatus) {
-                success(e);                
+                success(e);
             };
             var failFun = function (data, textStatus) {
                 fail(e);
             };
-                       
+
             var data = e.data.getInputs(e.currentTarget, "auto");
 
-            e.data.easySubmit(data, type, url, datatype,successFun,failFun, reportPath);
+            e.data.easySubmit(data, type, url, datatype, successFun, failFun, reportPath);
 
         },
 
@@ -1450,7 +1460,7 @@ $(function () {
             var me = this;
 
             forerunner.ssr._writeRDLExtActions(me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Name, me.RDLExt, $Control, mapAreaOnly, me.options.reportViewer.element, me._getInputsInRow, me._submitRow, undefined, undefined, me._delCurrentRow, me._insNewRow);
-           
+
 
         },
         _writeAction: function (RIContext, Action, Control) {
@@ -1459,11 +1469,11 @@ $(function () {
                 Control.addClass("fr-core-cursorpointer");
                 Control.attr("href", "#");
                 Control.on("click", { HyperLink: Action.HyperLink }, function (e) {
-                    me._stopDefaultEvent(e);               
+                    me._stopDefaultEvent(e);
                     if (forerunner.config.getCustomSettingsValue("URLActionNewTab", "off") === "on")
                         window.open(e.data.HyperLink, "_blank");
                     else
-                        location.href = e.data.HyperLink;                    
+                        location.href = e.data.HyperLink;
                 });
 
             }
@@ -1667,15 +1677,8 @@ $(function () {
                 $Cell.addClass(me._getClassName("fr-n-", Obj.Cell.ReportItem));
 
                 $Cell.attr("Style", Style);
-
-                
                 $Cell.addClass("fr-r-tC");
                 var RI = me._writeReportItems(new reportItemContext(RIContext.RS, Obj.Cell.ReportItem, Index, RIContext.CurrObj, new $("<Div/>"), "", new tempMeasurement(height, width)));
-
-                //Fix sizing issues in IE8
-                if (forerunner.device.isMSIE8())
-                    RI.css("min-height", height + "mm");
-
                 RI.addClass("fr-r-tCI");
                 //Add Repsponsive table expand
                 if ($Drilldown)
@@ -1758,7 +1761,7 @@ $(function () {
                     var tablixCols = RIContext.CurrObj.ColumnWidths.Columns;
                     var maxPri = -1;
                     var foundCol;
-                    
+
 
                     if (tablixExt.Columns && tablixExt.Columns.length <= RIContext.CurrObj.ColumnWidths.ColumnCount) {
                         for (cols = 0; cols < tablixExt.Columns.length; cols++) {
@@ -1835,7 +1838,7 @@ $(function () {
                             var cw = me._getWidth(RIContext.CurrObj.ColumnWidths.Columns[cols].Width);
 
                             // add .25 for the right border
-                            if (RIContext.CurrObj.ColumnWidths.Columns[cols+1].FixColumn ===0){
+                            if (RIContext.CurrObj.ColumnWidths.Columns[cols + 1].FixColumn === 0) {
                                 cw += 0.25;
                             }
 
@@ -1970,7 +1973,7 @@ $(function () {
 
 
                 //Handle fixed col header
-                if (RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex - 1].FixRows === 1) {                    
+                if (RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex - 1].FixRows === 1) {
                     $FixedColHeader.append($Row.clone(true, true));
                 }
 
@@ -2008,8 +2011,6 @@ $(function () {
             if (RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex] && RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex].FixRows === 1)
                 HasFixedRows = true;
 
-
-
             //There seems to be a bug in RPL, it can return a colIndex that is greater than the number of columns
             if (Obj.Type !== "BodyRow" && RIContext.CurrObj.ColumnWidth && RIContext.CurrObj.ColumnWidths.Columns[Obj.ColumnIndex]) {
                 if (RIContext.CurrObj.ColumnWidths.Columns[Obj.ColumnIndex].FixColumn === 1)
@@ -2025,18 +2026,36 @@ $(function () {
 
                 //Handle missing cells
                 $.each(Rowspans, function (rsIndex, RSObj) {
-                    Rowspans[rsIndex]--;
+                    // No not get NaN
+                    if (Rowspans[rsIndex] !== undefined)
+                        Rowspans[rsIndex]--;
                 });
 
                 $.each(Obj.Cells, function (BRIndex, BRObj) {
-
 
                     //Mark as header
                     if (respCols.ColHeaderRow === Obj.RowIndex)
                         $Row.addClass("fr-render-colHeader");
 
                     CellWidth = RIContext.CurrObj.ColumnWidths.Columns[BRObj.ColumnIndex].Width;
+
+
+                    //Remove Extra Headers cells that overlap with Body
+                    // For some reason SSRS will have headers and body for the same cell
+                    //If there was an empty RowHeader for same cell, remove and add body row
+                    for (var lci = LastColIndex ; lci >= BRObj.ColumnIndex ; lci--) {
+                        var cell = $("td:last-child", $Row);
+                        //if (!cell.attr("rowspan")) 
+                        cell.remove();
+                    }
+
+                    LastColIndex = BRObj.ColumnIndex;
+                    //Handle Col spans, last col is after the span
+                    if (BRObj.ColSpan)
+                        LastColIndex += BRObj.ColSpan - 1;
+
                     $Drilldown = undefined;
+
                     if (respCols.Columns[BRObj.ColumnIndex].show) {
                         if (respCols.isResp && respCols.ColHeaderRow !== Obj.RowIndex && BRObj.RowSpan === undefined && $ExtRow && $ExtRow.HasDrill !== true && BRObj.Cell) {
                             //If responsive table add the show hide image and hook up
@@ -2075,19 +2094,20 @@ $(function () {
                 State.CellCount += Obj.Cells.length;
             }
             else {
-                
+                var ci2 = LastColIndex;
+
+
                 if (Obj.Cell) {
 
-                    if (Obj.Type === "RowHeader") {
-                        //Write empty cell
-                        if (LastColIndex !== Obj.ColumnIndex - 1 && Obj.ColumnIndex > 0 && Rowspans[Obj.ColumnIndex - 1] === undefined)
-                            $Row.append($("<TD/>").html("&nbsp;"));
+                    //Handel missing cells
+                    for (ci2 = LastColIndex + 1; ci2 < Obj.ColumnIndex && Rowspans[ci2] === undefined  ; ci2++) {
+                        $Row.append($("<TD/>").html("&nbsp;"));
                     }
-                    LastColIndex = Obj.ColumnIndex;
 
+                    LastColIndex = Obj.ColumnIndex;
                     //Handle Col spans, last col is after the span
                     if (Obj.ColSpan)
-                        LastColIndex += Obj.ColSpan-1;
+                        LastColIndex += Obj.ColSpan - 1;
 
                     if (respCols.Columns[Obj.ColumnIndex].show === false && (Obj.Type === "Corner" || Obj.Type === "ColumnHeader")) {
                         CellWidth = RIContext.CurrObj.ColumnWidths.Columns[Obj.ColumnIndex].Width;
@@ -2124,10 +2144,33 @@ $(function () {
                     State.CellCount += 1;
 
                 }
-                else if (Obj.Type === "RowHeader") {
-                    //Write empty cell
-                    if (LastColIndex !== Obj.ColumnIndex - 1 && Obj.ColumnIndex > 0 && Rowspans[Obj.ColumnIndex - 1] === undefined )
+                else if (Obj.Type !== "ColumnHeader") {
+
+                    //add empty cells that where missed
+                    for (ci2 = LastColIndex + 1; ci2 < Obj.ColumnIndex && Rowspans[ci2] === undefined  ; ci2++) {
                         $Row.append($("<TD/>").html("&nbsp;"));
+                    }
+
+
+                    //Dont write cell if there is a row span unless this is the first row
+                    //SSRS can have mutiple RowHeaders for same cell
+                    if (LastColIndex !== Obj.ColumnIndex && (Rowspans[Obj.ColumnIndex] === undefined || Obj.RowSpan > 0 || Obj.ColSpan > 0)) {
+                        //Write empty cell           
+                        var $td = $("<TD/>").html("&nbsp;");
+                        //Add row span since not added in cell
+                        if (Obj.RowSpan > 0) {
+                            $td.attr("rowspan", Obj.RowSpan);
+                        }
+                        if (Obj.ColSpan > 0) {
+                            $td.attr("colspan", Obj.ColSpan);
+                        }
+                        $Row.append($td);
+                    }
+
+                    LastColIndex = Obj.ColumnIndex;
+                    if (Obj.ColSpan)
+                        LastColIndex += Obj.ColSpan - 1;
+
                 }
 
             }
@@ -2286,7 +2329,7 @@ $(function () {
                     Tablix.$Tablix.append(Tablix.State.ExtRow);
                     Tablix.State.ExtRow.hide();
                 }
-                else if(Tablix.State.Row)
+                else if (Tablix.State.Row)
                     Tablix.State.Row.findUntil(".fr-render-respIcon", ".fr-render-tablix").hide();
 
                 Tablix.BigTablixDone = true;
@@ -2557,32 +2600,43 @@ $(function () {
             if (!CurrObj)
                 return "";
 
-            //Need left, top, right bottom border
-            //Obj = me._getSharedElements(CurrObj.Elements.SharedElements).Style;
-            //if (Obj !== undefined) {
-            //    if (Obj.BorderStyle !== undefined && Obj.BorderStyle !==0 )
-            //        Style += "border:" + Obj.BorderWidth + " " + me._getBorderStyle(Obj.BorderStyle) + " " + Obj.BorderColor + ";";
-            //    if (Obj.BorderStyleLeft !== undefined || Obj.BorderWidthLeft !== undefined || Obj.BorderColorLeft !== undefined)
-            //        Style += "border-left:" + ((Obj.BorderWidthLeft === undefined) ? Obj.BorderWidth : Obj.BorderWidthLeft) + " " + ((Obj.BorderStyleLeft === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleLeft)) + " " + ((Obj.BorderColorLeft === undefined) ? Obj.BorderColor : Obj.BorderColorLeft) + ";";
-            //    if (Obj.BorderStyleRight !== undefined || Obj.BorderWidthRight !== undefined || Obj.BorderColorRight !== undefined)
-            //        Style += "border-right:" + ((Obj.BorderWidthRight === undefined) ? Obj.BorderWidth : Obj.BorderWidthRight) + " " + ((Obj.BorderStyleRight === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleRight)) + " " + ((Obj.BorderColorRight === undefined) ? Obj.BorderColr : Obj.BorderColorRight) + ";";
-            //    if (Obj.BorderStyleTop !== undefined || Obj.BorderWidthTop !== undefined || Obj.BorderColorTop !== undefined)
-            //        Style += "border-top:" + ((Obj.BorderWidthTop === undefined) ? Obj.BorderWidth : Obj.BorderWidthTop) + " " + ((Obj.BorderStyleTop === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleTop)) + " " + ((Obj.BorderColorTop === undefined) ? Obj.BorderColor : Obj.BorderColorTop) + ";";
-            //    if (Obj.BorderStyleBottom !== undefined || Obj.BorderWidthBottom !== undefined || Obj.BorderColorBottom !== undefined)
-            //        Style += "border-bottom:" + ((Obj.BorderWidthBottom === undefined) ? Obj.BorderWidth : Obj.BorderWidthBottom) + " " + ((Obj.BorderStyleBottom === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleBottom)) + " " + ((Obj.BorderColorBottom === undefined) ? Obj.BorderColor : Obj.BorderColorBottom) + ";";
-            //}
             Obj = CurrObj;
             if (Obj !== undefined) {
                 if (Obj.BorderStyle !== undefined && Obj.BorderStyle !== 0)
-                    Style += "border:" + Obj.BorderWidth + " " + me._getBorderStyle(Obj.BorderStyle) + " " + Obj.BorderColor + "!important;";
-                if (Obj.BorderStyleLeft !== undefined || Obj.BorderWidthLeft !== undefined || Obj.BorderColorLeft !== undefined)
-                    Style += "border-left:" + ((Obj.BorderWidthLeft === undefined) ? Obj.BorderWidth : Obj.BorderWidthLeft) + " " + ((Obj.BorderStyleLeft === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleLeft)) + " " + ((Obj.BorderColorLeft === undefined) ? Obj.BorderColor : Obj.BorderColorLeft) + "!important;";
-                if (Obj.BorderStyleRight !== undefined || Obj.BorderWidthRight !== undefined || Obj.BorderColorRight !== undefined)
-                    Style += "border-right:" + ((Obj.BorderWidthRight === undefined) ? Obj.BorderWidth : Obj.BorderWidthRight) + " " + ((Obj.BorderStyleRight === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleRight)) + " " + ((Obj.BorderColorRight === undefined) ? Obj.BorderColor : Obj.BorderColorRight) + "!important;";
-                if (Obj.BorderStyleTop !== undefined || Obj.BorderWidthTop !== undefined || Obj.BorderColorTop !== undefined)
-                    Style += "border-top:" + ((Obj.BorderWidthTop === undefined) ? Obj.BorderWidth : Obj.BorderWidthTop) + " " + ((Obj.BorderStyleTop === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleTop)) + " " + ((Obj.BorderColorTop === undefined) ? Obj.BorderColor : Obj.BorderColorTop) + "!important;";
-                if (Obj.BorderStyleBottom !== undefined || Obj.BorderWidthBottom !== undefined || Obj.BorderColorBottom !== undefined)
-                    Style += "border-bottom:" + ((Obj.BorderWidthBottom === undefined) ? Obj.BorderWidth : Obj.BorderWidthBottom) + " " + ((Obj.BorderStyleBottom === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleBottom)) + " " + ((Obj.BorderColorBottom === undefined) ? Obj.BorderColor : Obj.BorderColorBottom) + "!important;";
+                    Style += "border-style:" + me._getBorderStyle(Obj.BorderStyle) + ";";
+                if (Obj.BorderWidth)
+                    Style += "border-width:" + Obj.BorderWidth + ";";
+                if (Obj.BorderColor)
+                    Style += "border-color:" + Obj.BorderColor + ";";
+
+                if (Obj.BorderStyleLeft)
+                    Style += "border-left-style:" + me._getBorderStyle(Obj.BorderStyleLeft) + ";";
+                if (Obj.BorderWidthLeft)
+                    Style += "border-left-width:" + Obj.BorderWidthLeft + ";";
+                if (Obj.BorderColorLeft)
+                    Style += "border-left-color:" + Obj.BorderColorLeft + ";";
+
+                if (Obj.BorderStyleRight)
+                    Style += "border-right-style:" + me._getBorderStyle(Obj.BorderStyleRight) + ";";
+                if (Obj.BorderWidthRight)
+                    Style += "border-right-width:" + Obj.BorderWidthRight + ";";
+                if (Obj.BorderColorRight)
+                    Style += "border-right-color:" + Obj.BorderColorRight + ";";
+
+                if (Obj.BorderStyleTop)
+                    Style += "border-top-style:" + me._getBorderStyle(Obj.BorderStyleTop) + ";";
+                if (Obj.BorderWidthTop)
+                    Style += "border-top-width:" + Obj.BorderWidthTop + ";";
+                if (Obj.BorderColorTop)
+                    Style += "border-top-color:" + Obj.BorderColorTop + ";";
+
+                if (Obj.BorderStyleBottom)
+                    Style += "border-bottom-style:" + me._getBorderStyle(Obj.BorderStyleBottom) + ";";
+                if (Obj.BorderWidthBottom)
+                    Style += "border-bottom-width:" + Obj.BorderWidthBottom + ";";
+                if (Obj.BorderColorBottom)
+                    Style += "border-bottom-color:" + Obj.BorderColorBottom + ";";
+
                 if (Obj.BackgroundColor)
                     Style += "background-color:" + Obj.BackgroundColor + ";";
             }
@@ -2898,7 +2952,7 @@ $(function () {
                 case 1:
                     return "embed";
                 case 2:
-                    return "BiDiOverride";
+                    return "bidi-override";
             }
             return "normal";
         },
@@ -3063,9 +3117,6 @@ $(function () {
             var styles = me.reportObj.ReportContainer.SharedElements;
 
             for (var key in styles) {
-                //CSS += ".fr-border-" + styles[key].SID + "-" + me.reportObj.SessionID  + "{" + me._getFullBorderStyle(styles[key].Style) + "} ";
-                //CSS += ".fr-text-" + styles[key].SID + "-" + me.reportObj.SessionID + "{" + me._getTextStyle(styles[key].Style) + "} ";
-                //CSS += ".fr-nonText-" + styles[key].SID + "-" + me.reportObj.SessionID + "{" + me._getNonTextStyle(RS, styles[key].Style) + "} ";
                 CSS += ".fr-b-" + styles[key].SID + "-" + me.options.reportViewer.viewerID + "{" + me._getFullBorderStyle(styles[key].Style) + "} ";
                 CSS += ".fr-t-" + styles[key].SID + "-" + me.options.reportViewer.viewerID + "{" + me._getTextStyle(styles[key].Style, styles[key]) + "} ";
                 CSS += ".fr-n-" + styles[key].SID + "-" + me.options.reportViewer.viewerID + "{" + me._getNonTextStyle(RS, styles[key].Style) + "} ";

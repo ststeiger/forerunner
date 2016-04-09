@@ -14300,8 +14300,13 @@ $(function () {
                 }
 
                 //Set Tablix width if not responsive.
-                if (respCols.isResp === false)
-                    Style += me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
+                if (respCols.isResp === false) {
+                    var size = me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
+                    if (size === "")
+                        size = "width:100%;";
+
+                    Style += size;
+                }
                 $Tablix.attr("Style", Style);
                 $Tablix.append(colgroup);
                 if (!forerunner.device.isFirefox()) {

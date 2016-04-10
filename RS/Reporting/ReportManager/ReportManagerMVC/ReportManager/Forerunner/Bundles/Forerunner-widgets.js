@@ -13020,7 +13020,7 @@ $(function () {
 
                 for (var i = 0; i < Measurements.length; i++) {
                     var bottom = Measurements[i].Top + Measurements[i].Height;
-                    if (Obj.Top >= bottom && i != Index) {
+                    if (Obj.Top >= bottom && i !== Index) {
                         if (!curRI.IndexAbove) {
                             curRI.IndexAbove = i;
                             curRI.TopDelta = Obj.Top - bottom;
@@ -14300,8 +14300,13 @@ $(function () {
                 }
 
                 //Set Tablix width if not responsive.
-                if (respCols.isResp === false)
-                    Style += me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
+                if (respCols.isResp === false) {
+                    var size = me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
+                    if (size === "")
+                        size = "width:100%;";
+
+                    Style += size;
+                }
                 $Tablix.attr("Style", Style);
                 $Tablix.append(colgroup);
                 if (!forerunner.device.isFirefox()) {
@@ -14604,7 +14609,7 @@ $(function () {
 
                     //Dont write cell if there is a row span unless this is the first row
                     //SSRS can have mutiple RowHeaders for same cell
-                    if (LastColIndex !=Obj.ColumnIndex &&( Rowspans[Obj.ColumnIndex] === undefined || Obj.RowSpan > 0 || Obj.ColSpan > 0)) {
+                    if (LastColIndex !== Obj.ColumnIndex &&( Rowspans[Obj.ColumnIndex] === undefined || Obj.RowSpan > 0 || Obj.ColSpan > 0)) {
                         //Write empty cell           
                         var $td = $("<TD/>").html("&nbsp;");
                         //Add row span since not added in cell
@@ -15050,32 +15055,43 @@ $(function () {
             if (!CurrObj)
                 return "";
 
-            //Need left, top, right bottom border
-            //Obj = me._getSharedElements(CurrObj.Elements.SharedElements).Style;
-            //if (Obj !== undefined) {
-            //    if (Obj.BorderStyle !== undefined && Obj.BorderStyle !==0 )
-            //        Style += "border:" + Obj.BorderWidth + " " + me._getBorderStyle(Obj.BorderStyle) + " " + Obj.BorderColor + ";";
-            //    if (Obj.BorderStyleLeft !== undefined || Obj.BorderWidthLeft !== undefined || Obj.BorderColorLeft !== undefined)
-            //        Style += "border-left:" + ((Obj.BorderWidthLeft === undefined) ? Obj.BorderWidth : Obj.BorderWidthLeft) + " " + ((Obj.BorderStyleLeft === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleLeft)) + " " + ((Obj.BorderColorLeft === undefined) ? Obj.BorderColor : Obj.BorderColorLeft) + ";";
-            //    if (Obj.BorderStyleRight !== undefined || Obj.BorderWidthRight !== undefined || Obj.BorderColorRight !== undefined)
-            //        Style += "border-right:" + ((Obj.BorderWidthRight === undefined) ? Obj.BorderWidth : Obj.BorderWidthRight) + " " + ((Obj.BorderStyleRight === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleRight)) + " " + ((Obj.BorderColorRight === undefined) ? Obj.BorderColr : Obj.BorderColorRight) + ";";
-            //    if (Obj.BorderStyleTop !== undefined || Obj.BorderWidthTop !== undefined || Obj.BorderColorTop !== undefined)
-            //        Style += "border-top:" + ((Obj.BorderWidthTop === undefined) ? Obj.BorderWidth : Obj.BorderWidthTop) + " " + ((Obj.BorderStyleTop === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleTop)) + " " + ((Obj.BorderColorTop === undefined) ? Obj.BorderColor : Obj.BorderColorTop) + ";";
-            //    if (Obj.BorderStyleBottom !== undefined || Obj.BorderWidthBottom !== undefined || Obj.BorderColorBottom !== undefined)
-            //        Style += "border-bottom:" + ((Obj.BorderWidthBottom === undefined) ? Obj.BorderWidth : Obj.BorderWidthBottom) + " " + ((Obj.BorderStyleBottom === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleBottom)) + " " + ((Obj.BorderColorBottom === undefined) ? Obj.BorderColor : Obj.BorderColorBottom) + ";";
-            //}
             Obj = CurrObj;
             if (Obj !== undefined) {
                 if (Obj.BorderStyle !== undefined && Obj.BorderStyle !== 0)
-                    Style += "border:" + Obj.BorderWidth + " " + me._getBorderStyle(Obj.BorderStyle) + " " + Obj.BorderColor + "!important;";
-                if (Obj.BorderStyleLeft !== undefined || Obj.BorderWidthLeft !== undefined || Obj.BorderColorLeft !== undefined)
-                    Style += "border-left:" + ((Obj.BorderWidthLeft === undefined) ? Obj.BorderWidth : Obj.BorderWidthLeft) + " " + ((Obj.BorderStyleLeft === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleLeft)) + " " + ((Obj.BorderColorLeft === undefined) ? Obj.BorderColor : Obj.BorderColorLeft) + "!important;";
-                if (Obj.BorderStyleRight !== undefined || Obj.BorderWidthRight !== undefined || Obj.BorderColorRight !== undefined)
-                    Style += "border-right:" + ((Obj.BorderWidthRight === undefined) ? Obj.BorderWidth : Obj.BorderWidthRight) + " " + ((Obj.BorderStyleRight === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleRight)) + " " + ((Obj.BorderColorRight === undefined) ? Obj.BorderColor : Obj.BorderColorRight) + "!important;";
-                if (Obj.BorderStyleTop !== undefined || Obj.BorderWidthTop !== undefined || Obj.BorderColorTop !== undefined)
-                    Style += "border-top:" + ((Obj.BorderWidthTop === undefined) ? Obj.BorderWidth : Obj.BorderWidthTop) + " " + ((Obj.BorderStyleTop === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleTop)) + " " + ((Obj.BorderColorTop === undefined) ? Obj.BorderColor : Obj.BorderColorTop) + "!important;";
-                if (Obj.BorderStyleBottom !== undefined || Obj.BorderWidthBottom !== undefined || Obj.BorderColorBottom !== undefined)
-                    Style += "border-bottom:" + ((Obj.BorderWidthBottom === undefined) ? Obj.BorderWidth : Obj.BorderWidthBottom) + " " + ((Obj.BorderStyleBottom === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleBottom)) + " " + ((Obj.BorderColorBottom === undefined) ? Obj.BorderColor : Obj.BorderColorBottom) + "!important;";
+                    Style += "border-style:" + me._getBorderStyle(Obj.BorderStyle) + ";";
+                if (Obj.BorderWidth)
+                    Style += "border-width:" + Obj.BorderWidth + ";";
+                if (Obj.BorderColor)
+                    Style += "border-color:" + Obj.BorderColor + ";";
+
+                if (Obj.BorderStyleLeft)
+                    Style += "border-left-style:" +  me._getBorderStyle(Obj.BorderStyleLeft) + ";";
+                if (Obj.BorderWidthLeft)
+                    Style += "border-left-width:" + Obj.BorderWidthLeft + ";";
+                if (Obj.BorderColorLeft)
+                    Style += "border-left-color:" + Obj.BorderColorLeft + ";";
+
+                if (Obj.BorderStyleRight)
+                    Style += "border-right-style:" +  me._getBorderStyle(Obj.BorderStyleRight) + ";";
+                if (Obj.BorderWidthRight)
+                    Style += "border-right-width:" + Obj.BorderWidthRight + ";";
+                if (Obj.BorderColorRight)
+                    Style += "border-right-color:" + Obj.BorderColorRight + ";";
+
+                if (Obj.BorderStyleTop)
+                    Style += "border-top-style:" +  me._getBorderStyle(Obj.BorderStyleTop) + ";";
+                if (Obj.BorderWidthTop)
+                    Style += "border-top-width:" + Obj.BorderWidthTop + ";";
+                if (Obj.BorderColorTop)
+                    Style += "border-top-color:" + Obj.BorderColorTop + ";";
+
+                if (Obj.BorderStyleBottom)
+                    Style += "border-bottom-style:" +  me._getBorderStyle(Obj.BorderStyleBottom) + ";";
+                if (Obj.BorderWidthBottom)
+                    Style += "border-bottom-width:" + Obj.BorderWidthBottom + ";";
+                if (Obj.BorderColorBottom)
+                    Style += "border-bottom-color:" + Obj.BorderColorBottom + ";";
+
                 if (Obj.BackgroundColor)
                     Style += "background-color:" + Obj.BackgroundColor + ";";
             }
@@ -15391,7 +15407,7 @@ $(function () {
                 case 1:
                     return "embed";
                 case 2:
-                    return "BiDiOverride";
+                    return "bidi-override";
             }
             return "normal";
         },
@@ -15556,9 +15572,6 @@ $(function () {
             var styles = me.reportObj.ReportContainer.SharedElements;
 
             for (var key in styles) {
-                //CSS += ".fr-border-" + styles[key].SID + "-" + me.reportObj.SessionID  + "{" + me._getFullBorderStyle(styles[key].Style) + "} ";
-                //CSS += ".fr-text-" + styles[key].SID + "-" + me.reportObj.SessionID + "{" + me._getTextStyle(styles[key].Style) + "} ";
-                //CSS += ".fr-nonText-" + styles[key].SID + "-" + me.reportObj.SessionID + "{" + me._getNonTextStyle(RS, styles[key].Style) + "} ";
                 CSS += ".fr-b-" + styles[key].SID + "-" + me.options.reportViewer.viewerID + "{" + me._getFullBorderStyle(styles[key].Style) + "} ";
                 CSS += ".fr-t-" + styles[key].SID + "-" + me.options.reportViewer.viewerID + "{" + me._getTextStyle(styles[key].Style, styles[key]) + "} ";
                 CSS += ".fr-n-" + styles[key].SID + "-" + me.options.reportViewer.viewerID + "{" + me._getNonTextStyle(RS, styles[key].Style) + "} ";

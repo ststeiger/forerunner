@@ -147,6 +147,7 @@
                       </ActionInfo>
                       <Style>
                         <Border>
+                          <Color>Silver</Color>
                           <Style>Solid</Style>
                         </Border>
                         <BackgroundColor>White</BackgroundColor>

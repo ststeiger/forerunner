@@ -117,11 +117,20 @@ namespace ForerunnerLicense
             return LicenseUtil.Sign(string.Format(value, ld.SKU, ld.Quantity, ld.MachineData.Serialize(false,true), ld.LicenseKey, ld.RequireValidation, ld.FirstActivationDate.ToString( CultureInfo.CreateSpecificCulture("en-us")), ld.LicenseDuration,ld.IsTrial), pkey);
         }
 
+        private string getLicenseClass(string SKU)
+        {
+            string retval = "";
+
+            int dash = SKU.IndexOf("-");
+
+            if (dash >=0)
+                retval = SKU.Substring(dash);
+
+            return retval;
+        }
         private string ProcessMerge()
         {
-            ForerunnerDB DB = new ForerunnerDB();
-            SqlConnection SQLConn = DB.GetSQLConn();
-
+           
             LicenseData Lic = LoadLicenseFromServer(NewLicenseKey);
             LicenseData MergeLic = LoadLicenseFromServer(MergeKey);
 
@@ -138,28 +147,48 @@ namespace ForerunnerLicense
 
             if (Lic.SKU == MergeLic.SKU)
             {
-                Lic.Quantity += MergeLic.Quantity;
-                MergeLic.Quantity = 0;
+                if (MergeLic.LicenseType == "Sub")
+                {
+                    Lic.LicenseDuration += MergeLic.LicenseDuration;
+                    MergeLic.LicenseDuration = 0;
+                }
+                else
+                {
+                    Lic.Quantity += MergeLic.Quantity;
+                    MergeLic.Quantity = 0;
+                }
+                 
             }
 
-            if (MergeLic.IsExtension == 1)
+            else if (MergeLic.IsExtension == 1 )
             {
                 if (MergeLic.Quantity != Lic.Quantity)
                     return String.Format(Response, "Fail", "115", "Extension License must have same number of cores as license");
 
                 if (MergeLic.IsTrial != Lic.IsTrial || MergeLic.IsSubscription != Lic.IsSubscription || Lic.LicenseType != MergeLic.LicenseType)
                     return String.Format(Response, "Fail", "116", "Invalid license combination");
+                
+                if(getLicenseClass(Lic.SKU) != getLicenseClass(MergeLic.SKU))
+                    return String.Format(Response, "Fail", "117", "Invalid license combination, invalid dev,test production combination");
 
                 Lic.LicenseDuration += MergeLic.LicenseDuration;
                 MergeLic.LicenseDuration = 0;
 
             }
-
+            else
+            {
+                Response = String.Format(Response, "Fail", "118", "Cannot merge keys");
+                return Response;
+            }
             string SQL = @"UPDATE License SET Quantity = @NewQuantity, Duration = @NewDuration WHERE LicenseID = @LicenseKey
                            UPDATE License SET Quantity =0, Duration = 0 WHERE LicenseID = @MergeKey ";
 
+            ForerunnerDB DB = new ForerunnerDB();
+            SqlConnection SQLConn = DB.GetSQLConn();
+
             try
             {
+
                 SQLConn.Open();
                 SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
                 SQLComm.Parameters.AddWithValue("@LicenseKey", NewLicenseKey);

@@ -1384,7 +1384,7 @@ namespace Forerunner.SSRS.Manager
                 string SQL = @"DECLARE @UID uniqueidentifier
                                SELECT @UID = (SELECT  TOP 1 UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
                                SELECT DISTINCT Path, Name, ModifiedDate, f.ItemID, Description, MimeType, c.[Type], c.Hidden, f.SPSPath
-                               FROM ForerunnerFavorites f INNER JOIN Catalog c ON f.ItemID = c.ItemID WHERE f.UserID = @UID";
+                               FROM ForerunnerFavorites f LEFT OUTER JOIN Catalog c ON f.ItemID = c.ItemID WHERE f.UserID = @UID";
 
                 if (SeperateDB)
                 {
@@ -1413,7 +1413,7 @@ namespace Forerunner.SSRS.Manager
                             {
                                 
                                 //This is a Sharepoint item not stored in the catalog table
-                                if (SQLReader.IsDBNull(0))
+                                if (SQLReader.IsDBNull(0) && !IsNativeRS)
                                 {
                                     //Igore if NULL, this is error only casued by bug before fixed.
                                     if (!SQLReader.IsDBNull(8))
@@ -1422,7 +1422,7 @@ namespace Forerunner.SSRS.Manager
                                         list.Add(GetItemFromPath(path));
                                     }
                                 }
-                                else
+                                else if (!SQLReader.IsDBNull(0))
                                 {
                                     c = new CatalogItem();
                                     c.Path = GetPath(SQLReader.GetString(0));

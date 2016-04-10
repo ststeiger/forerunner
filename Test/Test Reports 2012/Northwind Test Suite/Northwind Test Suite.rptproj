@@ -280,6 +280,10 @@
       <FullPath>ThreeMaps.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>Two Cascading params.rdl</Name>
+      <FullPath>Two Cascading params.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>TwoChartReport.rdl</Name>
       <FullPath>TwoChartReport.rdl</FullPath>
     </ProjectItem>
@@ -304,8 +308,8 @@
       <FullPath>Video Test.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>Two Cascading params.rdl</Name>
-      <FullPath>Two Cascading params.rdl</FullPath>
+      <Name>goupr table.rdl</Name>
+      <FullPath>goupr table.rdl</FullPath>
     </ProjectItem>
   </Reports>
   <Configurations>

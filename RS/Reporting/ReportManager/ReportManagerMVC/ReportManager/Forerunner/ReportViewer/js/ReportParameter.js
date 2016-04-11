@@ -2206,24 +2206,27 @@ $(function () {
                 $(".fr-param", me.$params).filter(":radio").each(function (index, input) {
                     $input = $(input);
 
-                    if (!(input.name in radioList)) {
-                        if (!noValid || me._isNullChecked(input)) {
-                            radioList[input.name] = null;
+                    if (input.checked === true) {
+                        radioList[input.name] = { Value: me._isParamNullable(input) };
+                    }
+                
+                    if (input.name in radioList && radioList[input.name].Pushed !== true) {
+                        radioList[input.name].Pushed = true;
+                        if (me.element.find(".fr-paramname-" + input.name).hasClass("fr-usedefault")) {
+                            me._pushParam(a, $input, { Parameter: input.name, UseDefault: "true" });
+                        }
+                        else {
+                            me._pushParam(a, $input, { Parameter: input.name, IsMultiple: "", Type: "Boolean", Value: radioList[input.name].Value });
                         }
                     }
-                    if (input.checked === true) {
-                        radioList[input.name] = me._isParamNullable(input);
+
+                    //There will always be 2 radio per property, if first not checked look for null
+                    if (!radioList[input.name]) {
+                        if (!noValid || me._isNullChecked(input)) {
+                            radioList[input.name] = { Value: null };
+                        }
                     }
                 });
-                for (var radioName in radioList) {
-                    if (me.element.find(".fr-paramname-" + radioName).hasClass("fr-usedefault")) {
-                        me._pushParam(a, $input, { Parameter: radioName, UseDefault: "true" });
-                    }
-                    else {
-                        me._pushParam(a, $input, { Parameter: radioName, IsMultiple: "", Type: "Boolean", Value: radioList[radioName] });
-                    }
-                }
-
                 // Return null if this report has no parameters
                 if (a.length === 0) {
                     return null;

@@ -39,7 +39,8 @@ $(function () {
             useReportManagerSettings: false,
             $unzoomtoolbar: null,
             toolbarConfigOption: constants.toolbarConfigOption.full,
-            dbConfig: {}
+            dbConfig: {},
+            isTopParamLayout: null
         };
 
         // Merge options with the default settings
@@ -96,7 +97,8 @@ $(function () {
                 dbConfig: me.options.dbConfig,
                 $reportViewer: $viewer,
                 $ReportViewerInitializer: me,
-                $appContainer: me.options.$appContainer
+                $appContainer: me.options.$appContainer,
+                isTopParamLayout: me.options.isTopParamLayout
             });
 
             var tb = forerunner.ssr.tools.mergedButtons;
@@ -155,13 +157,25 @@ $(function () {
                 $lefttoolbar.leftToolbar({ $reportViewer: $viewer, $ReportViewerInitializer: me, $appContainer: me.options.$appContainer });
             }
 
-            var $righttoolbar = me.options.$righttoolbar;
-            if ($righttoolbar !== null) {
-                $righttoolbar.rightToolbar({ $reportViewer: $viewer, $ReportViewerInitializer: me, $appContainer: me.options.$appContainer });
-            }
+            var manageSetList;
+            if (me.options.isTopParamLayout) {
+                manageSetList = [rtb.btnRTBManageSets, rtb.btnSelectSet, rtb.btnSavParam];
+                //set the manage set elements to hide by default, after the parameters rendered, show them after that if visibla parameter exist.
+                $.each(manageSetList, function (i, v) {
+                    v.visible = false;
+                });
 
-            if (me.options.dbConfig.UseMobilizerDB === true && (me.options.isReportManager || me.options.useReportManagerSettings)) {
-                $righttoolbar.rightToolbar("addTools", 2, true, [rtb.btnRTBManageSets, rtb.btnSelectSet, rtb.btnSavParam]);
+                $toolbar.toolbar("addTools", 14, true, manageSetList);
+                me._initManageSetCallback();
+            } else {
+                var $righttoolbar = me.options.$righttoolbar;
+                if ($righttoolbar !== null) {
+                    $righttoolbar.rightToolbar({ $reportViewer: $viewer, $ReportViewerInitializer: me, $appContainer: me.options.$appContainer });
+                }
+
+                if (me.options.dbConfig.UseMobilizerDB === true && (me.options.isReportManager || me.options.useReportManagerSettings)) {
+                    $righttoolbar.rightToolbar("addTools", 2, true, [rtb.btnRTBManageSets, rtb.btnSelectSet, rtb.btnSavParam]);
+                }
             }
 
             // Create / render the menu pane
@@ -217,7 +231,7 @@ $(function () {
 
             var $paramarea = me.options.$paramarea;
             if ($paramarea !== null) {
-                $paramarea.reportParameter({ $reportViewer: $viewer });
+                $paramarea.reportParameter({ $reportViewer: $viewer, isTopParamLayout: me.options.isTopParamLayout });
                 $viewer.reportViewer("option", "paramArea", $paramarea);
             }
 
@@ -273,6 +287,28 @@ $(function () {
                 model: me.parameterModel
             });
             me._manageParamSetsDialog.manageParamSets("openDialog", parameterList);
+        },
+        _initManageSetCallback: function () {
+            var me = this;
+
+            if (me.parameterModel) {
+                me.parameterModel.on(events.parameterModelChanged(), function (e, data) {
+                    me._onModelChange.call(me, e, data);
+                });
+                me.parameterModel.on(events.parameterModelSetChanged(), function (e, data) {
+                    me._onModelChange.call(me, e, data);
+                });
+            }
+        },
+        _onModelChange: function () {
+            var me = this;
+            var rtb = forerunner.ssr.tools.rightToolbar;
+
+            if (me.parameterModel && me.parameterModel.parameterModel("canUserSaveCurrentSet")) {
+                me.options.$toolbar.toolbar("enableTools", [rtb.btnSavParam]);
+            } else {
+                me.options.$toolbar.toolbar("disableTools", [rtb.btnSavParam]);
+            }
         }
     };  // ssr.ReportViewerInitializer.prototype
 

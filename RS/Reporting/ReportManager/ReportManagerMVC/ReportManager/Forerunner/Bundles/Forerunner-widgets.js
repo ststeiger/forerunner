@@ -4647,16 +4647,20 @@ $(function () {
             }
 
             if (toolInfo.toolType === toolTypes.select) {
-                $tool.selectTool($.extend(me.options, { toolInfo: toolInfo, toolClass: "fr-toolbase-selectinner" }));
+                $tool.selectTool($.extend({}, me.options, { toolInfo: toolInfo, toolClass: "fr-toolbase-selectinner" }));
             }
 
             if (toolInfo.alwaysChange) {
                 $tool.alwaysChange({ handler: toolInfo.alwaysChange, toolBase: me });
             }
 
+            //for select widget the whole div container is hide
             if (toolInfo.visible === false) {
                 $tool.hide();
             }
+
+            //add an access entry to each toolbar item.
+            me.allTools[toolInfo.selectorClass].$domReference = $tool;
         },
         _createDropdown: function ($tool, toolInfo) {
             var me = this;
@@ -4716,8 +4720,10 @@ $(function () {
         * @param {String} selectorClass - tool's class name
         */
         showTool: function(selectorClass){
-            var me = this;
-            if (me.allTools[selectorClass]) {
+            var me = this,
+                toolInfo = me.allTools[selectorClass];
+
+            if (toolInfo) {
                 // NOTE: that you cannot know when hiding a tool if it should be made
                 // visible in the showTool function. So the strategy here is to remove
                 // the display style on the element and thereby revert the visibility
@@ -4726,6 +4732,10 @@ $(function () {
 
                 if (me._isButtonInConfig($toolEl)) {
                     $toolEl.css({ "display": "" });
+                }
+
+                if (toolInfo.toolType === toolTypes.select) {
+                    toolInfo.$domReference.selectTool("show");
                 }
             }
         },
@@ -5198,6 +5208,11 @@ $(function () {
                     $select.prop("selectedIndex", index);
                 }
             });
+        },
+        show: function () {
+            var me = this;
+
+            me.element.show();
         }
     });  // $widget
 
@@ -5597,6 +5612,13 @@ $(function () {
                 $mainheadersection.addClass("fr-layout-mainheadersection");
                 me.$mainheadersection = $mainheadersection;
                 $topdiv.append($mainheadersection);
+
+                //top parameter layout
+                var $topparamsection = new $("<div />");
+                $topparamsection.addClass("fr-layout-param-top");
+                me.$topparamsection = $topparamsection;
+                $topdiv.append($topparamsection );
+
                 var $topdivspacer = new $("<div />");
                 $topdivspacer.addClass("fr-layout-topdivspacer  fr-core-block");
                 me.$topdivspacer = $topdivspacer;
@@ -5764,6 +5786,7 @@ $(function () {
             $mainheadersection.on(events.toolbarParamAreaClick(), function (e, data) { me.showSlideoutPane(widgets.toolbar, false); });
             $mainheadersection.on(events.reportExplorerToolbarMenuClick(), function (e, data) { me.showSlideoutPane(widgets.reportExplorerToolbar, true); });
             $mainheadersection.on(events.dashboardToolbarMenuClick(), function (e, data) { me.showSlideoutPane(widgets.dashboardToolbar, true); });
+            
             $(".fr-layout-rightpanecontent", me.$container).on(events.reportParameterRender(), function (e, data) { me.showSlideoutPane(widgets.toolbar, false); });
             $(".fr-layout-leftheader", me.$container).on(events.leftToolbarMenuClick(), function (e, data) { me.hideSlideoutPane(true); });
 
@@ -5797,6 +5820,13 @@ $(function () {
                 // me.$container.css("overflow", "").unmask();
                 //me.scrollLock = false;
                 //me.restoreScroll();
+            });
+
+            //when the parameter done then reset the header spacer, used for top param layout
+            me.$container.on(events.reportParameterRender(), function (e, data) {
+                if (data.isTopParamLayout) {
+                    me.setLeftRightPaneStyle();
+                }
             });
 
             var isTouch = forerunner.device.isTouch();
@@ -6394,6 +6424,40 @@ $(function () {
                 }
             }
             return false;
+        },
+        setLeftRightPaneStyle: function () {
+            var me = this;            
+
+            var routeLinkSectionHeight = me.$linksection.is(":visible") ? me.$linksection.outerHeight() : 0;
+            var toolpaneheaderheight = me.$mainheadersection.height(); //equal toolbar height
+            var topParamHeight = me.$topparamsection.is(":visible") ? me.$topparamsection.outerHeight() : 0;
+
+            var offset = forerunner.device.isIEMobile9() ? 0 : routeLinkSectionHeight;
+
+            // window phone 7 get top property wrong
+            var topDivHeight = routeLinkSectionHeight + toolpaneheaderheight + topParamHeight;
+
+            me.$topdiv.css({ height: topDivHeight });
+            me.$topdivspacer.css({ height: topDivHeight });
+
+            me.$rightheader.css({ height: toolpaneheaderheight });
+            me.$leftheader.css({ height: toolpaneheaderheight });
+
+            me.$rightheaderspacer.css({ height: toolpaneheaderheight });
+            me.$leftheaderspacer.css({ height: toolpaneheaderheight });
+
+            if (me.options.isFullScreen) {
+                // Full screen is position fixed so top style is needed. Otherwise the top will
+                // be set automatically
+                me.$rightheader.css({ top: offset });
+                me.$leftheader.css({ top: offset });
+
+                me.$rightheaderspacer.css({ top: offset });
+                me.$leftheaderspacer.css({ top: offset });
+
+                me.$leftpanecontent.css({ top: (toolpaneheaderheight + offset) });
+                me.$rightpanecontent.css({ top: (toolpaneheaderheight + offset) });
+            }
         },
         setBackgroundLayout: function (e, data) {
             var me = this;
@@ -8642,6 +8706,7 @@ $(function () {
     var events = forerunner.ssr.constants.events;
     var tb = forerunner.ssr.tools.toolbar;
     var tg = forerunner.ssr.tools.groups;
+    var rtb = forerunner.ssr.tools.rightToolbar;
     var locData = forerunner.localize;
 
 
@@ -8665,7 +8730,8 @@ $(function () {
         options: {
             $reportViewer: null,
             dbConfig: {},
-            toolClass: "fr-toolbar"
+            toolClass: "fr-toolbar",
+            isTopParamLayout: null
         },
         _initCallbacks: function () {
             var me = this;
@@ -8781,10 +8847,15 @@ $(function () {
                 me._clearBtnStates();
             });
 
-           
+            me.options.$appContainer.on(events.reportParameterRender(), function (e, data) {
+                if (data && data.visibleParamCount > 0) {
+                    me.showTools([rtb.btnRTBManageSets, rtb.btnSelectSet, rtb.btnSavParam]);
+                }
+            });
         },
         _init: function () {
             var me = this;
+
             me._super(); //Invokes the method of the same name from the parent widget
 
             me.element.html("<div class='" + me.options.toolClass + " fr-core-toolbar fr-core-widget'/>");
@@ -8795,7 +8866,11 @@ $(function () {
                 me.hideTool(tb.btnEmailSubscription.selectorClass);
             }
 
-            me.addTools(1, false, [tb.btnParamarea]);
+            //only add param btn when not the top param layout
+            if (me.options.isTopParamLayout !== true) {
+                me.addTools(1, false, [tb.btnParamarea]);
+            }
+            
             me.enableTools([tb.btnMenu]);
             if (me.options.$reportViewer) {
                 me._initCallbacks();
@@ -15641,7 +15716,8 @@ $(function () {
             $reportViewer: null,
             pageNum: null,
             $appContainer: null,
-            RDLExt: {}
+            RDLExt: {},
+            isTopParamLayout: null
         },
 
         $params: null,
@@ -15661,35 +15737,51 @@ $(function () {
             var me = this;
             me.element.html(null);
             me.enableCascadingTree = forerunner.config.getCustomSettingsValue("EnableCascadingTree", "on") === "on";
-            me.isDebug = forerunner.config.getCustomSettingsValue("Debug", "off") === "on" ? true : false;
+            me.isDebug = forerunner.config.getCustomSettingsValue("Debug", "off") === "on";
+            me.isTopParamLayout = me.options.isTopParamLayout;
         },
         _render: function () {
             var me = this;
 
             me.element.children().remove();
 
-            var $params = new $("<div class='" + paramContainerClass + " fr-core-widget'>" +
-                "<form class='fr-param-form' onsubmit='return false'>" +
-                   "<div class='fr-param-element-border'><input type='text' style='display:none'></div>" +
-                   "<div>" +
-                       "<div class='fr-param-submit-container'>" +
-                          "<input name='Parameter_ViewReport' type='button' class='fr-param-viewreport fr-param-button' value='" + me.options.$reportViewer.locData.getLocData().paramPane.viewReport + "'/>" +
-                       "</div>" +
-                       "<div class='fr-param-cancel-container'>" +
-                          "<span class='fr-param-cancel'>" + me.options.$reportViewer.locData.getLocData().paramPane.cancel + "</span>" +
-                       "</div>" +
-                    "</div>" +
-                "</form>" +
-                "<div style='height:65px;'/>" +
-                "</div>");
+            //element border: include all the param elements
+            var elementBorder = "<div class='fr-param-element-border'><input type='text' style='display:none'></div>";
+            //operate buttons
+            var opers = "<div class='fr-param-opers'>" +
+                            "<div class='fr-param-submit-container'>" +
+                               "<input name='Parameter_ViewReport' type='button' class='fr-param-viewreport fr-param-button' value='" + me.options.$reportViewer.locData.getLocData().paramPane.viewReport + "'/>" +
+                            "</div>" +
+                            "<div class='fr-param-cancel-container'>" +
+                               "<span class='fr-param-cancel'>" + me.options.$reportViewer.locData.getLocData().paramPane.cancel + "</span>" +
+                            "</div>" +
+                         "</div>";
+
+            var innerLayout = me.isTopParamLayout ? (opers + elementBorder) : (elementBorder + opers),
+                bottomSpacer = me.isTopParamLayout ? "" : "<div style='height:65px;'/>";
+
+            var innerDom = "<div class='" + paramContainerClass + " fr-core-widget fr-hide'>" +
+                    "<form class='fr-param-form' onsubmit='return false'>" + innerLayout + "</form>" + bottomSpacer +
+                "</div>";            
+
+            var $params = new $(innerDom);
 
             me.element.css("display", "block");
-            me.element.html($params);
+            me.element.append($params);
+            if (me.isTopParamLayout) {
+                me.$toggle = new $("<div class='fr-param-toggle fr-hide'><a class='fr-param-close' href='javascript:;'><i class='fr-param-toggle-icon'></i></a></div>");
+                me.element.append(me.$toggle);
+            }
 
             me.$params = $params;
-            me.$form = me.element.find(".fr-param-form");
+            me.$form = me.element.find(".fr-param-form");            
 
             me._formInit = true;
+        },
+        _triggerGlobalEvent: function(eventName, data) {
+            var me = this;
+
+            me.options.$appContainer.trigger(eventName, data);
         },
         /**
          * Get the number of visible parameters
@@ -15779,6 +15871,11 @@ $(function () {
          */
         writeParameterPanel: function (data, pageNum, submitForm, renderParamArea, savedParam, paramMetadata) {
             var me = this;
+            
+            if (!data.ParametersList || data.ParametersList.length === 0) {
+                return
+            }
+
             if (data.Debug) {
                 me._debug = data.Debug;
             }
@@ -15795,15 +15892,41 @@ $(function () {
             me._dataPreprocess(data.ParametersList, true);
 
             var $eleBorder = $(".fr-param-element-border", me.$params);
+            var rowCount = me._getParamRowCount($eleBorder);
             var metadata = paramMetadata && paramMetadata.ParametersList;
             var savedParamMap = me._getParamMap(savedParam);
+            var $rows = new $("<div class='fr-param-row'></div>"), $param;
+
+            //add the first row
+            $eleBorder.append($rows);
+            
             $.each(data.ParametersList, function (index, param) {
                 var mergedParam = me._getMergedParam(param, savedParamMap);
                 if (mergedParam.Prompt !== "" && (mergedParam.PromptUserSpecified ? mergedParam.PromptUser : true)) {
-                    me._numVisibleParams += 1;
-                    $eleBorder.append(me._writeParamControl(mergedParam, new $("<div />"), pageNum, metadata ? metadata[index] : null));
+                    $param = me._writeParamControl(mergedParam, new $("<div class='fr-param-unit' />"), pageNum, metadata ? metadata[index] : null);
+                    $rows.append($param);
+
+                    if (!$param.hasClass("fr-param-tree-hidden")) {
+                        me._numVisibleParams += 1;
+                    }
+
+                    if (me._numVisibleParams % rowCount === 0) {
+                        $rows = new $("<div class='fr-param-row'></div>");
+                        $eleBorder.append($rows);
+                    }                   
                 }
             });
+
+            if (me._numVisibleParams > 0) {
+                me.$params.removeClass("fr-hide");
+                me.$toggle && me.$toggle.removeClass("fr-hide");
+            }
+
+            if (me.isTopParamLayout) {
+                // clear the float
+                $eleBorder.append(new $("<div class='fr-clear'></div>"));
+            }
+
             //resize the textbox width when custom right pane width is big
             me._elementWidthCheck();
 
@@ -15822,7 +15945,7 @@ $(function () {
                         error.appendTo(element.parent("div").nextAll(".fr-param-error-message"));
                     else {
                         if (element.attr("ismultiple") === "true" || element.hasClass("ui-autocomplete-input") || element.hasClass("fr-param-tree-input")) {
-                            error.appendTo(element.parent("div").siblings(".fr-param-error-message"));
+                            error.appendTo(element.closest(".fr-param-element-container").siblings(".fr-param-error-message"));
                         }
                         else
                             error.appendTo(element.siblings(".fr-param-error-message"));
@@ -15841,11 +15964,27 @@ $(function () {
                         $(element).removeClass("fr-param-error");
                 }
             });
+
             $(".fr-param-viewreport", me.$params).on("click", function () {
                 me._submitForm(pageNum);
             });
             $(".fr-param-cancel", me.$params).on("click", function () {
                 me._cancelForm();
+            });
+
+            me.$toggle && me.$toggle.on("click", function () {
+                if(me.$params.hasClass("fr-hide")) {
+                    me.$params.removeClass("fr-hide");
+                    me.$toggle.find("a").removeClass("fr-param-open").addClass("fr-param-close");
+                } else {
+                    me.$params.addClass("fr-hide");
+                    me.$toggle.find("a").removeClass("fr-param-close").addClass("fr-param-open");
+                }
+
+                me._triggerGlobalEvent(events.reportParameterRender(), {
+                    isTopParamLayout: me.isTopParamLayout,
+                    visibleParamCount: me._numVisibleParams
+                });
             });
 
             if (me.isDebug) {
@@ -15856,6 +15995,7 @@ $(function () {
                     LoadedForDefault: me._loadedForDefault
                 });
             }
+
             if (submitForm !== false) {
                 if (data.DefaultValueCount === parseInt(data.Count, 10) && me._loadedForDefault)
                     me._submitForm(pageNum);
@@ -15865,10 +16005,16 @@ $(function () {
                     me.options.$reportViewer.removeLoadingIndicator();
                 }
             } else {
-                if (renderParamArea !== false)
+                if (renderParamArea !== false) {
                     me._trigger(events.render);
+                }
                 me.options.$reportViewer.removeLoadingIndicator();
             }
+
+            me._triggerGlobalEvent(events.reportParameterRender(), {
+                isTopParamLayout: me.isTopParamLayout,
+                visibleParamCount: me._numVisibleParams
+            });
 
             //jquery adds height, remove it
             var pc = me.element.find("." + paramContainerClass);
@@ -15891,6 +16037,14 @@ $(function () {
                 me._writeParamDoneCallback();
                 me._writeParamDoneCallback = null;
             }
+        },
+        _getParamRowCount: function ($paramBox) {
+            var me = this,
+                outerWidth = me.element.width() - 160,
+                paramUnitWidth = 340;
+
+            var calculateRow = Math.floor(outerWidth / paramUnitWidth);
+            return Math.min(calculateRow, 4);
         },
         _getParamMap: function (savedParam) {
             var paramObj = {};
@@ -15947,6 +16101,8 @@ $(function () {
         },
         _elementWidthCheck: function () {
             var me = this;
+
+            if (me.isTopParamLayout) { return; }
 
             var containerWidth = me.options.$appContainer.width();
             var customRightPaneWidth = forerunner.config.getCustomSettingsValue("ParameterPaneWidth", 280);
@@ -16094,8 +16250,11 @@ $(function () {
             //If the control have valid values, then generate a select control
             var $container = new $("<div class='fr-param-item-container'></div>");
             var $optionsDiv = new $("<div class='fr-param-option-container'></div>");
+            var $moreBtn = null;
+            var options = [];
             var $errorMsg = new $("<div class='fr-param-error-message'/>");
             var $element = null;
+            var $nullElement = null;
             var useDefaultParam = paramMetadata || param;
 
 
@@ -16169,16 +16328,31 @@ $(function () {
             //they are assist elements to generate parameter list
             if (!$parent.hasClass("fr-param-tree-hidden")) {
 
-                //DOn't show nullable if has valid value list, null would have to be in the list
+                //Don't show nullable if has valid value list, null would have to be in the list
                 if (param.ValidValues === "") {
-                    $optionsDiv.append(me._addNullableCheckBox(param, $element, predefinedValue));
+                    $nullElement = me._addNullableCheckBox(param, $element, predefinedValue)
+                    $nullElement && options.push($nullElement);
                     //Hook up null check box to dependency
                     me._checkDependencies(param);
                 }
 
                 //Add use default option
                 if (useDefaultParam && me._hasDefaultValue(useDefaultParam)) {
-                    $optionsDiv.append(me._addUseDefaultOption(param, $element, predefinedValue));
+                    options.push(me._addUseDefaultOption(param, $element, predefinedValue));                    
+                }
+
+                if (options.length) {
+                    if (me.isTopParamLayout) {
+                        $moreBtn = new $('<button class="fr-param-more">...</button>"');
+                        $optionsDiv.append($moreBtn);
+                        $optionsDiv.append(me._setMoreOptionMenu($moreBtn, options));
+                        $optionsDiv.addClass("fr-param-not-close");
+                    }
+                    else {
+                        for (var i = 0; i < options.length; i++) {
+                            $optionsDiv.append(options[i]);
+                        }
+                    }
                 }
 
                 $container.append($errorMsg);
@@ -16186,6 +16360,67 @@ $(function () {
 
             $parent.append($label).append($container).append($optionsDiv);
             return $parent;
+        },
+        _setMoreOptionMenu: function ($moreBtn, optionList) {
+            var me = this,
+                $menu = new $("<ul class='fr-param-more-menu fr-hide'></ul>"),
+                $item = null,
+                btnHeight = null,
+                btnWidth = null;
+
+            for (var i = 0; i < optionList.length; i++) {
+                if (!optionList[i]) {
+                    continue;
+                }
+
+                $item = new $("<li class='fr-param-more-item'></li>");
+
+                $item.append(optionList[i]);
+                $menu.append($item);
+            }
+
+            $moreBtn.on("click", function (event) {
+                event.stopImmediatePropagation();
+                event.preventDefault();
+                var $obj = $(this);
+                
+                me._setDropdownPosition($obj, $menu, "right");
+
+                if ($menu.hasClass("fr-hide")) {
+                    me._closeAllDropdown();
+                    $menu.removeClass("fr-hide");
+                } else {
+                    $menu.addClass("fr-hide")
+                }
+            });
+
+            return $menu;
+        },
+        _setDropdownPosition: function ($element, $dropdown, leftOrRight) {
+            //only set the dropdown position for the top layout case
+            var me = this;
+
+            if (!me.isTopParamLayout) { return; }
+
+            var position = $element.position(),
+                dropdownWidth = null,
+                elementWidth = null,
+                elementHeight = $element.outerHeight(true);
+
+            if (leftOrRight === "left") {
+                $dropdown.css({
+                    top: position.top + elementHeight,
+                    left: position.left
+                });
+            } else {
+                dropdownWidth = $dropdown.outerWidth(true);
+                elementWidth = $element.outerWidth(true);
+
+                $dropdown.css({
+                    top: position.top + elementWidth,
+                    left: position.left + elementWidth - dropdownWidth
+                });
+            }
         },
         _setParamError: function (param, errorString) {
             var me = this;
@@ -16591,6 +16826,7 @@ $(function () {
                 enterLock = false;
 
             var $container = me._createDiv(["fr-param-element-container", "fr-param-dropdown-div", "fr-param-width"]);
+            var $wrapper = me._createDiv(["fr-param-inner-wrapper"]);
             var $control = me._createInput(param, "text", false, ["fr-param", "fr-param-dropdown-input", "fr-param-not-close", "fr-paramname-" + param.Name]);
             me._getParameterControlProperty(param, $control);
             //add auto complete selected item check
@@ -16738,7 +16974,8 @@ $(function () {
 
             me._setParamScrollPos($control);
 
-            $container.append($control).append($openDropDown);
+            $wrapper.append($control).append($openDropDown);
+            $container.append($wrapper);
             return $container;
         },
         _writeDropDownControl: function (param, dependenceDisable, pageNum, predefinedValue) {
@@ -16792,6 +17029,7 @@ $(function () {
             var nodeLevel = 1;
 
             var $container = me._createDiv(["fr-param-element-container", "fr-param-tree-container", "fr-param-dropdown-div", "fr-param-width"]);
+            var $wrapper = me._createDiv(["fr-param-inner-wrapper"]);
             var $input = me._createInput(param, "text", false, ["fr-param-client", "fr-param-not-close", "fr-paramname-" + param.Name]);
 
             $input.attr("cascadingTree", true).attr("readonly", "readonly").addClass("fr-param-tree-input").addClass("fr-param-dropdown-input");
@@ -16820,11 +17058,14 @@ $(function () {
             //generate default value after write parameter panel done
             me._addWriteParamDoneCallback(function () { me._setTreeSelectedValues($treeContainer); });
 
-            $container.append($input).append($hidden).append($openDropDown).append($treeContainer);
+            $wrapper.append($input).append($hidden).append($openDropDown);
+            $container.append($wrapper).append($treeContainer);
             return $container;
         },
         _showTreePanel: function ($tree, $input) {
             var me = this;
+
+            
 
             if ($tree.is(":visible")) {
                 me._setTreeSelectedValues($tree);
@@ -16832,14 +17073,13 @@ $(function () {
             }
             else {
                 $input.removeClass("fr-param-cascadingtree-error").attr("cascadingTree", "");
-                $tree.show();
                 //Fixed issue 1056: jquery.ui.position will got an error in IE8 when the panel width change, 
                 //so here I wrote code to got shop up position to popup tree panel
                 var $parent = $input.parent();
-                var left = forerunner.helper.parseCss($input, "marginLeft") + ($input.outerWidth() - $input.innerWidth()) / 2;
-                var top = forerunner.helper.parseCss($input, "marginTop") + $parent.outerHeight();
-                $tree.css({ "top": top, "left": left, "min-width": $parent.width() });
-                //$tree.position({ my: "left top", at: "left bottom", of: $input });
+
+                me._setDropdownPosition($parent, $tree, "left");
+                $tree.css({ "min-width": $parent.width() }).show();
+
                 $input.blur();
             }
         },
@@ -17153,7 +17393,7 @@ $(function () {
                 temp = null,
                 isValid = true,
                 invalidList = null;
-            var $parent = $tree.siblings(".fr-param-tree-input");
+            var $parent = $tree.siblings(".fr-param-inner-wrapper").find(".fr-param-tree-input");
 
             $parent.removeClass("fr-param-cascadingtree-error").attr("cascadingTree", "");
 
@@ -17396,6 +17636,7 @@ $(function () {
         _writeDropDownWithCheckBox: function (param, dependenceDisable, predefinedValue) {
             var me = this;
             var $control = me._createDiv(["fr-param-element-container", "fr-param-dropdown-div", "fr-param-width"]);
+            var $wrapper = me._createDiv(["fr-param-inner-wrapper"]);
 
             var $multipleCheckBox = me._createInput(param, "text", true, ["fr-param-client", "fr-param-dropdown-input", "fr-param-not-close", "fr-paramname-" + param.Name]);
 
@@ -17520,7 +17761,8 @@ $(function () {
             else
                 me._loadedForDefault = false;
 
-            $control.append($multipleCheckBox).append($hiddenCheckBox).append($openDropDown).append($dropDownContainer);
+            $wrapper.append($multipleCheckBox).append($hiddenCheckBox).append($openDropDown);
+            $control.append($wrapper).append($dropDownContainer);
 
             $control.delegate("label", "click", function (e) {
                 $(this).siblings(".fr-param-dropdown-checkbox").trigger("click");
@@ -17531,6 +17773,7 @@ $(function () {
             var me = this;
             //me._getTextAreaValue(predefinedValue);
             var $control = me._createDiv(["fr-param-element-container", "fr-param-dropdown-div", "fr-param-width"]);
+            var $wrapper = me._createDiv(["fr-param-inner-wrapper"]);
 
             var $multipleTextArea = me._createInput(param, "text", true, ["fr-param", "fr-param-dropdown-input", "fr-param-not-close", "fr-paramname-" + param.Name]);
             var $openDropDown = me._createDiv(["fr-param-dropdown-iconcontainer", "fr-core-cursorpointer"]);
@@ -17563,7 +17806,10 @@ $(function () {
             }
 
             $dropDownContainer.append($textarea);
-            $control.append($multipleTextArea).append($openDropDown).append($dropDownContainer);
+
+            $wrapper.append($multipleTextArea).append($openDropDown);
+            $control.append($wrapper).append($dropDownContainer);
+
             return $control;
         },
         _getTextAreaValue: function (predifinedValue, forArea) {
@@ -17631,30 +17877,43 @@ $(function () {
         _popupDropDownPanel: function (param) {
             var me = this;
             var isVisible = $(".fr-paramname-" + param.Name + "-dropdown-container", me.$params).is(":visible");
+            var $input = $(".fr-paramname-" + param.Name, me.$params);
+            var $elementContainer = $input.closest(".fr-param-element-container");
+
             me._closeAllDropdown();
 
             if (!isVisible) {
                 var $container = me.$params;
-                var $dropDown = $(".fr-paramname-" + param.Name + "-dropdown-container", me.$params);
-                var $multipleControl = $(".fr-paramname-" + param.Name, me.$params);
-                var positionTop = $multipleControl.offset().top;
+                var $dropDown = $(".fr-paramname-" + param.Name + "-dropdown-container", me.$params);                
+                var positionTop = $input.offset().top;
+                var $parent = $input.parent();
 
-                $multipleControl.parent().css("z-index", 1);
+                $elementContainer.css({
+                    "z-index": "10"
+                });
 
-                if ($container.height() - positionTop - $multipleControl.height() < $dropDown.height()) {
-                    //popup at above
-                    $dropDown.css("top", ($dropDown.height() + 10) * -1);
-                }
-                else {//popup at bottom, 9 is margin + padding + border
-                    $dropDown.css("top", $multipleControl.height() + 9);
-                }
+                if (me.isTopParamLayout) {
+                    me._setDropdownPosition($parent, $dropDown, "left");
+                } else {
+                    if ($container.height() - positionTop - $input.height() < $dropDown.height()) {
+                        //popup at above
+                        $dropDown.css("top", ($dropDown.height() + 10) * -1);
+                    }
+                    else {//popup at bottom, 9 is margin + padding + border
+                        $dropDown.css("top", $input.height() + 9);
+                    }
+                }                
 
                 if ($dropDown.is(":hidden")) {
-                    $dropDown.width($multipleControl.width() + 20).addClass("fr-param-dropdown-show").show(10);
+                    $dropDown.width($input.width() + 20).addClass("fr-param-dropdown-show").show(10);
                 }
                 else {
                     me._closeDropDownPanel(param);
                 }
+            } else {
+                $elementContainer.css({
+                    "z-index": "0"
+                });
             }
         },
         _closeDropDownPanel: function (param) {
@@ -17669,6 +17928,9 @@ $(function () {
             var me = this;
             $(".fr-param-dropdown-show", me.$params).filter(":visible").each(function (index, param) {
                 me._closeDropDownPanel({ Name: $(param).attr("data-value") });
+            });
+            $(".fr-param-more-menu", me.$params).filter(":visible").each(function (index, param) {
+                $(param).addClass("fr-hide");
             });
             //close auto complete dropdown, it will be appended to the body so use $appContainer here to do select
             $(".ui-autocomplete", me.options.$appContainer).hide();
@@ -18186,6 +18448,7 @@ $(function () {
             var me = this;
 
             me.removeParameter();
+            me.$toggle && me.$toggle.off("click").remove();
             $(document).off("click", me._checkExternalClick);
             if (me.$datepickers.length) {
                 $(window).off("resize", me._paramWindowResize);
@@ -19165,7 +19428,8 @@ $(function () {
             useReportManagerSettings: false,
             $unzoomtoolbar: null,
             toolbarConfigOption: constants.toolbarConfigOption.full,
-            dbConfig: {}
+            dbConfig: {},
+            isTopParamLayout: null
         };
 
         // Merge options with the default settings
@@ -19222,7 +19486,8 @@ $(function () {
                 dbConfig: me.options.dbConfig,
                 $reportViewer: $viewer,
                 $ReportViewerInitializer: me,
-                $appContainer: me.options.$appContainer
+                $appContainer: me.options.$appContainer,
+                isTopParamLayout: me.options.isTopParamLayout
             });
 
             var tb = forerunner.ssr.tools.mergedButtons;
@@ -19281,13 +19546,25 @@ $(function () {
                 $lefttoolbar.leftToolbar({ $reportViewer: $viewer, $ReportViewerInitializer: me, $appContainer: me.options.$appContainer });
             }
 
-            var $righttoolbar = me.options.$righttoolbar;
-            if ($righttoolbar !== null) {
-                $righttoolbar.rightToolbar({ $reportViewer: $viewer, $ReportViewerInitializer: me, $appContainer: me.options.$appContainer });
-            }
+            var manageSetList;
+            if (me.options.isTopParamLayout) {
+                manageSetList = [rtb.btnRTBManageSets, rtb.btnSelectSet, rtb.btnSavParam];
+                //set the manage set elements to hide by default, after the parameters rendered, show them after that if visibla parameter exist.
+                $.each(manageSetList, function (i, v) {
+                    v.visible = false;
+                });
 
-            if (me.options.dbConfig.UseMobilizerDB === true && (me.options.isReportManager || me.options.useReportManagerSettings)) {
-                $righttoolbar.rightToolbar("addTools", 2, true, [rtb.btnRTBManageSets, rtb.btnSelectSet, rtb.btnSavParam]);
+                $toolbar.toolbar("addTools", 14, true, manageSetList);
+                me._initManageSetCallback();
+            } else {
+                var $righttoolbar = me.options.$righttoolbar;
+                if ($righttoolbar !== null) {
+                    $righttoolbar.rightToolbar({ $reportViewer: $viewer, $ReportViewerInitializer: me, $appContainer: me.options.$appContainer });
+                }
+
+                if (me.options.dbConfig.UseMobilizerDB === true && (me.options.isReportManager || me.options.useReportManagerSettings)) {
+                    $righttoolbar.rightToolbar("addTools", 2, true, [rtb.btnRTBManageSets, rtb.btnSelectSet, rtb.btnSavParam]);
+                }
             }
 
             // Create / render the menu pane
@@ -19343,7 +19620,7 @@ $(function () {
 
             var $paramarea = me.options.$paramarea;
             if ($paramarea !== null) {
-                $paramarea.reportParameter({ $reportViewer: $viewer });
+                $paramarea.reportParameter({ $reportViewer: $viewer, isTopParamLayout: me.options.isTopParamLayout });
                 $viewer.reportViewer("option", "paramArea", $paramarea);
             }
 
@@ -19399,6 +19676,28 @@ $(function () {
                 model: me.parameterModel
             });
             me._manageParamSetsDialog.manageParamSets("openDialog", parameterList);
+        },
+        _initManageSetCallback: function () {
+            var me = this;
+
+            if (me.parameterModel) {
+                me.parameterModel.on(events.parameterModelChanged(), function (e, data) {
+                    me._onModelChange.call(me, e, data);
+                });
+                me.parameterModel.on(events.parameterModelSetChanged(), function (e, data) {
+                    me._onModelChange.call(me, e, data);
+                });
+            }
+        },
+        _onModelChange: function () {
+            var me = this;
+            var rtb = forerunner.ssr.tools.rightToolbar;
+
+            if (me.parameterModel && me.parameterModel.parameterModel("canUserSaveCurrentSet")) {
+                me.options.$toolbar.toolbar("enableTools", [rtb.btnSavParam]);
+            } else {
+                me.options.$toolbar.toolbar("disableTools", [rtb.btnSavParam]);
+            }
         }
     };  // ssr.ReportViewerInitializer.prototype
 
@@ -19573,16 +19872,22 @@ $(function () {
 
             me.$viewer = $viewer;
 
+            // when app container width bigger than 1079px and use enable top param layout on big screen, then turn on the top param layout
+            var containerWidth = layout.$container.outerWidth();
+            var isTopParamLayout = !forerunner.device.isTouch() && (containerWidth > 1079) && forerunner.config.getCustomSettingsValue("TopParameterLayoutOnBigScreen", "on") === "on";
+
             var initializer = new forerunner.ssr.ReportViewerInitializer({
                 $toolbar: layout.$mainheadersection,
                 $toolPane: layout.$leftpanecontent,
                 $routeLink: layout.$linksection,
                 $viewer: $viewer,
                 $nav: layout.$bottomdiv,
-                $paramarea: layout.$rightpanecontent,
+                //enable top parameter layout if user enable the it in the custom mobilizer setting
+                $paramarea: isTopParamLayout ? layout.$topparamsection : layout.$rightpanecontent,
                 $lefttoolbar: layout.$leftheader,
                 $righttoolbar: layout.$rightheader,
                 $docMap: layout.$docmapsection,
+                isTopParamLayout: isTopParamLayout,
                 ReportViewerAPI: forerunner.config.forerunnerAPIBase() + "ReportViewer",
                 jsonPath: me.options.jsonPath,
                 navigateTo: me.options.navigateTo,
@@ -20552,7 +20857,7 @@ $(function () {
                         $reportExplorer: me.$reportExplorer
                     });
 
-                    me._setLeftRightPaneStyle();
+                    layout.setLeftRightPaneStyle();
 
                     $toolbar.reportExplorerToolbar("setFolderBtnActive", viewToBtnMap[view]);
                     if (view === "search") {
@@ -20622,41 +20927,7 @@ $(function () {
                     me._trigger(events.afterTransition, null, { type: "ReportManager", path: path, view: view });
                 });
             }, timeout);
-        },
-        _setLeftRightPaneStyle: function () {
-            var me = this;
-            var layout = me.DefaultAppTemplate;
-
-            var routeLinkSectionHeight = layout.$linksection.is(":visible") ? layout.$linksection.outerHeight() : 0;
-            var toolpaneheaderheight = layout.$mainheadersection.height(); //equal toolbar height
-            var offset = forerunner.device.isIEMobile9() ? 0 : routeLinkSectionHeight;
-
-            // window phone 7 get top property wrong
-            var topDivHeight = routeLinkSectionHeight + toolpaneheaderheight;
-
-            layout.$topdiv.css({ height: topDivHeight });
-            layout.$topdivspacer.css({ height: topDivHeight });
-
-            layout.$rightheader.css({ height: toolpaneheaderheight });
-            layout.$leftheader.css({ height: toolpaneheaderheight });
-
-            layout.$rightheaderspacer.css({ height: toolpaneheaderheight });
-            layout.$leftheaderspacer.css({ height: toolpaneheaderheight });
-
-            if (me.options.isFullScreen) {
-                // Full screen is position fixed so top style is needed. Otherwise the top will
-                // be set automatically
-                layout.$rightheader.css({ top: offset });
-                layout.$leftheader.css({ top: offset });
-
-                layout.$rightheaderspacer.css({ top: offset });
-                layout.$leftheaderspacer.css({ top: offset });
-
-                layout.$leftpanecontent.css({ top: (toolpaneheaderheight + offset) });
-                layout.$rightpanecontent.css({ top: (toolpaneheaderheight + offset) });
-            }
-        },
- 
+        }, 
         /**
          * Transition to ReportViewer view
          *
@@ -20711,7 +20982,7 @@ $(function () {
                         dbConfig: me.options.dbConfig
                     });
 
-                    me._setLeftRightPaneStyle();
+                    layout.setLeftRightPaneStyle();
 
                     var $reportViewer = layout.$mainviewport.reportViewerEZ("getReportViewer");
                     if ($reportViewer && path !== null) {
@@ -20761,7 +21032,7 @@ $(function () {
                         $appContainer: layout.$container
                     });
 
-                    me._setLeftRightPaneStyle();
+                    layout.setLeftRightPaneStyle();
                     layout.$mainsection.fadeIn("fast");
 
                     var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");

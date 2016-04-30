@@ -384,7 +384,7 @@ $(function () {
                         $reportExplorer: me.$reportExplorer
                     });
 
-                    me._setLeftRightPaneStyle();
+                    layout.setLeftRightPaneStyle();
 
                     $toolbar.reportExplorerToolbar("setFolderBtnActive", viewToBtnMap[view]);
                     if (view === "search") {
@@ -454,41 +454,7 @@ $(function () {
                     me._trigger(events.afterTransition, null, { type: "ReportManager", path: path, view: view });
                 });
             }, timeout);
-        },
-        _setLeftRightPaneStyle: function () {
-            var me = this;
-            var layout = me.DefaultAppTemplate;
-
-            var routeLinkSectionHeight = layout.$linksection.is(":visible") ? layout.$linksection.outerHeight() : 0;
-            var toolpaneheaderheight = layout.$mainheadersection.height(); //equal toolbar height
-            var offset = forerunner.device.isIEMobile9() ? 0 : routeLinkSectionHeight;
-
-            // window phone 7 get top property wrong
-            var topDivHeight = routeLinkSectionHeight + toolpaneheaderheight;
-
-            layout.$topdiv.css({ height: topDivHeight });
-            layout.$topdivspacer.css({ height: topDivHeight });
-
-            layout.$rightheader.css({ height: toolpaneheaderheight });
-            layout.$leftheader.css({ height: toolpaneheaderheight });
-
-            layout.$rightheaderspacer.css({ height: toolpaneheaderheight });
-            layout.$leftheaderspacer.css({ height: toolpaneheaderheight });
-
-            if (me.options.isFullScreen) {
-                // Full screen is position fixed so top style is needed. Otherwise the top will
-                // be set automatically
-                layout.$rightheader.css({ top: offset });
-                layout.$leftheader.css({ top: offset });
-
-                layout.$rightheaderspacer.css({ top: offset });
-                layout.$leftheaderspacer.css({ top: offset });
-
-                layout.$leftpanecontent.css({ top: (toolpaneheaderheight + offset) });
-                layout.$rightpanecontent.css({ top: (toolpaneheaderheight + offset) });
-            }
-        },
- 
+        }, 
         /**
          * Transition to ReportViewer view
          *
@@ -543,7 +509,7 @@ $(function () {
                         dbConfig: me.options.dbConfig
                     });
 
-                    me._setLeftRightPaneStyle();
+                    layout.setLeftRightPaneStyle();
 
                     var $reportViewer = layout.$mainviewport.reportViewerEZ("getReportViewer");
                     if ($reportViewer && path !== null) {
@@ -593,7 +559,7 @@ $(function () {
                         $appContainer: layout.$container
                     });
 
-                    me._setLeftRightPaneStyle();
+                    layout.setLeftRightPaneStyle();
                     layout.$mainsection.fadeIn("fast");
 
                     var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");

@@ -73,6 +73,13 @@ $(function () {
                 $mainheadersection.addClass("fr-layout-mainheadersection");
                 me.$mainheadersection = $mainheadersection;
                 $topdiv.append($mainheadersection);
+
+                //top parameter layout
+                var $topparamsection = new $("<div />");
+                $topparamsection.addClass("fr-layout-param-top");
+                me.$topparamsection = $topparamsection;
+                $topdiv.append($topparamsection );
+
                 var $topdivspacer = new $("<div />");
                 $topdivspacer.addClass("fr-layout-topdivspacer  fr-core-block");
                 me.$topdivspacer = $topdivspacer;
@@ -240,6 +247,7 @@ $(function () {
             $mainheadersection.on(events.toolbarParamAreaClick(), function (e, data) { me.showSlideoutPane(widgets.toolbar, false); });
             $mainheadersection.on(events.reportExplorerToolbarMenuClick(), function (e, data) { me.showSlideoutPane(widgets.reportExplorerToolbar, true); });
             $mainheadersection.on(events.dashboardToolbarMenuClick(), function (e, data) { me.showSlideoutPane(widgets.dashboardToolbar, true); });
+            
             $(".fr-layout-rightpanecontent", me.$container).on(events.reportParameterRender(), function (e, data) { me.showSlideoutPane(widgets.toolbar, false); });
             $(".fr-layout-leftheader", me.$container).on(events.leftToolbarMenuClick(), function (e, data) { me.hideSlideoutPane(true); });
 
@@ -273,6 +281,13 @@ $(function () {
                 // me.$container.css("overflow", "").unmask();
                 //me.scrollLock = false;
                 //me.restoreScroll();
+            });
+
+            //when the parameter done then reset the header spacer, used for top param layout
+            me.$container.on(events.reportParameterRender(), function (e, data) {
+                if (data.isTopParamLayout) {
+                    me.setLeftRightPaneStyle();
+                }
             });
 
             var isTouch = forerunner.device.isTouch();
@@ -870,6 +885,40 @@ $(function () {
                 }
             }
             return false;
+        },
+        setLeftRightPaneStyle: function () {
+            var me = this;            
+
+            var routeLinkSectionHeight = me.$linksection.is(":visible") ? me.$linksection.outerHeight() : 0;
+            var toolpaneheaderheight = me.$mainheadersection.height(); //equal toolbar height
+            var topParamHeight = me.$topparamsection.is(":visible") ? me.$topparamsection.outerHeight() : 0;
+
+            var offset = forerunner.device.isIEMobile9() ? 0 : routeLinkSectionHeight;
+
+            // window phone 7 get top property wrong
+            var topDivHeight = routeLinkSectionHeight + toolpaneheaderheight + topParamHeight;
+
+            me.$topdiv.css({ height: topDivHeight });
+            me.$topdivspacer.css({ height: topDivHeight });
+
+            me.$rightheader.css({ height: toolpaneheaderheight });
+            me.$leftheader.css({ height: toolpaneheaderheight });
+
+            me.$rightheaderspacer.css({ height: toolpaneheaderheight });
+            me.$leftheaderspacer.css({ height: toolpaneheaderheight });
+
+            if (me.options.isFullScreen) {
+                // Full screen is position fixed so top style is needed. Otherwise the top will
+                // be set automatically
+                me.$rightheader.css({ top: offset });
+                me.$leftheader.css({ top: offset });
+
+                me.$rightheaderspacer.css({ top: offset });
+                me.$leftheaderspacer.css({ top: offset });
+
+                me.$leftpanecontent.css({ top: (toolpaneheaderheight + offset) });
+                me.$rightpanecontent.css({ top: (toolpaneheaderheight + offset) });
+            }
         },
         setBackgroundLayout: function (e, data) {
             var me = this;

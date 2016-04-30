@@ -206,16 +206,20 @@ $(function () {
             }
 
             if (toolInfo.toolType === toolTypes.select) {
-                $tool.selectTool($.extend(me.options, { toolInfo: toolInfo, toolClass: "fr-toolbase-selectinner" }));
+                $tool.selectTool($.extend({}, me.options, { toolInfo: toolInfo, toolClass: "fr-toolbase-selectinner" }));
             }
 
             if (toolInfo.alwaysChange) {
                 $tool.alwaysChange({ handler: toolInfo.alwaysChange, toolBase: me });
             }
 
+            //for select widget the whole div container is hide
             if (toolInfo.visible === false) {
                 $tool.hide();
             }
+
+            //add an access entry to each toolbar item.
+            me.allTools[toolInfo.selectorClass].$domReference = $tool;
         },
         _createDropdown: function ($tool, toolInfo) {
             var me = this;
@@ -275,8 +279,10 @@ $(function () {
         * @param {String} selectorClass - tool's class name
         */
         showTool: function(selectorClass){
-            var me = this;
-            if (me.allTools[selectorClass]) {
+            var me = this,
+                toolInfo = me.allTools[selectorClass];
+
+            if (toolInfo) {
                 // NOTE: that you cannot know when hiding a tool if it should be made
                 // visible in the showTool function. So the strategy here is to remove
                 // the display style on the element and thereby revert the visibility
@@ -285,6 +291,10 @@ $(function () {
 
                 if (me._isButtonInConfig($toolEl)) {
                     $toolEl.css({ "display": "" });
+                }
+
+                if (toolInfo.toolType === toolTypes.select) {
+                    toolInfo.$domReference.selectTool("show");
                 }
             }
         },
@@ -757,6 +767,11 @@ $(function () {
                     $select.prop("selectedIndex", index);
                 }
             });
+        },
+        show: function () {
+            var me = this;
+
+            me.element.show();
         }
     });  // $widget
 

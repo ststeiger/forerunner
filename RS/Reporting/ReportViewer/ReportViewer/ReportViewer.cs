@@ -596,6 +596,12 @@ namespace Forerunner.SSRS.Viewer
             string historyID = null;
             string NewSession;
             ExecutionInfo execInfo = null;
+            ExecutionInfo3 execInfo3 = null;
+
+            bool IsSSRS2015 = false;
+            if (GetServerInfo().SSRSVerion.Contains("2015"))
+                IsSSRS2015 = true;
+
             // BUGBUG:: This can be made more optimized if we can use an existing session id.
             // Need to add the plumbing there. - added by baotong - 2013-10-14
 
@@ -618,43 +624,86 @@ namespace Forerunner.SSRS.Viewer
                     return streamReader.ReadToEnd();
                 }
 
-                rs.Credentials = GetCredentials();                
+                rs.Credentials = GetCredentials();
                 if (SessionID != "" && SessionID != null)
                 {
                     ExecutionHeader execHeader = new ExecutionHeader();
                     rs.ExecutionHeaderValue = execHeader;
                     rs.ExecutionHeaderValue.ExecutionID = SessionID;
-                    execInfo = rs.GetExecutionInfo();
+                    if (IsSSRS2015)
+                        execInfo3 = rs.GetExecutionInfo3();
+                    else
+                        execInfo = rs.GetExecutionInfo();
                 }
                 else
-                    execInfo = rs.LoadReport(ReportPath, historyID);
+                {
+                    if (IsSSRS2015)
+                        execInfo3 = rs.LoadReport3(ReportPath, historyID);
+                    else
+                        execInfo = rs.LoadReport(ReportPath, historyID);
+                    
+                }
 
-                ParameterValue[] clientParameters = paramList == null ? null : JsonUtility.GetParameterValue(paramList, execInfo.Parameters);
+                ParameterValue[] clientParameters = null;
+                if (paramList != null)
+                {
+                    if (IsSSRS2015)
+                        clientParameters = JsonUtility.GetParameterValue(paramList, execInfo3.Parameters);
+                    else                        
+                        clientParameters = JsonUtility.GetParameterValue(paramList, execInfo.Parameters);
+                }                
 
                 NewSession = rs.ExecutionHeaderValue.ExecutionID;
 
-                if (execInfo.CredentialsRequired)
+                if (IsSSRS2015)
                 {
-                    if (credentials != null)
+                    if (execInfo3.CredentialsRequired)
                     {
-                        execInfo = rs.SetExecutionCredentials(JsonUtility.GetDataSourceCredentialsFromString(credentials));
+                        if (credentials != null)
+                            execInfo3 = rs.SetExecutionCredentials3(JsonUtility.GetDataSourceCredentialsFromString(credentials));    
+                        else
+                            return JsonUtility.GetDataSourceCredentialJSON(execInfo3.DataSourcePrompts, ReportPath, NewSession);
                     }
-                    else
+
+                    if (paramList != null)
+                        execInfo = rs.SetExecutionParameters3(clientParameters, null);
+                }
+                else
+                {
+                    if (execInfo.CredentialsRequired)
                     {
-                        return JsonUtility.GetDataSourceCredentialJSON(execInfo.DataSourcePrompts, ReportPath, NewSession);
+                        if (credentials != null)
+                            execInfo = rs.SetExecutionCredentials(JsonUtility.GetDataSourceCredentialsFromString(credentials));
+                        else
+                            return JsonUtility.GetDataSourceCredentialJSON(execInfo.DataSourcePrompts, ReportPath, NewSession);
                     }
+
+                    if (paramList != null)
+                        execInfo = rs.SetExecutionParameters(clientParameters, null);
                 }
 
-                if (paramList != null)
+                if (IsSSRS2015)
                 {
-                    execInfo = rs.SetExecutionParameters(clientParameters, null);
+                    if (execInfo3.Parameters.Length != 0)
+                    {
+                        ReportParameter[] reportParameter = execInfo3.Parameters;
+
+                        ParametersGridLayoutDefinition pl = execInfo3.ParametersLayout;
+                        return JsonUtility.ConvertParamemterToJSON(reportParameter, NewSession, ReportServerURL, ReportPath, execInfo3.NumPages);
+                    }
+
+                        
+  
                 }
-
-
-                if (execInfo.Parameters.Length != 0)
+                else
                 {
-                    ReportParameter[] reportParameter = execInfo.Parameters;
-                    return JsonUtility.ConvertParamemterToJSON(reportParameter, NewSession, ReportServerURL, ReportPath, execInfo.NumPages);
+                    if (execInfo.Parameters.Length != 0)
+                    {
+                        ReportParameter[] reportParameter = execInfo.Parameters;
+
+                   
+                        return JsonUtility.ConvertParamemterToJSON(reportParameter, NewSession, ReportServerURL, ReportPath, execInfo.NumPages);
+                    }
                 }
                 return "{\"Type\":\"\"}";
             }

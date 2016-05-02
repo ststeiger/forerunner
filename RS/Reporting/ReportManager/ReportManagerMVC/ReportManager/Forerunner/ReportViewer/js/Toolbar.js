@@ -15,6 +15,7 @@ $(function () {
     var events = forerunner.ssr.constants.events;
     var tb = forerunner.ssr.tools.toolbar;
     var tg = forerunner.ssr.tools.groups;
+    var rtb = forerunner.ssr.tools.rightToolbar;
     var locData = forerunner.localize;
 
 
@@ -38,7 +39,8 @@ $(function () {
         options: {
             $reportViewer: null,
             dbConfig: {},
-            toolClass: "fr-toolbar"
+            toolClass: "fr-toolbar",
+            isTopParamLayout: null
         },
         _initCallbacks: function () {
             var me = this;
@@ -154,10 +156,15 @@ $(function () {
                 me._clearBtnStates();
             });
 
-           
+            me.options.$appContainer.on(events.reportParameterRender(), function (e, data) {
+                if (data && data.visibleParamCount > 0) {
+                    me.showTools([rtb.btnRTBManageSets, rtb.btnSelectSet, rtb.btnSavParam]);
+                }
+            });
         },
         _init: function () {
             var me = this;
+
             me._super(); //Invokes the method of the same name from the parent widget
 
             me.element.html("<div class='" + me.options.toolClass + " fr-core-toolbar fr-core-widget'/>");
@@ -168,7 +175,11 @@ $(function () {
                 me.hideTool(tb.btnEmailSubscription.selectorClass);
             }
 
-            me.addTools(1, false, [tb.btnParamarea]);
+            //only add param btn when not the top param layout
+            if (me.options.isTopParamLayout !== true) {
+                me.addTools(1, false, [tb.btnParamarea]);
+            }
+            
             me.enableTools([tb.btnMenu]);
             if (me.options.$reportViewer) {
                 me._initCallbacks();

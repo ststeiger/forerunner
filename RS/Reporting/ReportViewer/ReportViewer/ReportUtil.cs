@@ -403,7 +403,43 @@ namespace Forerunner
             }
         }
 
-        public static string ConvertParamemterToJSON(ReportParameter [] parametersList, string SessionID, string ReportServerURL, string reportPath, int NumPages)
+        public static string ConvertParamemterLayoutToJSON(ParametersGridLayoutDefinition Layout)
+        {
+            JSONTextWriter w = new JSONTextWriter();
+            
+            
+            w.WriteStartObject();
+            w.WriteMember("Rows");
+            w.WriteNumber(Layout.NumberOfRows);
+            w.WriteMember("Columns");
+            w.WriteNumber(Layout.NumberOfColumns);
+
+            w.WriteMember("Cells");
+            w.WriteStartArray();
+            foreach (ParametersGridCellDefinition Cell in Layout.CellDefinitions)
+            {
+                w.WriteStartObject();
+
+                w.WriteMember("ParameterName");
+                w.WriteString(Cell.ParameterName);
+
+                w.WriteMember("Row");
+                w.WriteNumber(Cell.RowIndex);
+
+                w.WriteMember("Column");
+                w.WriteNumber(Cell.ColumnsIndex);
+
+                w.WriteEndObject();
+            }
+            w.WriteEndArray();
+            
+            
+            w.WriteEndObject();
+
+            return w.ToString();
+        }
+
+        public static string ConvertParamemterToJSON(ReportParameter [] parametersList, string SessionID, string ReportServerURL, string reportPath, int NumPages,string Layout = null)
         {
             JSONTextWriter w = new JSONTextWriter();
             bool DefaultExist = false;
@@ -422,6 +458,13 @@ namespace Forerunner
             w.WriteString("Parameters");
             w.WriteMember("Count");
             w.WriteString(parametersList.Length.ToString());
+
+            if (Layout != null)
+            {
+                w.WriteMember("Layout");
+                w.WriteJSON(Layout);
+            }
+            
             w.WriteMember("ParametersList");
             w.WriteStartArray();
             foreach (ReportParameter parameter in parametersList)

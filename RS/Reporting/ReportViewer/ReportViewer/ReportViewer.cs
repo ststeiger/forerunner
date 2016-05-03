@@ -602,10 +602,6 @@ namespace Forerunner.SSRS.Viewer
             if (GetServerInfo().SSRSVerion.Contains("2015"))
                 IsSSRS2015 = true;
 
-            // BUGBUG:: This can be made more optimized if we can use an existing session id.
-            // Need to add the plumbing there. - added by baotong - 2013-10-14
-
-
             try
             {
                 // The Forerunner.ParamterJSONFile flag is used to debug Reort Parameter widget validation bugs.
@@ -688,20 +684,15 @@ namespace Forerunner.SSRS.Viewer
                     {
                         ReportParameter[] reportParameter = execInfo3.Parameters;
 
-                        ParametersGridLayoutDefinition pl = execInfo3.ParametersLayout;
-                        return JsonUtility.ConvertParamemterToJSON(reportParameter, NewSession, ReportServerURL, ReportPath, execInfo3.NumPages);
-                    }
-
-                        
-  
+                        string layout = JsonUtility.ConvertParamemterLayoutToJSON(execInfo3.ParametersLayout);
+                        return JsonUtility.ConvertParamemterToJSON(reportParameter, NewSession, ReportServerURL, ReportPath, execInfo3.NumPages,layout);
+                    }  
                 }
                 else
                 {
                     if (execInfo.Parameters.Length != 0)
                     {
                         ReportParameter[] reportParameter = execInfo.Parameters;
-
-                   
                         return JsonUtility.ConvertParamemterToJSON(reportParameter, NewSession, ReportServerURL, ReportPath, execInfo.NumPages);
                     }
                 }

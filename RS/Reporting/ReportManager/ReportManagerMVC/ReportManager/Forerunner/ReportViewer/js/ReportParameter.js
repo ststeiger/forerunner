@@ -56,6 +56,7 @@ $(function () {
 
         _init: function () {
             var me = this;
+
             me.element.html(null);
             me.enableCascadingTree = forerunner.config.getCustomSettingsValue("EnableCascadingTree", "on") === "on";
             me.isDebug = forerunner.config.getCustomSettingsValue("Debug", "off") === "on";
@@ -63,6 +64,10 @@ $(function () {
         },
         _render: function () {
             var me = this;
+
+            if (me._formInit) {
+                return;
+            }
 
             me.element.children().remove();
 
@@ -89,20 +94,24 @@ $(function () {
 
             me.element.css("display", "block");
             me.element.append($params);
-            if (me.isTopParamLayout) {
-                me.$toggle = new $("<div class='fr-param-toggle fr-hide'><a class='fr-param-close' href='javascript:;'><i class='fr-param-toggle-icon'></i></a></div>");
-                me.element.append(me.$toggle);
-            }
 
             me.$params = $params;
             me.$form = me.element.find(".fr-param-form");            
 
             me._formInit = true;
+            me._bindEvent();
         },
         _triggerGlobalEvent: function(eventName, data) {
             var me = this;
 
             me.options.$appContainer.trigger(eventName, data);
+        },
+        _bindEvent: function() {
+            var me = this;
+
+            me.options.$appContainer.on(events.paramAreaClickTop, function () {
+                me._topParamToggle();
+            });
         },
         /**
          * Get the number of visible parameters
@@ -240,7 +249,6 @@ $(function () {
 
             if (me._numVisibleParams > 0) {
                 me.$params.removeClass("fr-hide");
-                me.$toggle && me.$toggle.removeClass("fr-hide");
             }
 
             if (me.isTopParamLayout) {
@@ -291,21 +299,6 @@ $(function () {
             });
             $(".fr-param-cancel", me.$params).on("click", function () {
                 me._cancelForm();
-            });
-
-            me.$toggle && me.$toggle.on("click", function () {
-                if(me.$params.hasClass("fr-hide")) {
-                    me.$params.removeClass("fr-hide");
-                    me.$toggle.find("a").removeClass("fr-param-open").addClass("fr-param-close");
-                } else {
-                    me.$params.addClass("fr-hide");
-                    me.$toggle.find("a").removeClass("fr-param-close").addClass("fr-param-open");
-                }
-
-                me._triggerGlobalEvent(events.reportParameterRender(), {
-                    isTopParamLayout: me.isTopParamLayout,
-                    visibleParamCount: me._numVisibleParams
-                });
             });
 
             if (me.isDebug) {
@@ -452,6 +445,16 @@ $(function () {
                         $checkbox.trigger("click");
                     }
                 }
+            });
+        },
+        _topParamToggle: function () {
+            var me = this;
+
+            me.$params.hasClass("fr-hide") ? me.$params.removeClass("fr-hide") : me.$params.addClass("fr-hide");
+
+            me._triggerGlobalEvent(events.reportParameterRender(), {
+                isTopParamLayout: me.isTopParamLayout,
+                visibleParamCount: me._numVisibleParams
             });
         },
         /**
@@ -2769,7 +2772,6 @@ $(function () {
             var me = this;
 
             me.removeParameter();
-            me.$toggle && me.$toggle.off("click").remove();
             $(document).off("click", me._checkExternalClick);
             if (me.$datepickers.length) {
                 $(window).off("resize", me._paramWindowResize);

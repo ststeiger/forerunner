@@ -462,6 +462,8 @@ $(function () {
 
             /** @constant */
             paramAreaClick: "paramareaclick",
+            /** @constant */
+            paramAreaClickTop: "paramareaclicktop",
             /** widget + event, lowercase */
             toolbarParamAreaClick: function () { return (forerunner.ssr.constants.widgets.toolbar + this.paramAreaClick).toLowerCase(); },
             /** widget + event, lowercase */

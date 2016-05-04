@@ -175,10 +175,7 @@ $(function () {
                 me.hideTool(tb.btnEmailSubscription.selectorClass);
             }
 
-            //only add param btn when not the top param layout
-            if (me.options.isTopParamLayout !== true) {
-                me.addTools(1, false, [tb.btnParamarea]);
-            }
+            me.addTools(1, false, [tb.btnParamarea]);
             
             me.enableTools([tb.btnMenu]);
             if (me.options.$reportViewer) {

@@ -77,7 +77,11 @@ $(function () {
             tooltip: function () { return  locData.getLocData().toolbar.paramarea; },
             events: {
                 click: function (e) {
-                    e.data.me._trigger(events.paramAreaClick, null, {});
+                    if (e.data.me.options.isTopParamLayout) {
+                        e.data.me.options.$appContainer.trigger(events.paramAreaClickTop);
+                    } else {
+                        e.data.me._trigger(events.paramAreaClick, null, {});
+                    }                    
                 }
             }
         },

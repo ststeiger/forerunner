@@ -1757,6 +1757,151 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 .error { color: #E80C4D; }
 .fr-param-form{}
     .fr-param-form .fr-param-button{ width: 110px; height: 39px; margin-left: 10px; text-align: center; border: 1px solid #8c9eba; cursor: pointer; font-size: 13pt; color: #ffffff; background: #5e96cf; /* Old browsers */ background: -moz-linear-gradient(top, #5e96cf 0%, #4e70b0 100%); /* FF3.6+ */ background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#5e96cf), color-stop(100%,#4e70b0)); /* Chrome,Safari4+ */ background: -webkit-linear-gradient(top, #5e96cf 0%,#4e70b0 100%); /* Chrome10+,Safari5.1+ */ background: -o-linear-gradient(top, #5e96cf 0%,#4e70b0 100%); /* Opera 11.10+ */ background: -ms-linear-gradient(top, #5e96cf 0%,#4e70b0 100%); /* IE10+ */ background: linear-gradient(to bottom, #5e96cf 0%,#4e70b0 100%); /* W3C */ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5e96cf', endColorstr='#4e70b0',GradientType=0 ); /* IE6-9 */ }
+
+.fr-layout-param-top {
+	background:#354468;
+	width:100%;
+	color:#fff;
+	padding:0;
+    position:relative;
+}
+.fr-layout-param-top .fr-param-container {
+    padding: 6px 0;
+    overflow-y: visible;
+    position:static;
+    border-bottom:1px solid #1f98c7;
+}
+.fr-layout-param-top .fr-param-element-container {
+    position: static;
+}
+.fr-layout-param-top .fr-param-inner-wrapper {
+    position: relative;
+}
+.fr-layout-param-top .ui-datepicker-trigger {
+	margin-bottom:0;
+}
+.fr-layout-param-top .fr-clear {
+	clear:both;
+}
+.fr-layout-param-top .fr-param-element-border {
+	margin:0 160px 0 0;
+	display:block;
+	border-right:1px solid #fff;
+    overflow-x: auto;
+    padding-bottom: 4px;
+}
+.fr-layout-param-top .fr-param-opers {
+	width:140px;
+	float:right;
+	padding:4px 10px;
+}
+.fr-layout-param-top .fr-param-row {
+	margin:10px 0 0;
+}
+.fr-layout-param-top .fr-param-unit {
+	display:inline-block;
+    width:340px;
+    vertical-align: top;
+}
+.fr-layout-param-top .fr-param-unit.fr-param-tree-hidden {
+    display: none;
+}
+.fr-layout-param-top .fr-param-label {
+	width:100px;
+	text-align:right;
+    -ms-word-wrap: break-word;
+	word-wrap:break-word;
+    -ms-word-break: break-word;
+    word-break:break-word;
+    vertical-align:top;
+    font-size: 16px;
+}
+.fr-layout-param-top .fr-param-option-container,.fr-layout-param-top .fr-param-item-container {
+	display:inline-block;
+	vertical-align:top;
+	margin:0;
+}
+.fr-layout-param-top .fr-param-option-container .fr-param-more {
+    display: inline-block;
+    padding:4px 4px 2px 4px;
+    /*border: 1px solid #1f98c7;*/
+    border: none;
+    margin: 2px;
+    background-color: #eee;
+}
+.fr-layout-param-top .fr-param-option-container .fr-param-more:hover {
+    background-color: #bbb;
+    color: #1f98c7;
+}
+.fr-layout-param-top .fr-param-width {
+	width:160px;
+    max-width:160px;
+	margin:0;
+	margin-right:4px;
+    -ms-word-break: break-word;
+    word-break:break-word;
+    -ms-word-wrap: break-word;
+    word-wrap:break-word;
+}
+.fr-layout-param-top .fr-param-dropdown {
+    z-index: 10;
+}
+.fr-layout-param-top .fr-param-dropdown-input {
+	width:152px;
+}
+.fr-layout-param-top .fr-param-button {
+	width:100px;
+	height:32px;
+	margin-left:0;
+}
+.fr-layout-param-top .fr-param-cancel-container {
+	display:none;
+}
+/*more button menu*/
+.fr-layout-param-top .fr-param-more-menu {    
+    position: absolute;
+    list-style-type: none;
+    padding: 2px 4px 0;
+    border: 1px solid #1f98c7;
+    background: #fff;
+    color: #000;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    border-radius: 2px;
+    z-index: 10;
+}
+.fr-layout-param-top .fr-param-more-item {    
+    display: block;
+    min-width: 100px;
+    max-width: 150px;
+    text-align: right;
+    padding: 2px 2px 0;
+    margin-top: 2px;
+
+}
+.fr-layout-param-top .fr-param-option-div {
+    margin-left: 0;
+    text-align: left;
+}
+.fr-layout-param-top .fr-param-option-div .fr-param-option-checkbox {
+    float: right;
+}
+.fr-layout-param-top .fr-param-option-div .fr-param-option-label {
+    vertical-align: top;
+    margin-right: 4px;
+}
+
+.fr-layout-param-top .fr-param-tree,
+.fr-layout-param-top .ui-autocomplete {
+    border: 1px solid #1f98c7
+}
+.fr-layout-param-top .fr-param-tree-container {
+    position:static;
+}
+.fr-layout-param-top .fr-param-error-message {
+    margin-left: 0;
+    margin-top: 2px;
+}
 .fr-print-section { display: none; }
 
 .fr-print-form { }

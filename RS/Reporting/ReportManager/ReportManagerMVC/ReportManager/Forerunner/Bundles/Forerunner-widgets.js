@@ -5181,6 +5181,8 @@ $(function () {
                 "<div class='" + me.options.toolClass + " fr-core-widget'>" +
                     "<select class='" + me.options.toolInfo.selectorClass + "' readonly='true' ismultiple='false'></select>" +
                 "</div>");
+
+            me.options.toolInfo.containerClass && me.element.addClass(me.options.toolInfo.containerClass);
             me.element.append($selectContainer);
         },
         _create: function () {
@@ -19547,13 +19549,14 @@ $(function () {
 
             var manageSetList;
             if (me.options.isTopParamLayout) {
-                manageSetList = [rtb.btnRTBManageSets, rtb.btnSelectSet, rtb.btnSavParam];
+                $toolbar.addClass('fr-toolbar-top-param');
+                manageSetList = [rtb.btnSavParam, rtb.btnSelectSet, rtb.btnRTBManageSets];
                 //set the manage set elements to hide by default, after the parameters rendered, show them after that if visibla parameter exist.
                 $.each(manageSetList, function (i, v) {
                     v.visible = false;
                 });
 
-                $toolbar.toolbar("addTools", 14, true, manageSetList);
+                $toolbar.toolbar("addTools", 2, true, manageSetList);
                 me._initManageSetCallback();
             } else {
                 var $righttoolbar = me.options.$righttoolbar;

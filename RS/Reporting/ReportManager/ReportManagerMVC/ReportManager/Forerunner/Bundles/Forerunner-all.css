@@ -2183,7 +2183,11 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 .fr-toolbar-sparator-text { color: white; line-height: 36px; text-align: center; }
 .fr-button-favorite, .fr-button-recent, .fr-button-home, .fr-toolbar-paramarea-button { float: right; }
 
-
+.fr-toolbar-top-param .fr-rtb-save-param,
+.fr-toolbar-top-param .fr-rtb-manage_sets,
+.fr-toolbar-top-param .fr-rtb-select-set-box {
+    float: right;
+}
 .fr-toolpane { margin: 0px; padding: 0px; width: 100%; height: 100%; overflow-x: hidden; overflow-y: auto;-webkit-overflow-scrolling: touch; -ms-overflow-style: auto;}
   .fr-toolpane input[type=number]::-webkit-inner-spin-button,
   .fr-toolpane input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }

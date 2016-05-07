@@ -1268,6 +1268,7 @@ $(function () {
         /** @member */
         btnSelectSet: {
             toolType: toolTypes.select,
+            containerClass: 'fr-rtb-select-set-box',
             selectorClass: "fr-rtb-select-set",
             model: function () {
                 var me = this;
@@ -1277,8 +1278,10 @@ $(function () {
             modelChange: events.parameterModelChanged(),
             tooltip: function () { return  locData.getLocData().toolbar.selectSet; },
             alwaysChange: function (e) {
-                var $select = $(".fr-layout-rightheader select");
-                var id = $select.val();
+                //var $select = $(".fr-layout-rightheader select");
+                //var id = $select.val();
+                var target = e.srcElement ? e.srcElement : e.target;
+                var id = target.value;
                 var parameterModel = e.data.me.options.$ReportViewerInitializer.getParameterModel();
                 parameterModel.parameterModel("setCurrentSet", id);
             }

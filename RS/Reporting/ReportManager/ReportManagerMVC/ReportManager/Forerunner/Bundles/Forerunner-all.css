@@ -1765,8 +1765,11 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 	padding:0;
     position:relative;
 }
+.fr-layout-param-top .fr-core-widget {
+    font-family: "Segoe UI","Helvetica Neue", Helvetica, Arial, sans-serif;
+}
 .fr-layout-param-top .fr-param-container {
-    padding: 6px 0;
+    padding: 6px;
     overflow-y: visible;
     position:static;
     border-bottom:1px solid #1f98c7;
@@ -1784,37 +1787,36 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 	clear:both;
 }
 .fr-layout-param-top .fr-param-element-border {
-	margin:0 160px 0 0;
+	margin:0 150px 0 0;
 	display:block;
 	border-right:1px solid #fff;
     overflow-x: auto;
     padding-bottom: 4px;
 }
 .fr-layout-param-top .fr-param-opers {
-	width:140px;
+	width:130px;
 	float:right;
-	padding:4px 10px;
-}
-.fr-layout-param-top .fr-param-row {
-	margin:10px 0 0;
+	padding:4px;
 }
 .fr-layout-param-top .fr-param-unit {
 	display:inline-block;
-    width:340px;
+    width:320px;
+    margin: 8px 0;
     vertical-align: top;
 }
 .fr-layout-param-top .fr-param-unit.fr-param-tree-hidden {
     display: none;
 }
 .fr-layout-param-top .fr-param-label {
-	width:100px;
-	text-align:right;
+	width:84px;
+	text-align:left;
+    margin: 4px 2px;
     -ms-word-wrap: break-word;
 	word-wrap:break-word;
     -ms-word-break: break-word;
     word-break:break-word;
     vertical-align:top;
-    font-size: 16px;
+    font-size: 10pt;
 }
 .fr-layout-param-top .fr-param-option-container,.fr-layout-param-top .fr-param-item-container {
 	display:inline-block;
@@ -1826,7 +1828,7 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
     padding:4px 4px 2px 4px;
     /*border: 1px solid #1f98c7;*/
     border: none;
-    margin: 2px;
+    margin: 3px;
     background-color: #eee;
 }
 .fr-layout-param-top .fr-param-option-container .fr-param-more:hover {

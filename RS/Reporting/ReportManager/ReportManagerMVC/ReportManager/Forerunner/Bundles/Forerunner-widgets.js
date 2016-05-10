@@ -15787,6 +15787,7 @@ $(function () {
         _bindEvent: function() {
             var me = this;
 
+            me.options.$appContainer.off(events.paramAreaClickTop);
             me.options.$appContainer.on(events.paramAreaClickTop, function () {
                 me._topParamToggle();
             });
@@ -15883,7 +15884,7 @@ $(function () {
             if (!data.ParametersList || data.ParametersList.length === 0) {
                 return
             }
-
+            
             if (data.Debug) {
                 me._debug = data.Debug;
             }
@@ -15895,35 +15896,66 @@ $(function () {
             me._loadedForDefault = true;
             me._submittedParamsList = null;
             me._numVisibleParams = 0;
+            me.paramUnitWidth = 330;
 
             me._render();
             me._dataPreprocess(data.ParametersList, true);
 
+            me.layoutInfo = data.Layout ? me._generateLayoutInfo(data) : null;
+            // pre process first, and then check the sequence
+            var parameters = me.layoutInfo ? me._checkParameterShowSequence(data.ParametersList) : data.ParametersList;
+
             var $eleBorder = $(".fr-param-element-border", me.$params);
-            var rowCount = me._getParamRowCount($eleBorder);
+            var columnCount = me._getParamColumnCount(parameters.length);
             var metadata = paramMetadata && paramMetadata.ParametersList;
             var savedParamMap = me._getParamMap(savedParam);
-            var $rows = new $("<div class='fr-param-row'></div>"), $param;
 
-            //add the first row
+            var $rows = new $("<div class='fr-param-row'></div>"),                
+                $param;
+
+            //add the first row            
             $eleBorder.append($rows);
-            
-            $.each(data.ParametersList, function (index, param) {
-                var mergedParam = me._getMergedParam(param, savedParamMap);
-                if (mergedParam.Prompt !== "" && (mergedParam.PromptUserSpecified ? mergedParam.PromptUser : true)) {
-                    $param = me._writeParamControl(mergedParam, new $("<div class='fr-param-unit' />"), pageNum, metadata ? metadata[index] : null);
-                    $rows.append($param);
 
-                    if (!$param.hasClass("fr-param-tree-hidden")) {
-                        me._numVisibleParams += 1;
+            for (var index = 0, len = parameters.length, param; index < len; index++) {
+                param = parameters[index];
+
+                if (param) {
+                    var originIndex = param.originIndex || index;
+
+                    var mergedParam = me._getMergedParam(param, savedParamMap);
+
+                    // Prompt === "" mean hidden parameter
+                    if (mergedParam.Prompt !== "" && (mergedParam.PromptUserSpecified ? mergedParam.PromptUser : true)) {
+                        $param = me._writeParamControl(mergedParam, new $("<div class='fr-param-unit' />"), pageNum, metadata ? metadata[originIndex] : null);
+                        $rows.append($param);
+
+                        //for the cascading tree widget layout, since we integrated the child elements in the tree, so the next element move ahead
+                        if (!$param.hasClass("fr-param-tree-hidden")) {
+                            me._numVisibleParams += 1;
+                        }
                     }
-
-                    if (me._numVisibleParams % rowCount === 0) {
-                        $rows = new $("<div class='fr-param-row'></div>");
-                        $eleBorder.append($rows);
-                    }                   
+                } else {
+                    $rows.append(new $("<div class='fr-param-unit'></div>"));
+                    me._numVisibleParams += 1;
                 }
-            });
+
+                //if visible params count not change then that mean encounter a hidden parameter
+                if (me._numVisibleParams && me._numVisibleParams % columnCount === 0) {
+                    $rows.css({
+                        width: columnCount * me.paramUnitWidth + 'px'
+                    });
+
+                    $rows = new $("<div class='fr-param-row'></div>");                    
+                    $eleBorder.append($rows);
+                }
+
+                if (index === len - 1 && me._numVisibleParams < columnCount) {
+                    $rows.css({
+                        width: me._numVisibleParams * me.paramUnitWidth + 'px'
+                    })
+                }
+                
+            }
 
             if (me._numVisibleParams > 0) {
                 me.$params.removeClass("fr-hide");
@@ -16030,13 +16062,102 @@ $(function () {
                 me._writeParamDoneCallback = null;
             }
         },
-        _getParamRowCount: function ($paramBox) {
+        _generateLayoutInfo: function(paramsData) {
             var me = this,
-                outerWidth = me.element.width() - 160,
-                paramUnitWidth = 340;
+                cell,
+                layoutData = paramsData.Layout,
+                layoutInfo = {
+                    rows: layoutData.Rows,
+                    columns: layoutData.Columns,
+                    totalCount: layoutData.Rows * layoutData.Columns,
+                    cells: []
+                };
 
-            var calculateRow = Math.floor(outerWidth / paramUnitWidth);
-            return Math.min(calculateRow, 4);
+            if (!layoutInfo.totalCount) { return null; }
+
+            for (var i = 0, j; i < layoutInfo.rows; i++) {
+                layoutInfo.cells[i] = new Array(layoutInfo.columns);
+
+                for (j = 0; j < layoutInfo.columns; j++) {
+                    layoutInfo.cells[i][j] = '';
+                }
+            }
+
+            for (i = 0; i < layoutData.Cells.length; i++) {
+                cell = layoutData.Cells[i];
+
+                if (me._parameterDefinitions[cell.ParameterName].Prompt) {
+                    layoutInfo.cells[cell.Row][cell.Column] = cell.ParameterName;
+                }
+            }
+
+            // calculate each rows
+            var result;
+
+            for (i = 0; i < layoutInfo.rows; i++) {
+                result = false;
+                for (j = 0; j < layoutInfo.columns; j++) {
+                    result = result || layoutInfo.cells[i][j];
+                }
+                //remove entire emtry row
+                if (!result) {
+                    layoutInfo.cells.splice(i, 1);
+                    i--;
+                    layoutInfo.rows--;
+                }
+            }
+
+            // calculate each columns
+            for (i = 0; i < layoutInfo.columns; i++) {
+                result = false;
+                for (j = 0; j < layoutInfo.rows; j++) {
+                    result = result || layoutInfo.cells[j][i];
+                }
+
+                //remove entire empty column
+                if (!result) {
+                    for (j = 0; j < layoutInfo.rows; j++) {
+                        layoutInfo.cells[j].splice(i, 1);
+                    }
+                    i--;
+                    layoutInfo.columns--;
+                }
+            }
+
+            return layoutInfo;
+        },
+        _checkParameterShowSequence: function(Parameters) {
+            var me = this,
+                i,
+                layoutInfo = me.layoutInfo,
+                rows = [],
+                result = [];
+
+            for (i = 0; i < Parameters.length; i++) {
+                Parameters[i].originIndex = i;
+            }
+            
+            for (i = 0; i < layoutInfo.rows; i++) {
+                rows = rows.concat(layoutInfo.cells[i])
+            }
+
+            for (i = 0; i < rows.length; i++) {
+                result[i] = rows[i] ? me._parameterDefinitions[rows[i]] : null;
+            }
+
+            return result;
+        },
+        _getParamColumnCount: function (paramsCount) {
+            var me = this;
+
+            if (me.layoutInfo) {
+                return me.layoutInfo.columns;
+            }
+
+            var outerWidth = me.element.width() - 160;
+
+            var calculateColumn = Math.floor(outerWidth / me.paramUnitWidth);
+            return Math.min(calculateColumn, 4, paramsCount);
         },
         _getParamMap: function (savedParam) {
             var paramObj = {};
@@ -16246,7 +16367,7 @@ $(function () {
         },
         _writeParamControl: function (param, $parent, pageNum, paramMetadata) {
             var me = this;
-            var $label = new $("<div class='fr-param-label'>" + param.Prompt + "</div>");
+            var $label = me.isTopParamLayout ? new $("<span class='fr-param-label'>" + param.Prompt + "</span>") : new $("<div class='fr-param-label'>" + param.Prompt + "</div>");
             var bindingEnter = true;
             var predefinedValue = me._getPredefinedValue(param);
             //If the control have valid values, then generate a select control
@@ -18169,7 +18290,7 @@ $(function () {
             me.$params = null;
             me._submittedParamsList = null;
             me._parameterDefinitions = null;
-            me._dependencyList = null;
+            me._dependencyList = null;            
 
             $("." + paramContainerClass, me.element).remove();
         },
@@ -18450,6 +18571,7 @@ $(function () {
             var me = this;
 
             me.removeParameter();
+
             $(document).off("click", me._checkExternalClick);
             if (me.$datepickers.length) {
                 $(window).off("resize", me._paramWindowResize);

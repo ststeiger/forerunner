@@ -2832,7 +2832,7 @@ $(function () {
                 var value = decodeURIComponent(pair[1]).toLowerCase();
                 if (key === "fr:reportmanager")
                     options.isReportManager = !(value === "false");
-                else if (key === "fr:showBreadCrumb")
+                else if (key === "fr:showbreadcrumb")
                     options.showBreadCrumb = !(value === "false");
                 else if (key === "fr:reportmanagersettings")
                     options.useReportManagerSettings = !(value === "false");

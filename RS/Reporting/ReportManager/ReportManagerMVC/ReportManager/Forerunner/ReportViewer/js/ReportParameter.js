@@ -83,11 +83,11 @@ $(function () {
                             "</div>" +
                          "</div>";
 
-            var innerLayout = me.isTopParamLayout ? (opers + elementBorder) : (elementBorder + opers),
+            var innerLayout = elementBorder + opers,
                 bottomSpacer = me.isTopParamLayout ? "" : "<div style='height:65px;'/>";
 
             var innerDom = "<div class='" + paramContainerClass + " fr-core-widget fr-hide'>" +
-                    "<form class='fr-param-form' onsubmit='return false'>" + innerLayout + "</form>" + bottomSpacer +
+                    "<form class='fr-param-form' onsubmit='return false'><div class='fr-param-inner'>" + innerLayout + "</div></form>" + bottomSpacer +
                 "</div>";            
 
             var $params = new $(innerDom);
@@ -233,9 +233,9 @@ $(function () {
             var savedParamMap = me._getParamMap(savedParam);
 
             var $rows = new $("<div class='fr-param-row'></div>"),                
-                $param;
+                rowWidth = 0, $param;
 
-            //add the first row            
+            //add the first row
             $eleBorder.append($rows);
 
             for (var index = 0, len = parameters.length, param; index < len; index++) {
@@ -263,8 +263,9 @@ $(function () {
 
                 //if visible params count not change then that mean encounter a hidden parameter
                 if (me._numVisibleParams && me._numVisibleParams % columnCount === 0) {
+                    rowWidth = Math.max(rowWidth, columnCount * me.paramUnitWidth);
                     $rows.css({
-                        width: columnCount * me.paramUnitWidth + 'px'
+                        width:  rowWidth + 'px'
                     });
 
                     $rows = new $("<div class='fr-param-row'></div>");                    
@@ -272,20 +273,15 @@ $(function () {
                 }
 
                 if (index === len - 1 && me._numVisibleParams < columnCount) {
+                    rowWidth = Math.max(rowWidth, me._numVisibleParams * me.paramUnitWidth);
                     $rows.css({
-                        width: me._numVisibleParams * me.paramUnitWidth + 'px'
+                        width: rowWidth + 'px'
                     })
                 }
-                
             }
-
+            
             if (me._numVisibleParams > 0) {
                 me.$params.removeClass("fr-hide");
-            }
-
-            if (me.isTopParamLayout) {
-                // clear the float
-                $eleBorder.append(new $("<div class='fr-clear'></div>"));
             }
 
             //resize the textbox width when custom right pane width is big

@@ -16875,13 +16875,17 @@ $(function () {
             me._getParameterControlProperty(param, $control);
             switch (param.Type) {
                 case "DateTime":
+                    //New Jquery UI uses y for 2 part date and yy for 4
+                    var dateFormat = forerunner.ssr._internal.getDateFormat(me.options.$reportViewer.locData)
+                    dateFormat = dateFormat.replace("yy", "y");
+
                     $control.datepicker({
                         showOn: "button",
                         changeMonth: true,
                         changeYear: true,
                         showButtonPanel: true,
                         //gotoCurrent: true,
-                        dateFormat: forerunner.ssr._internal.getDateFormat(me.options.$reportViewer.locData),
+                        dateFormat: dateFormat,
                         onClose: function () {
                             var $input = $control;
                             $input.removeAttr("disabled").removeClass("datepicker-focus");

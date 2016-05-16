@@ -195,7 +195,7 @@
     font-family: "Segoe UI","Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 .fr-layout-param-top .fr-param-container {
-    padding: 6px;
+    padding: 6px 6px 2px;
     overflow-y: visible;
     position:static;
     border-bottom:1px solid #1f98c7;
@@ -212,17 +212,24 @@
 .fr-layout-param-top .fr-clear {
 	clear:both;
 }
-.fr-layout-param-top .fr-param-element-border {
-	margin:0 150px 0 0;
-	display:block;
-	border-right:1px solid #fff;
+.fr-layout-param-top .fr-param-form {
     overflow-x: auto;
-    padding-bottom: 4px;
+}
+.fr-layout-param-top .fr-param-inner {
+    display: table;
+    margin-bottom: 4px;
+}
+.fr-layout-param-top .fr-param-element-border {
+	display:table-cell;
+    margin: 0;
+    width: 100%;
+	border-right:1px solid #fff;
+    vertical-align: top;
 }
 .fr-layout-param-top .fr-param-opers {
+    display:table-cell;
 	width:130px;
-	float:right;
-	padding:4px;
+	padding:4px 20px;
 }
 .fr-layout-param-top .fr-param-unit {
 	display:inline-block;

@@ -357,10 +357,7 @@ $(function () {
                 me.options.$reportViewer.removeLoadingIndicator();
             }
 
-            me._triggerGlobalEvent(events.reportParameterRender(), {
-                isTopParamLayout: me.isTopParamLayout,
-                visibleParamCount: me._numVisibleParams
-            });
+          
 
             //jquery adds height, remove it
             var pc = me.element.find("." + paramContainerClass);
@@ -383,6 +380,11 @@ $(function () {
                 me._writeParamDoneCallback();
                 me._writeParamDoneCallback = null;
             }
+
+            me._triggerGlobalEvent(events.reportParameterRender(), {
+                isTopParamLayout: me.isTopParamLayout,
+                visibleParamCount: me._numVisibleParams
+            });
         },
         _generateLayoutInfo: function(paramsData) {
             var me = this,

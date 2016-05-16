@@ -662,7 +662,7 @@ namespace Forerunner.SSRS.Viewer
                     }
 
                     if (paramList != null)
-                        execInfo = rs.SetExecutionParameters3(clientParameters, null);
+                        execInfo3 = rs.SetExecutionParameters3(clientParameters, null);
                 }
                 else
                 {

@@ -793,7 +793,8 @@ $(function () {
             rsInstance: null,
             showSubscriptionUI: false,
             zoom: "100",
-            exportCallback: undefined
+            exportCallback: undefined,
+            $ReportViewerInitializer: null
         },
 
         // Constructor
@@ -1825,7 +1826,12 @@ $(function () {
                     me.numPages = action.reportPages[action.CurrentPage].reportObj.ReportContainer.NumPages ? action.reportPages[action.CurrentPage].reportObj.ReportContainer.NumPages : 0;
 
                     if (action.paramDefs) {
-                        me.options.paramArea.reportParameter({ $reportViewer: me, $appContainer: me.options.$appContainer, RDLExt: me.getRDLExt() });
+                        me.options.paramArea.reportParameter({
+                            $reportViewer: me,
+                            $appContainer: me.options.$appContainer,
+                            $ReportViewerInitializer: me.options.$ReportViewerInitializer,
+                            RDLExt: me.getRDLExt()
+                        });
                         me.options.paramArea.reportParameter("setParametersAndUpdate", action.paramDefs, action.savedParams, action.CurrentPage);
                         me.$numOfVisibleParameters = me.options.paramArea.reportParameter("getNumOfVisibleParameters");
                         if (me.$numOfVisibleParameters > 0) {
@@ -2813,6 +2819,7 @@ $(function () {
                     me.options.paramArea.reportParameter({
                         $reportViewer: this,
                         $appContainer: me.options.$appContainer,
+                        $ReportViewerInitializer: me.options.$ReportViewerInitializer,
                         RDLExt: me.getRDLExt()
                     });
                     
@@ -2917,6 +2924,7 @@ $(function () {
                     $paramArea.reportParameter({
                         $reportViewer: this,
                         $appContainer: me.options.$appContainer,
+                        $ReportViewerInitializer: me.options.$ReportViewerInitializer,
                         RDLExt: me.getRDLExt()
                     });
 
@@ -4115,10 +4123,11 @@ $(function () {
         },
         canUserSaveCurrentSet: function () {
             var me = this;
+           
             if (me.serverData && me.serverData.canEditAllUsersSet) {
                 return true;
             }
-
+            
             return !me.isCurrentSetAllUser();
         },
         addSet:function(parameterList,name,isDefault,isAllUser){
@@ -4263,7 +4272,7 @@ $(function () {
             };
             data.optionArray = me.getOptionArray(me.serverData.parameterSets);
             return data;
-        },
+        },        
         _triggerModelChange: function () {
             var me = this;
             me._trigger(events.modelChanged, null, me._modelChangeData());
@@ -4297,6 +4306,7 @@ $(function () {
         },
         _load: function (reportPath,done) {
             var me = this;
+
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/GetUserParameters";
             if (me._isLoaded(reportPath)) {
                 if (done) done();
@@ -4390,15 +4400,13 @@ $(function () {
                 }
             }
         },
-        getAllParameterSets: function (reportPath,done)
-        {
+        getAllParameterSets: function (reportPath, done) {
             var me = this;
 
             me._load(reportPath, function () {
-                done(me.serverData.parameterSets);
+                done(me._modelChangeData());
             });
         },
-        
         getCurrentParameterList: function (reportPath, isSkipSetDefault,done) {
             var me = this;
             var currentParameterList = null;
@@ -13417,7 +13425,7 @@ $(function () {
                         $TextObj.attr("readonly", "readonly");
 
                     //removes the font height if there is no text.
-                    if (val.trim() === "")
+                    if ($.trim(val) === "")
                         Style += "white-space:normal;";
 
                     Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
@@ -15675,6 +15683,166 @@ $(function () {
         },
     });  // $.widget
 });
+///#source 1 1 /Forerunner/ReportViewer/js/ParamSetMenu.js
+/**
+ * @file Contains the param set menu widget.
+ *
+ */
+
+// Assign or create the single globally scoped variable
+var forerunner = forerunner || {};
+
+// Forerunner SQL Server Reports
+forerunner.ssr = forerunner.ssr || {};
+
+$(function () {
+    var widgets = forerunner.ssr.constants.widgets;
+    var events = forerunner.ssr.constants.events;
+
+    /**
+     * Widget used to show manage set menu widget, a sub widget of report parameter
+     *
+     * @namespace $.forerunner.paramSetMenu
+     * @prop {Object} options - The options for parma set menu
+     * @prop {Object} options.$reportViewer - The report viewer widget     
+     * @prop {Object} options.$ReportViewerInitializer - The report viewer initializer instance     
+     * @prop {Object} options.$parameter - parameter instance
+     * @prop {Object} options.localData - localization data
+     * @example
+     *   $manageSetBtn.paramSetMenu({ 
+     *      $reportViewer: $appContainer,
+     *      $parameter: parameterContext,
+     *      localData: localData,
+     *   });   
+     */
+    $.widget(widgets.getFullname(widgets.paramSetMenu), {
+        options: { 
+            $appContainer: null,
+            $ReportViewerInitializer: null,
+            $reportViewer: null,
+            $parameter: null,
+            localData: null
+        },
+        _inited: false,
+        _create: function () {
+            var me = this;
+
+            me.parameterModel = me.options.$ReportViewerInitializer.getParameterModel();
+        },        
+        _init: function () {
+            var me = this;
+            
+            if (me._inited) {
+                return;
+            }
+
+            //me.$switcher = me.element.find(".fr-param-paramset");
+            me.localData = me.options.localData;
+            me.canEdit = false;
+
+            var tmpl = "<div class='fr-paramset-menu'>" +
+                    "<div class='fr-paramset-btn' title='" + me.localData.toolbar.saveParam + "'>" +
+                        "<div class='fr-icons24x24 fr-icons24x24-save-param fr-paramset-save'></div>" +
+                    "</div>" +
+                    "<div class='fr-paramset-btn' title='" + me.localData.toolbar.parameterSets + "'>" +
+                        "<div class='fr-icons24x24 fr-icons24x24-parameterSets fr-paramset-edit'></div>" +
+                    "</div>" +
+                    "<div class='fr-paramset-dp' title='" + me.localData.toolbar.selectSet + "'>" +
+                        "<select class='fr-rtb-select-set fr-paramset-select' readonly='true' ismultiple='false'></select>" +
+                    "</div>" +
+                "</div>";
+
+            me.$paramSet = new $(tmpl);
+            me.$save = me.$paramSet.find(".fr-paramset-save");
+            me.$edit = me.$paramSet.find(".fr-paramset-edit");
+            me.$select = me.$paramSet.find(".fr-paramset-select");
+            me.$btnBox = me.$paramSet.find(".fr-paramset-btn");
+
+            me.element.append(me.$paramSet);
+            me._loadParamList();
+            me._initEvent();
+            me._inited = true;
+        },
+        _loadParamList: function () {
+            var me = this,
+                reportPath = me.options.$reportViewer.getReportPath();
+
+            me.parameterModel.parameterModel("getAllParameterSets", reportPath, function (data) {
+                me.$select.html("");
+
+                $.each(data.optionArray, function (index, option) {
+                    var encodedOptionName = forerunner.helper.htmlEncode(option.name);
+                    var $option = $("<option value=" + option.id + ">" + encodedOptionName + "</option>");
+
+                    me.$select.append($option);
+
+                    option.id === data.selectedId && me.$select.prop("selectedIndex", index);
+                });
+            });
+        },
+        _onModelChange: function () {
+            var me = this;
+
+            if (me.parameterModel && me.parameterModel.parameterModel("canUserSaveCurrentSet")) {
+                me.canEdit = true;
+                me.$btnBox.removeClass("fr-paramset-disabled");
+            } else {
+                me.canEdit = false;
+                me.$btnBox.addClass("fr-paramset-disabled");
+            }
+        },
+        _initEvent: function () {
+            var me = this;
+
+            me.canEdit = me.parameterModel.parameterModel("canUserSaveCurrentSet");
+
+            me.parameterModel.on(events.parameterModelChanged(), function (e, data) {
+                me._onModelChange.call(me, e, data);
+            });
+
+            me.parameterModel.on(events.parameterModelSetChanged(), function (e, data) {
+                me._onModelChange.call(me, e, data);
+            });
+
+            // save current parameters
+            me.$save.on("click", function (e) {
+                if (me.canEdit !== true) return;
+
+                var parameterList = me.options.$parameter.getParamsList();
+
+                me.parameterModel.parameterModel("save",
+                    parameterList,
+                    function (data) {
+                        forerunner.dialog.showMessageBox(me.options.$appContainer, me.localData.messages.saveParamSuccess, me.localData.toolbar.saveParam);
+                    },
+                    function () {
+                        forerunner.dialog.showMessageBox(me.options.$appContainer, me.localData.messages.saveParamFailed, me.localData.toolbar.saveParam);
+                    }
+                )
+            });
+
+            // open the manage set dialog and edit
+            me.$edit.on("click", function () {
+                var parameterList = me.options.$parameter.getParamsList();
+                
+                me.options.$ReportViewerInitializer.showManageParamSetsDialog(parameterList);
+            });
+
+            // select an saved parameter 
+            me.$select.on("change", function () {
+                var id = this.value;
+                me.parameterModel.parameterModel("setCurrentSet", id);
+            });
+        },
+        destory: function () {
+            var me = this;
+
+            me.$paramSet.remove();
+        }
+    });  // $.widget
+
+});  // $(function ()
+
 ///#source 1 1 /Forerunner/ReportViewer/js/ReportParameter.js
 /**
  * @file Contains the parameter widget.
@@ -15716,6 +15884,7 @@ $(function () {
             pageNum: null,
             $appContainer: null,
             RDLExt: {},
+            $ReportViewerInitializer: null,
             isTopParamLayout: null
         },
 
@@ -15739,6 +15908,7 @@ $(function () {
             me.enableCascadingTree = forerunner.config.getCustomSettingsValue("EnableCascadingTree", "on") === "on";
             me.isDebug = forerunner.config.getCustomSettingsValue("Debug", "off") === "on";
             me.isTopParamLayout = me.options.isTopParamLayout;
+            me.localData = forerunner.localize.getLocData();
         },
         _render: function () {
             var me = this;
@@ -15752,14 +15922,15 @@ $(function () {
             //element border: include all the param elements
             var elementBorder = "<div class='fr-param-element-border'><input type='text' style='display:none'></div>";
             //operate buttons
-            var opers = "<div class='fr-param-opers'>" +
-                            "<div class='fr-param-submit-container'>" +
-                               "<input name='Parameter_ViewReport' type='button' class='fr-param-viewreport fr-param-button' value='" + me.options.$reportViewer.locData.getLocData().paramPane.viewReport + "'/>" +
-                            "</div>" +
-                            "<div class='fr-param-cancel-container'>" +
-                               "<span class='fr-param-cancel'>" + me.options.$reportViewer.locData.getLocData().paramPane.cancel + "</span>" +
-                            "</div>" +
-                         "</div>";
+            var submit = "<div class='fr-param-submit-container'>" +
+                               "<input name='Parameter_ViewReport' type='button' class='fr-param-viewreport fr-param-button' value='" + me.localData.paramPane.viewReport + "'/>" +
+                            "</div>";
+            var cancel = "<div class='fr-param-cancel-container'>" +
+                               "<span class='fr-param-cancel'>" + me.localData.paramPane.cancel + "</span>" +
+                            "</div>";
+            var paramset = "<div class='fr-param-paramset-container fr-param-not-close'></div>";
+
+            var opers = "<div class='fr-param-opers'><div class='fr-param-opers-box'>" +  (me.isTopParamLayout ? paramset + submit : submit + cancel) + "</div></div>";
 
             var innerLayout = elementBorder + opers,
                 bottomSpacer = me.isTopParamLayout ? "" : "<div style='height:65px;'/>";
@@ -15774,7 +15945,18 @@ $(function () {
             me.element.append($params);
 
             me.$params = $params;
-            me.$form = me.element.find(".fr-param-form");            
+            me.$form = me.element.find(".fr-param-form");
+
+            if(me.isTopParamLayout) {
+                me.$paramSetContainer = me.$params.find(".fr-param-paramset-container");
+                me.$paramSetContainer.paramSetMenu({
+                    $appContainer: me.options.$appContainer,
+                    $reportViewer: me.options.$reportViewer,
+                    $ReportViewerInitializer: me.options.$ReportViewerInitializer,
+                    $parameter: me,
+                    localData: me.localData
+                });
+            }
 
             me._formInit = true;
             me._bindEvent();
@@ -15897,6 +16079,7 @@ $(function () {
             me._submittedParamsList = null;
             me._numVisibleParams = 0;
             me.paramUnitWidth = 330;
+            me.opersWidth = 200;
 
             me._render();
             me._dataPreprocess(data.ParametersList, true);
@@ -15970,7 +16153,7 @@ $(function () {
             }
 
             if (me._reportDesignError !== null) {
-                me._reportDesignError += me.options.$reportViewer.locData.getLocData().messages.contactAdmin;
+                me._reportDesignError += me.localData.messages.contactAdmin;
             }
 
             me.$form.validate({
@@ -16150,7 +16333,7 @@ $(function () {
                 return me.layoutInfo.columns;
             }
 
-            var outerWidth = me.element.width() - 160;
+            var outerWidth = me.element.width() - me.opersWidth;
 
             var calculateColumn = Math.floor(outerWidth / me.paramUnitWidth);
             return Math.min(calculateColumn, 4, paramsCount);
@@ -16343,7 +16526,7 @@ $(function () {
                 $.each(me.$datepickers, function (index, datePicker) {
                     $(datePicker).datepicker("option", "buttonImage", forerunner.config.forerunnerFolder() + "reportviewer/Images/calendar.png")
                         .datepicker("option", "buttonImageOnly", true)
-                        .datepicker("option", "buttonText", me.options.$reportViewer.locData.getLocData().paramPane.datePicker);
+                        .datepicker("option", "buttonText", me.localData.paramPane.datePicker);
                 });
 
                 $(window).off("resize", me._paramWindowResize);
@@ -16536,7 +16719,7 @@ $(function () {
                 elementWidth = $element.outerWidth(true);
 
                 $dropdown.css({
-                    top: position.top + elementWidth,
+                    top: position.top + elementHeight,
                     left: position.left + elementWidth - dropdownWidth
                 });
             }
@@ -16626,7 +16809,7 @@ $(function () {
             //to avoid conflict (like auto complete) with other widget not use placeholder to do it
             //Anyway IE native support placeholder property from IE10 on, so not big deal
             //Also, we are letting the devs style it.  So we have to make userNative: false for everybody now.
-            $control.attr("required", "true").watermark(me.options.$reportViewer.locData.getLocData().paramPane.required, forerunner.config.getWatermarkConfig());
+            $control.attr("required", "true").watermark(me.localData.paramPane.required, forerunner.config.getWatermarkConfig());
             $control.addClass("fr-param-required");
             me._paramValidation[param.Name].push("required");
         },
@@ -16669,7 +16852,7 @@ $(function () {
                 });
 
                 var $label = new $("<Label class='fr-param-option-label' />");
-                $label.html(me.options.$reportViewer.locData.getLocData().paramPane.nullField);
+                $label.html(me.localData.paramPane.nullField);
                 $label.on("click", function () { $checkbox.trigger("click"); });
 
                 $container.append($checkbox).append($label);
@@ -16705,7 +16888,7 @@ $(function () {
             $checkbox.on("click", function () { me._triggerUseDefaultClick.call(me, param, $control, $checkbox, predefinedValue, $hidden); });
 
             var $label = new $("<label class='fr-param-option-label' />");
-            $label.text(me.options.$reportViewer.locData.getLocData().paramPane.useDefault);
+            $label.text(me.localData.paramPane.useDefault);
             $label.on("click", function () { $checkbox.trigger("click"); });
 
             $container.append($checkbox).append($label);
@@ -16804,7 +16987,7 @@ $(function () {
         },
         _writeRadioButton: function (param, dependenceDisable, pageNum, predefinedValue) {
             var me = this;
-            var paramPane = me.options.$reportViewer.locData.getLocData().paramPane;
+            var paramPane = me.localData.paramPane;
             var radioValues = [];
             radioValues[0] = { display: paramPane.isTrue, value: "True" };
             radioValues[1] = { display: paramPane.isFalse, value: "False" };
@@ -17113,7 +17296,7 @@ $(function () {
             }
 
             me._getParameterControlProperty(param, $control);
-            var defaultSelect = me.options.$reportViewer.locData.getLocData().paramPane.select;
+            var defaultSelect = me.localData.paramPane.select;
             var $defaultOption = new $("<option title='" + defaultSelect + "' value=''>&#60" + defaultSelect + "&#62</option>");
             $control.append($defaultOption);
 
@@ -18055,6 +18238,7 @@ $(function () {
             $(".fr-param-more-menu", me.$params).filter(":visible").each(function (index, param) {
                 $(param).addClass("fr-hide");
             });
+            
             //close auto complete dropdown, it will be appended to the body so use $appContainer here to do select
             $(".ui-autocomplete", me.options.$appContainer).hide();
             //close cascading tree and set value
@@ -18082,7 +18266,7 @@ $(function () {
             }
 
             var required = !!$(param).attr("required");
-            if (required && param.value === me.options.$reportViewer.locData.getLocData().paramPane.required) {
+            if (required && param.value === me.localData.paramPane.required) {
                 return false;
             }
 
@@ -18552,7 +18736,7 @@ $(function () {
         },
         _getDatePickerLoc: function () {
             var me = this;
-            return me.options.$reportViewer.locData.getLocData().datepicker;
+            return me.localData.datepicker;
         },
         //handle window resize action
         _paramWindowResize: function (event, data) {
@@ -19592,7 +19776,8 @@ $(function () {
                 rsInstance: me.options.rsInstance,
                 showSubscriptionUI: (me.options.isReportManager || me.options.useReportManagerSettings) && forerunner.config.getCustomSettingsValue("showSubscriptionUI", "on") === "on",
                 zoom: me.options.zoom,
-                showSubscriptionOnOpen: me.options.showSubscriptionOnOpen
+                showSubscriptionOnOpen: me.options.showSubscriptionOnOpen,
+                $ReportViewerInitializer: this
             });
                
 
@@ -19672,14 +19857,14 @@ $(function () {
             var manageSetList;
             if (me.options.isTopParamLayout) {
                 $toolbar.addClass('fr-toolbar-top-param');
-                manageSetList = [rtb.btnSavParam, rtb.btnSelectSet, rtb.btnRTBManageSets];
-                //set the manage set elements to hide by default, after the parameters rendered, show them after that if visibla parameter exist.
-                $.each(manageSetList, function (i, v) {
-                    v.visible = false;
-                });
+                //manageSetList = [rtb.btnSavParam, rtb.btnSelectSet, rtb.btnRTBManageSets];
+                ////set the manage set elements to hide by default, after the parameters rendered, show them after that if visibla parameter exist.
+                //$.each(manageSetList, function (i, v) {
+                //    v.visible = false;
+                //});
 
-                $toolbar.toolbar("addTools", 2, true, manageSetList);
-                me._initManageSetCallback();
+                //$toolbar.toolbar("addTools", 2, true, manageSetList);
+                //me._initManageSetCallback();
             } else {
                 var $righttoolbar = me.options.$righttoolbar;
                 if ($righttoolbar !== null) {
@@ -19800,28 +19985,6 @@ $(function () {
                 model: me.parameterModel
             });
             me._manageParamSetsDialog.manageParamSets("openDialog", parameterList);
-        },
-        _initManageSetCallback: function () {
-            var me = this;
-
-            if (me.parameterModel) {
-                me.parameterModel.on(events.parameterModelChanged(), function (e, data) {
-                    me._onModelChange.call(me, e, data);
-                });
-                me.parameterModel.on(events.parameterModelSetChanged(), function (e, data) {
-                    me._onModelChange.call(me, e, data);
-                });
-            }
-        },
-        _onModelChange: function () {
-            var me = this;
-            var rtb = forerunner.ssr.tools.rightToolbar;
-
-            if (me.parameterModel && me.parameterModel.parameterModel("canUserSaveCurrentSet")) {
-                me.options.$toolbar.toolbar("enableTools", [rtb.btnSavParam]);
-            } else {
-                me.options.$toolbar.toolbar("disableTools", [rtb.btnSavParam]);
-            }
         }
     };  // ssr.ReportViewerInitializer.prototype
 

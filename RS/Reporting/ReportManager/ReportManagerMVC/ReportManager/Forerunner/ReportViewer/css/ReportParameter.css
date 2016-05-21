@@ -228,8 +228,14 @@
 }
 .fr-layout-param-top .fr-param-opers {
     display:table-cell;
-	width:130px;
-	padding:4px 20px;
+	padding:0 20px 4px;
+}
+.fr-layout-param-top .fr-param-opers-box {
+    width: 180px;
+}
+.fr-layout-param-top .fr-param-paramset-container {
+    display: inline-block;
+    margin: 0 4px 4px -4px;
 }
 .fr-layout-param-top .fr-param-unit {
 	display:inline-block;
@@ -284,10 +290,17 @@
 .fr-layout-param-top .fr-param-dropdown-input {
 	width:152px;
 }
-.fr-layout-param-top .fr-param-button {
-	width:100px;
+.fr-layout-param-top .fr-param-viewreport,
+.fr-layout-param-top .fr-param-paramset {	
 	height:32px;
+    padding: 0;
 	margin-left:0;
+}
+.fr-layout-param-top .fr-param-viewreport {
+    width: 170px;
+}
+.fr-layout-param-top .fr-param-paramset {
+    width: 40px;
 }
 .fr-layout-param-top .fr-param-cancel-container {
 	display:none;

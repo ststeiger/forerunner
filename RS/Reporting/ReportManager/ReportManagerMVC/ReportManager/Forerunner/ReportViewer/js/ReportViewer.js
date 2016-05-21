@@ -73,7 +73,8 @@ $(function () {
             rsInstance: null,
             showSubscriptionUI: false,
             zoom: "100",
-            exportCallback: undefined
+            exportCallback: undefined,
+            $ReportViewerInitializer: null
         },
 
         // Constructor
@@ -1105,7 +1106,12 @@ $(function () {
                     me.numPages = action.reportPages[action.CurrentPage].reportObj.ReportContainer.NumPages ? action.reportPages[action.CurrentPage].reportObj.ReportContainer.NumPages : 0;
 
                     if (action.paramDefs) {
-                        me.options.paramArea.reportParameter({ $reportViewer: me, $appContainer: me.options.$appContainer, RDLExt: me.getRDLExt() });
+                        me.options.paramArea.reportParameter({
+                            $reportViewer: me,
+                            $appContainer: me.options.$appContainer,
+                            $ReportViewerInitializer: me.options.$ReportViewerInitializer,
+                            RDLExt: me.getRDLExt()
+                        });
                         me.options.paramArea.reportParameter("setParametersAndUpdate", action.paramDefs, action.savedParams, action.CurrentPage);
                         me.$numOfVisibleParameters = me.options.paramArea.reportParameter("getNumOfVisibleParameters");
                         if (me.$numOfVisibleParameters > 0) {
@@ -2093,6 +2099,7 @@ $(function () {
                     me.options.paramArea.reportParameter({
                         $reportViewer: this,
                         $appContainer: me.options.$appContainer,
+                        $ReportViewerInitializer: me.options.$ReportViewerInitializer,
                         RDLExt: me.getRDLExt()
                     });
                     
@@ -2197,6 +2204,7 @@ $(function () {
                     $paramArea.reportParameter({
                         $reportViewer: this,
                         $appContainer: me.options.$appContainer,
+                        $ReportViewerInitializer: me.options.$ReportViewerInitializer,
                         RDLExt: me.getRDLExt()
                     });
 

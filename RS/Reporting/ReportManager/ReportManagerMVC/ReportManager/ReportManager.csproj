@@ -384,6 +384,7 @@
     <Content Include="Forerunner\ReportViewer\css\DSCredential.css" />
     <Content Include="Forerunner\ReportViewer\css\ManageParamSets.css" />
     <Content Include="Forerunner\ReportViewer\css\ManageSubscription.css" />
+    <Content Include="Forerunner\ReportViewer\css\ParamSetMenu.css" />
     <Content Include="Forerunner\ReportViewer\css\ReportPrint.css" />
     <Content Include="Forerunner\Common\css\ToolBase.css" />
     <Content Include="Forerunner\ReportViewer\css\ReportDocumentMap.css" />
@@ -414,6 +415,7 @@
     <Content Include="Forerunner\ReportViewer\js\EmailSubscription.js" />
     <Content Include="Forerunner\ReportViewer\js\ManageParamSets.js" />
     <Content Include="Forerunner\ReportViewer\js\ManageSubscription.js" />
+    <Content Include="Forerunner\ReportViewer\js\ParamSetMenu.js" />
     <Content Include="Forerunner\ReportViewer\js\ReportPrint.js" />
     <Content Include="Forerunner\ReportViewer\js\ReportViewerEZ.js" />
     <Content Include="Forerunner\ReportViewer\js\ReportViewer.js" />

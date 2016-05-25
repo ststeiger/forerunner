@@ -160,7 +160,7 @@ $(function () {
 
             var manageSetList;
             if (me.options.isTopParamLayout) {
-                $toolbar.addClass('fr-toolbar-top-param');
+                $toolbar.addClass("fr-toolbar-top-param");
                 //manageSetList = [rtb.btnSavParam, rtb.btnSelectSet, rtb.btnRTBManageSets];
                 ////set the manage set elements to hide by default, after the parameters rendered, show them after that if visibla parameter exist.
                 //$.each(manageSetList, function (i, v) {

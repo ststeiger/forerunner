@@ -1268,7 +1268,7 @@ $(function () {
         /** @member */
         btnSelectSet: {
             toolType: toolTypes.select,
-            containerClass: 'fr-rtb-select-set-box',
+            containerClass: "fr-rtb-select-set-box",
             selectorClass: "fr-rtb-select-set",
             model: function () {
                 var me = this;

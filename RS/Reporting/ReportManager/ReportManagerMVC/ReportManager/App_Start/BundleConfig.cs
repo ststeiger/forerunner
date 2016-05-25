@@ -60,6 +60,7 @@ namespace ReportManager
                   "~/Forerunner/ReportViewer/css/ManageSubscription.css",
                   "~/Forerunner/ReportViewer/css/PageNav.css",
                   "~/Forerunner/ReportViewer/css/ReportDocumentMap.css",
+                  "~/Forerunner/ReportViewer/css/ParamSetMenu.css",
                   "~/Forerunner/ReportViewer/css/ReportParameter.css",
                   "~/Forerunner/ReportViewer/css/ReportPrint.css",
                   "~/Forerunner/ReportViewer/css/ReportRender.css",

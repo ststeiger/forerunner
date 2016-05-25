@@ -55,10 +55,11 @@ $(function () {
         },
         canUserSaveCurrentSet: function () {
             var me = this;
+           
             if (me.serverData && me.serverData.canEditAllUsersSet) {
                 return true;
             }
-
+            
             return !me.isCurrentSetAllUser();
         },
         addSet:function(parameterList,name,isDefault,isAllUser){
@@ -203,7 +204,7 @@ $(function () {
             };
             data.optionArray = me.getOptionArray(me.serverData.parameterSets);
             return data;
-        },
+        },        
         _triggerModelChange: function () {
             var me = this;
             me._trigger(events.modelChanged, null, me._modelChangeData());
@@ -237,6 +238,7 @@ $(function () {
         },
         _load: function (reportPath,done) {
             var me = this;
+
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/GetUserParameters";
             if (me._isLoaded(reportPath)) {
                 if (done) done();
@@ -330,15 +332,13 @@ $(function () {
                 }
             }
         },
-        getAllParameterSets: function (reportPath,done)
-        {
+        getAllParameterSets: function (reportPath, done) {
             var me = this;
 
             me._load(reportPath, function () {
-                done(me.serverData.parameterSets);
+                done(me._modelChangeData());
             });
         },
-        
         getCurrentParameterList: function (reportPath, isSkipSetDefault,done) {
             var me = this;
             var currentParameterList = null;

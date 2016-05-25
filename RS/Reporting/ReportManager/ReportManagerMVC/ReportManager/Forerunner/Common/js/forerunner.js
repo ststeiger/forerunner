@@ -390,7 +390,8 @@ $(function () {
             forerunnerMoveItem: "forerunnerMoveItem",
             /** @constant */
             favoriteModel: "favoriteModel",
-
+            /** @constant */
+            paramSetMenu: "paramSetMenu",
             /** @constant */
             namespace: "forerunner",
 

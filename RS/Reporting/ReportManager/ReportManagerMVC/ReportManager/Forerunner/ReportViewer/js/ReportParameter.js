@@ -38,6 +38,7 @@ $(function () {
             pageNum: null,
             $appContainer: null,
             RDLExt: {},
+            $ReportViewerInitializer: null,
             isTopParamLayout: null
         },
 
@@ -61,6 +62,7 @@ $(function () {
             me.enableCascadingTree = forerunner.config.getCustomSettingsValue("EnableCascadingTree", "on") === "on";
             me.isDebug = forerunner.config.getCustomSettingsValue("Debug", "off") === "on";
             me.isTopParamLayout = me.options.isTopParamLayout;
+            me.localData = forerunner.localize.getLocData();
         },
         _render: function () {
             var me = this;
@@ -74,14 +76,15 @@ $(function () {
             //element border: include all the param elements
             var elementBorder = "<div class='fr-param-element-border'><input type='text' style='display:none'></div>";
             //operate buttons
-            var opers = "<div class='fr-param-opers'>" +
-                            "<div class='fr-param-submit-container'>" +
-                               "<input name='Parameter_ViewReport' type='button' class='fr-param-viewreport fr-param-button' value='" + me.options.$reportViewer.locData.getLocData().paramPane.viewReport + "'/>" +
-                            "</div>" +
-                            "<div class='fr-param-cancel-container'>" +
-                               "<span class='fr-param-cancel'>" + me.options.$reportViewer.locData.getLocData().paramPane.cancel + "</span>" +
-                            "</div>" +
-                         "</div>";
+            var submit = "<div class='fr-param-submit-container'>" +
+                               "<input name='Parameter_ViewReport' type='button' class='fr-param-viewreport fr-param-button' value='" + me.localData.paramPane.viewReport + "'/>" +
+                            "</div>";
+            var cancel = "<div class='fr-param-cancel-container'>" +
+                               "<span class='fr-param-cancel'>" + me.localData.paramPane.cancel + "</span>" +
+                            "</div>";
+            var paramset = "<div class='fr-param-paramset-container fr-param-not-close'></div>";
+
+            var opers = "<div class='fr-param-opers'><div class='fr-param-opers-box'>" +  (me.isTopParamLayout ? paramset + submit : submit + cancel) + "</div></div>";
 
             var innerLayout = elementBorder + opers,
                 bottomSpacer = me.isTopParamLayout ? "" : "<div style='height:65px;'/>";
@@ -96,7 +99,18 @@ $(function () {
             me.element.append($params);
 
             me.$params = $params;
-            me.$form = me.element.find(".fr-param-form");            
+            me.$form = me.element.find(".fr-param-form");
+
+            if(me.isTopParamLayout) {
+                me.$paramSetContainer = me.$params.find(".fr-param-paramset-container");
+                me.$paramSetContainer.paramSetMenu({
+                    $appContainer: me.options.$appContainer,
+                    $reportViewer: me.options.$reportViewer,
+                    $ReportViewerInitializer: me.options.$ReportViewerInitializer,
+                    $parameter: me,
+                    localData: me.localData
+                });
+            }
 
             me._formInit = true;
             me._bindEvent();
@@ -219,6 +233,7 @@ $(function () {
             me._submittedParamsList = null;
             me._numVisibleParams = 0;
             me.paramUnitWidth = 330;
+            me.opersWidth = 200;
 
             me._render();
             me._dataPreprocess(data.ParametersList, true);
@@ -292,7 +307,7 @@ $(function () {
             }
 
             if (me._reportDesignError !== null) {
-                me._reportDesignError += me.options.$reportViewer.locData.getLocData().messages.contactAdmin;
+                me._reportDesignError += me.localData.messages.contactAdmin;
             }
 
             me.$form.validate({
@@ -474,7 +489,7 @@ $(function () {
                 return me.layoutInfo.columns;
             }
 
-            var outerWidth = me.element.width() - 160;
+            var outerWidth = me.element.width() - me.opersWidth;
 
             var calculateColumn = Math.floor(outerWidth / me.paramUnitWidth);
             return Math.min(calculateColumn, 4, paramsCount);
@@ -667,7 +682,7 @@ $(function () {
                 $.each(me.$datepickers, function (index, datePicker) {
                     $(datePicker).datepicker("option", "buttonImage", forerunner.config.forerunnerFolder() + "reportviewer/Images/calendar.png")
                         .datepicker("option", "buttonImageOnly", true)
-                        .datepicker("option", "buttonText", me.options.$reportViewer.locData.getLocData().paramPane.datePicker);
+                        .datepicker("option", "buttonText", me.localData.paramPane.datePicker);
                 });
 
                 $(window).off("resize", me._paramWindowResize);
@@ -860,7 +875,7 @@ $(function () {
                 elementWidth = $element.outerWidth(true);
 
                 $dropdown.css({
-                    top: position.top + elementWidth,
+                    top: position.top + elementHeight,
                     left: position.left + elementWidth - dropdownWidth
                 });
             }
@@ -950,7 +965,7 @@ $(function () {
             //to avoid conflict (like auto complete) with other widget not use placeholder to do it
             //Anyway IE native support placeholder property from IE10 on, so not big deal
             //Also, we are letting the devs style it.  So we have to make userNative: false for everybody now.
-            $control.attr("required", "true").watermark(me.options.$reportViewer.locData.getLocData().paramPane.required, forerunner.config.getWatermarkConfig());
+            $control.attr("required", "true").watermark(me.localData.paramPane.required, forerunner.config.getWatermarkConfig());
             $control.addClass("fr-param-required");
             me._paramValidation[param.Name].push("required");
         },
@@ -993,7 +1008,7 @@ $(function () {
                 });
 
                 var $label = new $("<Label class='fr-param-option-label' />");
-                $label.html(me.options.$reportViewer.locData.getLocData().paramPane.nullField);
+                $label.html(me.localData.paramPane.nullField);
                 $label.on("click", function () { $checkbox.trigger("click"); });
 
                 $container.append($checkbox).append($label);
@@ -1029,7 +1044,7 @@ $(function () {
             $checkbox.on("click", function () { me._triggerUseDefaultClick.call(me, param, $control, $checkbox, predefinedValue, $hidden); });
 
             var $label = new $("<label class='fr-param-option-label' />");
-            $label.text(me.options.$reportViewer.locData.getLocData().paramPane.useDefault);
+            $label.text(me.localData.paramPane.useDefault);
             $label.on("click", function () { $checkbox.trigger("click"); });
 
             $container.append($checkbox).append($label);
@@ -1128,7 +1143,7 @@ $(function () {
         },
         _writeRadioButton: function (param, dependenceDisable, pageNum, predefinedValue) {
             var me = this;
-            var paramPane = me.options.$reportViewer.locData.getLocData().paramPane;
+            var paramPane = me.localData.paramPane;
             var radioValues = [];
             radioValues[0] = { display: paramPane.isTrue, value: "True" };
             radioValues[1] = { display: paramPane.isFalse, value: "False" };
@@ -1437,7 +1452,7 @@ $(function () {
             }
 
             me._getParameterControlProperty(param, $control);
-            var defaultSelect = me.options.$reportViewer.locData.getLocData().paramPane.select;
+            var defaultSelect = me.localData.paramPane.select;
             var $defaultOption = new $("<option title='" + defaultSelect + "' value=''>&#60" + defaultSelect + "&#62</option>");
             $control.append($defaultOption);
 
@@ -2379,6 +2394,7 @@ $(function () {
             $(".fr-param-more-menu", me.$params).filter(":visible").each(function (index, param) {
                 $(param).addClass("fr-hide");
             });
+            
             //close auto complete dropdown, it will be appended to the body so use $appContainer here to do select
             $(".ui-autocomplete", me.options.$appContainer).hide();
             //close cascading tree and set value
@@ -2406,7 +2422,7 @@ $(function () {
             }
 
             var required = !!$(param).attr("required");
-            if (required && param.value === me.options.$reportViewer.locData.getLocData().paramPane.required) {
+            if (required && param.value === me.localData.paramPane.required) {
                 return false;
             }
 
@@ -2876,7 +2892,7 @@ $(function () {
         },
         _getDatePickerLoc: function () {
             var me = this;
-            return me.options.$reportViewer.locData.getLocData().datepicker;
+            return me.localData.datepicker;
         },
         //handle window resize action
         _paramWindowResize: function (event, data) {

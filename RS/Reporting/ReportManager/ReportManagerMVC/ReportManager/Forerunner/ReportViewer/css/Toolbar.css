@@ -13,3 +13,8 @@
 .fr-toolbar-sparator-text { color: white; line-height: 36px; text-align: center; }
 .fr-button-favorite, .fr-button-recent, .fr-button-home, .fr-toolbar-paramarea-button { float: right; }
 
+.fr-toolbar-top-param .fr-rtb-save-param,
+.fr-toolbar-top-param .fr-rtb-manage_sets,
+.fr-toolbar-top-param .fr-rtb-select-set-box {
+    float: right;
+}

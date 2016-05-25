@@ -740,6 +740,8 @@ $(function () {
                 "<div class='" + me.options.toolClass + " fr-core-widget'>" +
                     "<select class='" + me.options.toolInfo.selectorClass + "' readonly='true' ismultiple='false'></select>" +
                 "</div>");
+
+            me.options.toolInfo.containerClass && me.element.addClass(me.options.toolInfo.containerClass);
             me.element.append($selectContainer);
         },
         _create: function () {

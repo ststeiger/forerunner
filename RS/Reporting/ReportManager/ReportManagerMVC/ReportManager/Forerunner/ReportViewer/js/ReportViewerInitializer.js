@@ -80,7 +80,8 @@ $(function () {
                 rsInstance: me.options.rsInstance,
                 showSubscriptionUI: (me.options.isReportManager || me.options.useReportManagerSettings) && forerunner.config.getCustomSettingsValue("showSubscriptionUI", "on") === "on",
                 zoom: me.options.zoom,
-                showSubscriptionOnOpen: me.options.showSubscriptionOnOpen
+                showSubscriptionOnOpen: me.options.showSubscriptionOnOpen,
+                $ReportViewerInitializer: this
             });
                
 
@@ -159,14 +160,15 @@ $(function () {
 
             var manageSetList;
             if (me.options.isTopParamLayout) {
-                manageSetList = [rtb.btnRTBManageSets, rtb.btnSelectSet, rtb.btnSavParam];
-                //set the manage set elements to hide by default, after the parameters rendered, show them after that if visibla parameter exist.
-                $.each(manageSetList, function (i, v) {
-                    v.visible = false;
-                });
+                $toolbar.addClass("fr-toolbar-top-param");
+                //manageSetList = [rtb.btnSavParam, rtb.btnSelectSet, rtb.btnRTBManageSets];
+                ////set the manage set elements to hide by default, after the parameters rendered, show them after that if visibla parameter exist.
+                //$.each(manageSetList, function (i, v) {
+                //    v.visible = false;
+                //});
 
-                $toolbar.toolbar("addTools", 14, true, manageSetList);
-                me._initManageSetCallback();
+                //$toolbar.toolbar("addTools", 2, true, manageSetList);
+                //me._initManageSetCallback();
             } else {
                 var $righttoolbar = me.options.$righttoolbar;
                 if ($righttoolbar !== null) {
@@ -287,28 +289,6 @@ $(function () {
                 model: me.parameterModel
             });
             me._manageParamSetsDialog.manageParamSets("openDialog", parameterList);
-        },
-        _initManageSetCallback: function () {
-            var me = this;
-
-            if (me.parameterModel) {
-                me.parameterModel.on(events.parameterModelChanged(), function (e, data) {
-                    me._onModelChange.call(me, e, data);
-                });
-                me.parameterModel.on(events.parameterModelSetChanged(), function (e, data) {
-                    me._onModelChange.call(me, e, data);
-                });
-            }
-        },
-        _onModelChange: function () {
-            var me = this;
-            var rtb = forerunner.ssr.tools.rightToolbar;
-
-            if (me.parameterModel && me.parameterModel.parameterModel("canUserSaveCurrentSet")) {
-                me.options.$toolbar.toolbar("enableTools", [rtb.btnSavParam]);
-            } else {
-                me.options.$toolbar.toolbar("disableTools", [rtb.btnSavParam]);
-            }
         }
     };  // ssr.ReportViewerInitializer.prototype
 

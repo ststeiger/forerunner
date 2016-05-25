@@ -893,7 +893,7 @@ $(function () {
                         $TextObj.attr("readonly", "readonly");
 
                     //removes the font height if there is no text.
-                    if (val.trim() === "")
+                    if ($.trim(val) === "")
                         Style += "white-space:normal;";
 
                     Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);

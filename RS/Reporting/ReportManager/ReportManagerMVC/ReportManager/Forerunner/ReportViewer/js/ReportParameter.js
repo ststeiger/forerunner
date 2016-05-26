@@ -117,7 +117,6 @@ $(function () {
         },
         _triggerGlobalEvent: function(eventName, data) {
             var me = this;
-
             me.options.$appContainer.trigger(eventName, data);
         },
         _bindEvent: function() {

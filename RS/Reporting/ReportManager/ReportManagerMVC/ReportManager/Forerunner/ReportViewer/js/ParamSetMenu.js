@@ -132,7 +132,7 @@ $(function () {
                     function () {
                         forerunner.dialog.showMessageBox(me.options.$appContainer, me.localData.messages.saveParamFailed, me.localData.toolbar.saveParam);
                     }
-                )
+                );
             });
 
             // open the manage set dialog and edit

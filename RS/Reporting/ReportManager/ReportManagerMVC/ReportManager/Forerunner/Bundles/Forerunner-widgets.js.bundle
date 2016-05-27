@@ -33,7 +33,8 @@
     <file>/Forerunner/ReportViewer/js/ReportDocumentMap.js</file>
     <file>/Forerunner/ReportViewer/js/ReportPrint.js</file>
     <file>/Forerunner/ReportViewer/js/ManageParamSets.js</file>
-    <file>/Forerunner/ReportViewer/js/ReportViewerInitializer.js</file>
+  <file>/Forerunner/ReportViewer/js/ParamSetMenu.js</file>
+  <file>/Forerunner/ReportViewer/js/ReportViewerInitializer.js</file>
     <file>/Forerunner/ReportViewer/js/ReportViewerEZ.js</file>
     <file>/Forerunner/ReportViewer/js/DSCredential.js</file>
     <file>/Forerunner/ReportExplorer/js/ReportExplorerEZ.js</file>

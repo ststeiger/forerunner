@@ -25,6 +25,7 @@
   <file>/Forerunner/ReportExplorer/css/MoveItem.css</file>
   <file>/Forerunner/ReportViewer/css/ManageSubscription.css</file>
   <file>/Forerunner/ReportViewer/css/ManageParamSets.css</file>
+  <file>/Forerunner/ReportViewer/css/ParamSetMenu.css</file>
   <file>/Forerunner/ReportViewer/css/PageNav.css</file>
   <file>/Forerunner/ReportViewer/css/ReportDocumentMap.css</file>
   <file>/Forerunner/ReportViewer/css/ReportParameter.css</file>

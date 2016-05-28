@@ -102,6 +102,7 @@ $(function () {
 
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/SaveUserSettings?settings=" + stringified;
             if (me.options.rsInstance) url += "&instance=" + me.options.rsInstance;
+
             forerunner.ajax.ajax({
                 url: url,
                 dataType: "json",
@@ -112,7 +113,6 @@ $(function () {
                     console.log(data);
                 }
             });
-
         },
         /**
          * Get the user settings.

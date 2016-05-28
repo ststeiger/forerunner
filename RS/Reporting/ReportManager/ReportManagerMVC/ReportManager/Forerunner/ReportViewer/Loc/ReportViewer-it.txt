@@ -130,7 +130,11 @@
     "ViewStyleLarge":"Grande",
     "ViewStyleSmall":"Piccolo",
     "ViewStyleList":"Lista",
-    "ViewStyle":"Vista Style"
+    "ViewStyle":"Vista Style",
+    "ParamLayout":"Parameter Layout",
+    "ParamLayoutTop":"Top",
+    "ParamLayoutRight":"Right",
+    "ParamLayoutTopPrompt":"Width Requirement: 1024px or Higher"
   },
   "paramPane": {
     "nullField":"Zero",

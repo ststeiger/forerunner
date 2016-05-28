@@ -38,7 +38,6 @@ $(function () {
             pageNum: null,
             $appContainer: null,
             RDLExt: {},
-            $ReportViewerInitializer: null,
             isTopParamLayout: null
         },
 
@@ -57,75 +56,45 @@ $(function () {
 
         _init: function () {
             var me = this;
-
             me.element.html(null);
             me.enableCascadingTree = forerunner.config.getCustomSettingsValue("EnableCascadingTree", "on") === "on";
             me.isDebug = forerunner.config.getCustomSettingsValue("Debug", "off") === "on";
             me.isTopParamLayout = me.options.isTopParamLayout;
-            me.localData = forerunner.localize.getLocData();
         },
         _render: function () {
             var me = this;
 
-            if (me._formInit) {
-                return;
-            }
-
             me.element.children().remove();
 
-            //element border: include all the param elements
             var elementBorder = "<div class='fr-param-element-border'><input type='text' style='display:none'></div>";
-            //operate buttons
-            var submit = "<div class='fr-param-submit-container'>" +
-                               "<input name='Parameter_ViewReport' type='button' class='fr-param-viewreport fr-param-button' value='" + me.localData.paramPane.viewReport + "'/>" +
-                            "</div>";
-            var cancel = "<div class='fr-param-cancel-container'>" +
-                               "<span class='fr-param-cancel'>" + me.localData.paramPane.cancel + "</span>" +
-                            "</div>";
-            var paramset = "<div class='fr-param-paramset-container fr-param-not-close'></div>";
+            var opers = "<div class='fr-param-opers'>" +
+                            "<div class='fr-param-submit-container'>" +
+                               "<input name='Parameter_ViewReport' type='button' class='fr-param-viewreport fr-param-button' value='" + me.options.$reportViewer.locData.getLocData().paramPane.viewReport + "'/>" +
+                            "</div>" +
+                            "<div class='fr-param-cancel-container'>" +
+                               "<span class='fr-param-cancel'>" + me.options.$reportViewer.locData.getLocData().paramPane.cancel + "</span>" +
+                            "</div>" +
+                         "</div>";
 
-            var opers = "<div class='fr-param-opers'><div class='fr-param-opers-box'>" +  (me.isTopParamLayout ? paramset + submit : submit + cancel) + "</div></div>";
-
-            var innerLayout = elementBorder + opers,
-                bottomSpacer = me.isTopParamLayout ? "" : "<div style='height:65px;'/>";
-
-            var innerDom = "<div class='" + paramContainerClass + " fr-core-widget fr-hide'>" +
-                    "<form class='fr-param-form' onsubmit='return false'><div class='fr-param-inner'>" + innerLayout + "</div></form>" + bottomSpacer +
-                "</div>";            
-
-            var $params = new $(innerDom);
+            var $params = new $("<div class='" + paramContainerClass + " fr-core-widget fr-hide'>" +
+                    "<form class='fr-param-form' onsubmit='return false'>" +
+                        (me.isTopParamLayout ? (opers + elementBorder) : (elementBorder + opers)) +
+                    "</form>" +
+                    (me.isTopParamLayout ? "" : "<div style='height:65px;'/>") +
+                "</div>");
 
             me.element.css("display", "block");
-            me.element.append($params);
+            me.element.html($params);
 
             me.$params = $params;
             me.$form = me.element.find(".fr-param-form");
 
-            if(me.isTopParamLayout) {
-                me.$paramSetContainer = me.$params.find(".fr-param-paramset-container");
-                me.$paramSetContainer.paramSetMenu({
-                    $appContainer: me.options.$appContainer,
-                    $reportViewer: me.options.$reportViewer,
-                    $ReportViewerInitializer: me.options.$ReportViewerInitializer,
-                    $parameter: me,
-                    localData: me.localData
-                });
-            }
-
             me._formInit = true;
-            me._bindEvent();
         },
         _triggerGlobalEvent: function(eventName, data) {
             var me = this;
-            me.options.$appContainer.trigger(eventName, data);
-        },
-        _bindEvent: function() {
-            var me = this;
 
-            me.options.$appContainer.off(events.paramAreaClickTop);
-            me.options.$appContainer.on(events.paramAreaClickTop, function () {
-                me._topParamToggle();
-            });
+            me.options.$appContainer.trigger(eventName, data);
         },
         /**
          * Get the number of visible parameters
@@ -215,11 +184,11 @@ $(function () {
          */
         writeParameterPanel: function (data, pageNum, submitForm, renderParamArea, savedParam, paramMetadata) {
             var me = this;
-            
+
             if (!data.ParametersList || data.ParametersList.length === 0) {
-                return;
+                return
             }
-            
+
             if (data.Debug) {
                 me._debug = data.Debug;
             }
@@ -231,71 +200,41 @@ $(function () {
             me._loadedForDefault = true;
             me._submittedParamsList = null;
             me._numVisibleParams = 0;
-            me.paramUnitWidth = 330;
-            me.opersWidth = 200;
 
             me._render();
             me._dataPreprocess(data.ParametersList, true);
 
-            me.layoutInfo = data.Layout ? me._generateLayoutInfo(data) : null;
-            // pre process first, and then check the sequence
-            var parameters = me.layoutInfo ? me._checkParameterShowSequence(data.ParametersList) : data.ParametersList;
-
             var $eleBorder = $(".fr-param-element-border", me.$params);
-            var columnCount = me._getParamColumnCount(parameters.length);
+            var rowCount = me._getParamRowCount($eleBorder);
             var metadata = paramMetadata && paramMetadata.ParametersList;
             var savedParamMap = me._getParamMap(savedParam);
-
-            var $rows = new $("<div class='fr-param-row'></div>"),                
-                rowWidth = 0, $param;
+            var $rows = new $("<div class='fr-param-row'></div>"), $param;
 
             //add the first row
             $eleBorder.append($rows);
-
-            for (var index = 0, len = parameters.length, param; index < len; index++) {
-                param = parameters[index];
-
-                if (param) {
-                    var originIndex = param.originIndex || index;
-
-                    var mergedParam = me._getMergedParam(param, savedParamMap);
-
-                    // Prompt === "" mean hidden parameter
-                    if (mergedParam.Prompt !== "" && (mergedParam.PromptUserSpecified ? mergedParam.PromptUser : true)) {
-                        $param = me._writeParamControl(mergedParam, new $("<div class='fr-param-unit' />"), pageNum, metadata ? metadata[originIndex] : null);
-                        $rows.append($param);
-
-                        //for the cascading tree widget layout, since we integrated the child elements in the tree, so the next element move ahead
-                        if (!$param.hasClass("fr-param-tree-hidden")) {
-                            me._numVisibleParams += 1;
-                        }
-                    }
-                } else {
-                    $rows.append(new $("<div class='fr-param-unit'></div>"));
-                    me._numVisibleParams += 1;
-                }
-
-                //if visible params count not change then that mean encounter a hidden parameter
-                if (me._numVisibleParams && me._numVisibleParams % columnCount === 0) {
-                    rowWidth = Math.max(rowWidth, columnCount * me.paramUnitWidth);
-                    $rows.css({
-                        width:  rowWidth + "px"
-                    });
-
-                    $rows = new $("<div class='fr-param-row'></div>");                    
-                    $eleBorder.append($rows);
-                }
-
-                if (index === len - 1 && me._numVisibleParams < columnCount) {
-                    rowWidth = Math.max(rowWidth, me._numVisibleParams * me.paramUnitWidth);
-                    $rows.css({
-                        width: rowWidth + "px"
-                    });
-                }
-            }
             
+            $.each(data.ParametersList, function (index, param) {
+                var mergedParam = me._getMergedParam(param, savedParamMap);
+                if (mergedParam.Prompt !== "" && (mergedParam.PromptUserSpecified ? mergedParam.PromptUser : true)) {
+                    me._numVisibleParams += 1;
+
+                    $param = me._writeParamControl(mergedParam, new $("<div class='fr-param-unit' />"), pageNum, metadata ? metadata[index] : null);
+                    $rows.append($param);
+
+                    if (me._numVisibleParams % rowCount === 0) {
+                        $rows = new $("<div class='fr-param-row'></div>");
+                        $eleBorder.append($rows);
+                    }                   
+                }
+            });
+
             if (me._numVisibleParams > 0) {
                 me.$params.removeClass("fr-hide");
+            }
+
+            if (me.isTopParamLayout) {
+                // clear the float
+                $eleBorder.append(new $("<div class='fr-clear'></div>"));
             }
 
             //resize the textbox width when custom right pane width is big
@@ -306,9 +245,9 @@ $(function () {
             }
 
             if (me._reportDesignError !== null) {
-                me._reportDesignError += me.localData.messages.contactAdmin;
+                me._reportDesignError += me.options.$reportViewer.locData.getLocData().messages.contactAdmin;
             }
-
+            debugger
             me.$form.validate({
                 ignoreTitle: true,
                 errorPlacement: function (error, element) {
@@ -316,7 +255,7 @@ $(function () {
                         error.appendTo(element.parent("div").nextAll(".fr-param-error-message"));
                     else {
                         if (element.attr("ismultiple") === "true" || element.hasClass("ui-autocomplete-input") || element.hasClass("fr-param-tree-input")) {
-                            error.appendTo(element.closest(".fr-param-element-container").siblings(".fr-param-error-message"));
+                            error.appendTo(element.parent("div").siblings(".fr-param-error-message"));
                         }
                         else
                             error.appendTo(element.siblings(".fr-param-error-message"));
@@ -367,7 +306,7 @@ $(function () {
                 me.options.$reportViewer.removeLoadingIndicator();
             }
 
-          
+            me._triggerGlobalEvent(events.reportParameterRender(), { isTopParamLayout: me.isTopParamLayout });
 
             //jquery adds height, remove it
             var pc = me.element.find("." + paramContainerClass);
@@ -390,108 +329,14 @@ $(function () {
                 me._writeParamDoneCallback();
                 me._writeParamDoneCallback = null;
             }
-
-            me._triggerGlobalEvent(events.reportParameterRender(), {
-                isTopParamLayout: me.isTopParamLayout,
-                visibleParamCount: me._numVisibleParams
-            });
         },
-        _generateLayoutInfo: function(paramsData) {
+        _getParamRowCount: function ($paramBox) {
             var me = this,
-                cell,
-                layoutData = paramsData.Layout,
-                layoutInfo = {
-                    rows: layoutData.Rows,
-                    columns: layoutData.Columns,
-                    totalCount: layoutData.Rows * layoutData.Columns,
-                    cells: []
-                };
+                outerWidth = me.element.width() - 160,
+                paramUnitWidth = 340;
 
-            if (!layoutInfo.totalCount) { return null; }
-
-            for (var i = 0, j; i < layoutInfo.rows; i++) {
-                layoutInfo.cells[i] = new Array(layoutInfo.columns);
-
-                for (j = 0; j < layoutInfo.columns; j++) {
-                    layoutInfo.cells[i][j] = "";
-                }
-            }
-
-            for (i = 0; i < layoutData.Cells.length; i++) {
-                cell = layoutData.Cells[i];
-
-                if (me._parameterDefinitions[cell.ParameterName].Prompt) {
-                    layoutInfo.cells[cell.Row][cell.Column] = cell.ParameterName;
-                }
-            }
-
-            // calculate each rows
-            var result;
-
-            for (i = 0; i < layoutInfo.rows; i++) {
-                result = false;
-                for (j = 0; j < layoutInfo.columns; j++) {
-                    result = result || layoutInfo.cells[i][j];
-                }
-                //remove entire emtry row
-                if (!result) {
-                    layoutInfo.cells.splice(i, 1);
-                    i--;
-                    layoutInfo.rows--;
-                }
-            }
-
-            // calculate each columns
-            for (i = 0; i < layoutInfo.columns; i++) {
-                result = false;
-                for (j = 0; j < layoutInfo.rows; j++) {
-                    result = result || layoutInfo.cells[j][i];
-                }
-
-                //remove entire empty column
-                if (!result) {
-                    for (j = 0; j < layoutInfo.rows; j++) {
-                        layoutInfo.cells[j].splice(i, 1);
-                    }
-                    i--;
-                    layoutInfo.columns--;
-                }
-            }
-
-            return layoutInfo;
-        },
-        _checkParameterShowSequence: function(Parameters) {
-            var me = this,
-                i,
-                layoutInfo = me.layoutInfo,
-                rows = [],
-                result = [];
-
-            for (i = 0; i < Parameters.length; i++) {
-                Parameters[i].originIndex = i;
-            }
-            
-            for (i = 0; i < layoutInfo.rows; i++) {
-                rows = rows.concat(layoutInfo.cells[i]);
-            }
-
-            for (i = 0; i < rows.length; i++) {
-                result[i] = rows[i] ? me._parameterDefinitions[rows[i]] : null;
-            }
-
-            return result;
-        },
-        _getParamColumnCount: function (paramsCount) {
-            var me = this;
-
-            if (me.layoutInfo) {
-                return me.layoutInfo.columns;
-            }
-
-            var outerWidth = me.element.width() - me.opersWidth;
-
-            var calculateColumn = Math.floor(outerWidth / me.paramUnitWidth);
-            return Math.min(calculateColumn, 4, paramsCount);
+            var calculateRow = Math.floor(outerWidth / paramUnitWidth);
+            return Math.min(calculateRow, 4);
         },
         _getParamMap: function (savedParam) {
             var paramObj = {};
@@ -578,16 +423,6 @@ $(function () {
                         $checkbox.trigger("click");
                     }
                 }
-            });
-        },
-        _topParamToggle: function () {
-            var me = this;
-
-            me.$params.hasClass("fr-hide") ? me.$params.removeClass("fr-hide") : me.$params.addClass("fr-hide");
-
-            me._triggerGlobalEvent(events.reportParameterRender(), {
-                isTopParamLayout: me.isTopParamLayout,
-                visibleParamCount: me._numVisibleParams
             });
         },
         /**
@@ -681,7 +516,7 @@ $(function () {
                 $.each(me.$datepickers, function (index, datePicker) {
                     $(datePicker).datepicker("option", "buttonImage", forerunner.config.forerunnerFolder() + "reportviewer/Images/calendar.png")
                         .datepicker("option", "buttonImageOnly", true)
-                        .datepicker("option", "buttonText", me.localData.paramPane.datePicker);
+                        .datepicker("option", "buttonText", me.options.$reportViewer.locData.getLocData().paramPane.datePicker);
                 });
 
                 $(window).off("resize", me._paramWindowResize);
@@ -701,7 +536,7 @@ $(function () {
         },
         _writeParamControl: function (param, $parent, pageNum, paramMetadata) {
             var me = this;
-            var $label = me.isTopParamLayout ? new $("<span class='fr-param-label'>" + param.Prompt + "</span>") : new $("<div class='fr-param-label'>" + param.Prompt + "</div>");
+            var $label = new $("<div class='fr-param-label'>" + param.Prompt + "</div>");
             var bindingEnter = true;
             var predefinedValue = me._getPredefinedValue(param);
             //If the control have valid values, then generate a select control
@@ -787,7 +622,7 @@ $(function () {
 
                 //Don't show nullable if has valid value list, null would have to be in the list
                 if (param.ValidValues === "") {
-                    $nullElement = me._addNullableCheckBox(param, $element, predefinedValue);
+                    $nullElement = me._addNullableCheckBox(param, $element, predefinedValue)
                     $nullElement && options.push($nullElement);
                     //Hook up null check box to dependency
                     me._checkDependencies(param);
@@ -800,7 +635,7 @@ $(function () {
 
                 if (options.length) {
                     if (me.isTopParamLayout) {
-                        $moreBtn = new $("<button class='fr-param-more'>...</button>");
+                        $moreBtn = new $('<button class="fr-param-more">...</button>"');
                         $optionsDiv.append($moreBtn);
                         $optionsDiv.append(me._setMoreOptionMenu($moreBtn, options));
                         $optionsDiv.addClass("fr-param-not-close");
@@ -840,15 +675,10 @@ $(function () {
                 event.stopImmediatePropagation();
                 event.preventDefault();
                 var $obj = $(this);
-                
-                me._setDropdownPosition($obj, $menu, "right");
 
-                if ($menu.hasClass("fr-hide")) {
-                    me._closeAllDropdown();
-                    $menu.removeClass("fr-hide");
-                } else {
-                    $menu.addClass("fr-hide");
-                }
+                me._closeAllDropdown();
+                me._setDropdownPosition($obj, $menu, "right")
+                $menu.hasClass("fr-hide") ? $menu.removeClass("fr-hide") : $menu.addClass("fr-hide");
             });
 
             return $menu;
@@ -874,7 +704,7 @@ $(function () {
                 elementWidth = $element.outerWidth(true);
 
                 $dropdown.css({
-                    top: position.top + elementHeight,
+                    top: position.top + elementWidth,
                     left: position.left + elementWidth - dropdownWidth
                 });
             }
@@ -964,7 +794,7 @@ $(function () {
             //to avoid conflict (like auto complete) with other widget not use placeholder to do it
             //Anyway IE native support placeholder property from IE10 on, so not big deal
             //Also, we are letting the devs style it.  So we have to make userNative: false for everybody now.
-            $control.attr("required", "true").watermark(me.localData.paramPane.required, forerunner.config.getWatermarkConfig());
+            $control.attr("required", "true").watermark(me.options.$reportViewer.locData.getLocData().paramPane.required, forerunner.config.getWatermarkConfig());
             $control.addClass("fr-param-required");
             me._paramValidation[param.Name].push("required");
         },
@@ -1007,7 +837,7 @@ $(function () {
                 });
 
                 var $label = new $("<Label class='fr-param-option-label' />");
-                $label.html(me.localData.paramPane.nullField);
+                $label.html(me.options.$reportViewer.locData.getLocData().paramPane.nullField);
                 $label.on("click", function () { $checkbox.trigger("click"); });
 
                 $container.append($checkbox).append($label);
@@ -1043,7 +873,7 @@ $(function () {
             $checkbox.on("click", function () { me._triggerUseDefaultClick.call(me, param, $control, $checkbox, predefinedValue, $hidden); });
 
             var $label = new $("<label class='fr-param-option-label' />");
-            $label.text(me.localData.paramPane.useDefault);
+            $label.text(me.options.$reportViewer.locData.getLocData().paramPane.useDefault);
             $label.on("click", function () { $checkbox.trigger("click"); });
 
             $container.append($checkbox).append($label);
@@ -1128,7 +958,7 @@ $(function () {
 
                 //not reset the default value, since it may always change on the server side like current date.
                 //me._setParamValue(param, preDefinedValue, $control);
-                $control.valid();
+                //$control.valid();
             }
         },
         _setRadioButton: function (s, v) {
@@ -1142,7 +972,7 @@ $(function () {
         },
         _writeRadioButton: function (param, dependenceDisable, pageNum, predefinedValue) {
             var me = this;
-            var paramPane = me.localData.paramPane;
+            var paramPane = me.options.$reportViewer.locData.getLocData().paramPane;
             var radioValues = [];
             radioValues[0] = { display: paramPane.isTrue, value: "True" };
             radioValues[1] = { display: paramPane.isFalse, value: "False" };
@@ -1209,17 +1039,13 @@ $(function () {
             me._getParameterControlProperty(param, $control);
             switch (param.Type) {
                 case "DateTime":
-                    //New Jquery UI uses y for 2 part date and yy for 4
-                    var dateFormat = forerunner.ssr._internal.getDateFormat(me.options.$reportViewer.locData);
-                    dateFormat = dateFormat.replace("yy", "y");
-
                     $control.datepicker({
                         showOn: "button",
                         changeMonth: true,
                         changeYear: true,
                         showButtonPanel: true,
                         //gotoCurrent: true,
-                        dateFormat: dateFormat,
+                        dateFormat: forerunner.ssr._internal.getDateFormat(me.options.$reportViewer.locData),
                         onClose: function () {
                             var $input = $control;
                             $input.removeAttr("disabled").removeClass("datepicker-focus");
@@ -1451,7 +1277,7 @@ $(function () {
             }
 
             me._getParameterControlProperty(param, $control);
-            var defaultSelect = me.localData.paramPane.select;
+            var defaultSelect = me.options.$reportViewer.locData.getLocData().paramPane.select;
             var $defaultOption = new $("<option title='" + defaultSelect + "' value=''>&#60" + defaultSelect + "&#62</option>");
             $control.append($defaultOption);
 
@@ -1537,10 +1363,11 @@ $(function () {
                 //Fixed issue 1056: jquery.ui.position will got an error in IE8 when the panel width change, 
                 //so here I wrote code to got shop up position to popup tree panel
                 var $parent = $input.parent();
-
+                //var left = forerunner.helper.parseCss($input, "marginLeft") + ($input.outerWidth() - $input.innerWidth()) / 2;
+                //var top = forerunner.helper.parseCss($input, "marginTop") + $parent.outerHeight();
                 me._setDropdownPosition($parent, $tree, "left");
                 $tree.css({ "min-width": $parent.width() }).show();
-
+                //$tree.position({ my: "left top", at: "left bottom", of: $input });
                 $input.blur();
             }
         },
@@ -1854,7 +1681,7 @@ $(function () {
                 temp = null,
                 isValid = true,
                 invalidList = null;
-            var $parent = $tree.siblings(".fr-param-inner-wrapper").find(".fr-param-tree-input");
+            var $parent = $tree.siblings(".fr-param-tree-input");
 
             $parent.removeClass("fr-param-cascadingtree-error").attr("cascadingTree", "");
 
@@ -2393,7 +2220,6 @@ $(function () {
             $(".fr-param-more-menu", me.$params).filter(":visible").each(function (index, param) {
                 $(param).addClass("fr-hide");
             });
-            
             //close auto complete dropdown, it will be appended to the body so use $appContainer here to do select
             $(".ui-autocomplete", me.options.$appContainer).hide();
             //close cascading tree and set value
@@ -2421,7 +2247,7 @@ $(function () {
             }
 
             var required = !!$(param).attr("required");
-            if (required && param.value === me.localData.paramPane.required) {
+            if (required && param.value === me.options.$reportViewer.locData.getLocData().paramPane.required) {
                 return false;
             }
 
@@ -2629,7 +2455,7 @@ $(function () {
             me.$params = null;
             me._submittedParamsList = null;
             me._parameterDefinitions = null;
-            me._dependencyList = null;            
+            me._dependencyList = null;
 
             $("." + paramContainerClass, me.element).remove();
         },
@@ -2891,7 +2717,7 @@ $(function () {
         },
         _getDatePickerLoc: function () {
             var me = this;
-            return me.localData.datepicker;
+            return me.options.$reportViewer.locData.getLocData().datepicker;
         },
         //handle window resize action
         _paramWindowResize: function (event, data) {
@@ -2910,7 +2736,6 @@ $(function () {
             var me = this;
 
             me.removeParameter();
-
             $(document).off("click", me._checkExternalClick);
             if (me.$datepickers.length) {
                 $(window).off("resize", me._paramWindowResize);

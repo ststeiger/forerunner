@@ -481,6 +481,7 @@ $(function () {
             //Android and iOS need some time to clean prior scroll position, I gave it a 50 milliseconds delay
             //To resolved bug 909, 845, 811 on iOS
             var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 0;
+
             setTimeout(function () {
 
                 forerunner.ajax.getUserSetting(me.options.rsInstance,function(settings){

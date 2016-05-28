@@ -1,11 +1,11 @@
 ﻿{
-  "common" : {
-	"submit":"Submit",
-	"cancel":"Cancel",
-	"deleteBtn":"Delete",
-	"edit":"Edit",
-	"name":"Name",
-	"description":"Description"
+  "common": {
+    "submit":"Submit",
+    "cancel":"Cancel",
+    "deleteBtn":"Delete",
+    "edit":"Edit",
+    "name":"Name",
+    "description":"Description"
   },
   "messages": {
     "loading":"Loading...",
@@ -22,17 +22,17 @@
     "docmapShowFailed":"Failed",
     "prepareActionFailed":"Failed",
     "bookmarkNotFound":"Cannot find the bookmark in the report",
-    "saveDashboardFailed": "Save Dashboard Failed",
-    "saveDashboardSucceeded": "Save Dashboard Succeeded",
-    "loadDashboardFailed": "Load Dashboard Failed",
-    "loadDashboard": "Load Dashboard",
-    "createFailed": "A Dashboard with that name already exists. You can either: 1) rename your dashboard or 2) check the overwrite box then try again.",
-	"saveSearchFolderSucceeded":"Search Folder Created Succeeded",
-	"saveSearchFolderFailed":"Search Folder Created Failed",
-	"addTagsSucceeded":"Add Tags Succeeded",
-	"addTagsFailed":"Add Tags Failed",
-  "invalidName":"Invalid Name",
-	"propertyFailed":"Properties updated Failed"
+    "saveDashboardFailed":"Save Dashboard Failed",
+    "saveDashboardSucceeded":"Save Dashboard Succeeded",
+    "loadDashboardFailed":"Load Dashboard Failed",
+    "loadDashboard":"Load Dashboard",
+    "createFailed":"A Dashboard with that name already exists. You can either: 1) rename your dashboard or 2) check the overwrite box then try again.",
+    "saveSearchFolderSucceeded":"Search Folder Created Succeeded",
+    "saveSearchFolderFailed":"Search Folder Created Failed",
+    "addTagsSucceeded":"Add Tags Succeeded",
+    "addTagsFailed":"Add Tags Failed",
+    "invalidName":"Invalid Name",
+    "propertyFailed":"Properties updated Failed"
   },
   "errorTag": {
     "moreDetail":"Click for more detail",
@@ -72,12 +72,12 @@
     "dsCredential":"Credential",
     "views":"Views",
     "addToFavorites":"Add to Favorites",
-    "RDLExt": "RDL Extension",
+    "RDLExt":"RDL Extension",
     "editDashboard":"Edit Dashboard",
-    "saveDashboard": "Save Dashboard",
-    "viewDashboard": "View Dashboard",
-	"tags":"Tags"
- },
+    "saveDashboard":"Save Dashboard",
+    "viewDashboard":"View Dashboard",
+    "tags":"Tags"
+  },
   "toolbar": {
     "back":"Back",
     "docMap":"Document Map",
@@ -110,9 +110,9 @@
     "search":"Search",
     "createDashboard":"Create Dashboard",
     "editDashboard":"Edit Dashboard",
-    "saveDashboard": "Save Dashboard",
+    "saveDashboard":"Save Dashboard",
     "searchFolder":"Search Folder",
-    "viewDashboard": "View Dashboard"
+    "viewDashboard":"View Dashboard"
   },
   "print": {
     "title":"Print Report",
@@ -133,37 +133,41 @@
     "submit":"Ok",
     "cancel":"Cancel",
     "ResponsiveUI":"Responsive UI",
-	"Email":"Email",
-	"AdminUI": "Admin UI",
-    "ViewStyle" : "View Style",
-    "ViewStyleLarge" : "Large",
-	"ViewStyleSmall" : "Small",
-	"ViewStyleList" : "List"
+    "Email":"Email",
+    "AdminUI":"Admin UI",
+    "ViewStyle":"View Style",
+    "ViewStyleLarge":"Large",
+    "ViewStyleSmall":"Small",
+    "ViewStyleList":"List",
+    "ParamLayout":"Parameter Layout",
+    "ParamLayoutTop":"Top",
+    "ParamLayoutRight":"Right",
+    "ParamLayoutTopPrompt":"Width Requirement: 1024px or Higher"
   },
   "subscription": {
-    "email": "Email",
-	"cancel": "Cancel",
-	"save": "Save",
-	"manageSubscription": "Manage Subscription",
-	"toPlaceholder": "To",
+    "email":"Email",
+    "cancel":"Cancel",
+    "save":"Save",
+    "manageSubscription":"Manage Subscription",
+    "toPlaceholder":"To",
     "ccPlaceholder":"CC",
-	"bccPlaceholder":"BCC",
-	"replyToPlaceholder":"Reply-To",
-	"subjectPlaceholder": "Subject",
-	"descriptionPlaceholder": "Description",
-	"commentPlaceholder": "Comment",
-	"subject": "@ReportName was executed at @ExecutionTime",
-	"description": "Send email to {0}",
-	"includeLink": "Include link",
-	"includeReport": "Include report",
-	"schedule": "Schedule",
-	"format": "Format",
-	"saveFailed": "Saving subscription failed",
-	"addNew": "Create",
-	"edit": "Edit",
-	"deleteSubscription": "Delete",
-	"deleteFailed": "Subscription deletion failed",
-	"emptyPrompt":"There are no subscriptions to display at this time"
+    "bccPlaceholder":"BCC",
+    "replyToPlaceholder":"Reply-To",
+    "subjectPlaceholder":"Subject",
+    "descriptionPlaceholder":"Description",
+    "commentPlaceholder":"Comment",
+    "subject":"@ReportName was executed at @ExecutionTime",
+    "description":"Send email to {0}",
+    "includeLink":"Include link",
+    "includeReport":"Include report",
+    "schedule":"Schedule",
+    "format":"Format",
+    "saveFailed":"Saving subscription failed",
+    "addNew":"Create",
+    "edit":"Edit",
+    "deleteSubscription":"Delete",
+    "deleteFailed":"Subscription deletion failed",
+    "emptyPrompt":"There are no subscriptions to display at this time"
   },
   "paramPane": {
     "nullField":"Null",
@@ -174,7 +178,7 @@
     "cancel":"Cancel",
     "datePicker":"Date",
     "select":"Select",
-	"useDefault":"Use Default"
+    "useDefault":"Use Default"
   },
   "validateError": {
     "required":"Required",
@@ -247,20 +251,20 @@
     "emptyError":"Search criteria cannot be empty",
     "notFound":"No results match your search criteria. Please refine your search."
   },
-  "RDLExt":{
-	"title":"RDL Extensions",
-	"submit":"Submit",
-	"cancel": "Cancel",
-	"dialogTitle" : "RDL Extension JSON"
-	},
+  "RDLExt": {
+    "title":"RDL Extensions",
+    "submit":"Submit",
+    "cancel":"Cancel",
+    "dialogTitle":"RDL Extension JSON"
+  },
   "createDashboard": {
     "title":"Create Dashboard",
     "cancel":"Cancel",
     "submit":"Save",
-    "dashboardName": "Name",
-    "namePlaceholder": "dashboard name",
-    "dashboardTemplate": "Template",
-    "overwrite": "Overwrite"
+    "dashboardName":"Name",
+    "namePlaceholder":"dashboard name",
+    "dashboardTemplate":"Template",
+    "overwrite":"Overwrite"
   },
   "reportProperties": {
     "title":"Edit View",
@@ -268,10 +272,10 @@
     "submit":"Submit",
     "selectReport":"<select report>",
     "hideToolbar":"Hide",
-    "toolbar": "Toolbar:",
-    "minimal": "Minimal",
-    "full": "Full",
-    "removeReport": "Remove Report"
+    "toolbar":"Toolbar:",
+    "minimal":"Minimal",
+    "full":"Full",
+    "removeReport":"Remove Report"
   },
   "tags": {
     "title":"Tags",
@@ -279,68 +283,68 @@
     "cancel":"Cancel",
     "submit":"Submit",
     "prompt":"Separate tags with commas.",
-	"yourPosition":"You are at"
+    "yourPosition":"You are at"
   },
-  "searchFolder":{
-	"title":"Search Folder",
-	"name":"Name",
-	"tags":"Tags",
-	"cancel":"Cancel",
-	"submit":"Submit",
-	"prompt":"Separate tags with commas.",
-	"homePage":"Home Page",
-	"createTo":"Created under",
-	"namePlaceholder": "Search Folder Name"
+  "searchFolder": {
+    "title":"Search Folder",
+    "name":"Name",
+    "tags":"Tags",
+    "cancel":"Cancel",
+    "submit":"Submit",
+    "prompt":"Separate tags with commas.",
+    "homePage":"Home Page",
+    "createTo":"Created under",
+    "namePlaceholder":"Search Folder Name"
   },
-  "properties":{
-	"title":"Properties",
-	"submit":"Submit",
-	"deleteItem":"Delete",
-	"description":"Description",
-	"readonly":"Please set name property in catalog item context menu"
+  "properties": {
+    "title":"Properties",
+    "submit":"Submit",
+    "deleteItem":"Delete",
+    "description":"Description",
+    "readonly":"Please set name property in catalog item context menu"
   },
-  "contextMenu":{
-  "title":"Context Menu",
-  "delLabel": "Delete",
-  "properties": "Properties",
-  "security":"Security",
-  "linkedReport":"Linked Report",
-  "downloadFile":"Download File",
+  "contextMenu": {
+    "title":"Context Menu",
+    "delLabel":"Delete",
+    "properties":"Properties",
+    "security":"Security",
+    "linkedReport":"Linked Report",
+    "downloadFile":"Download File",
     "deleteConfirm":"Are you sure to delete {0}?",
-	"folderNotEmpty":"There is sub item inside the folder, you can't delete it.",
-	"move":"Move",
-	"unFavorite":"Remove Favorite",
-	"unFavConfirm":"Are you sure you want to remove {0} from favorite list?"
+    "folderNotEmpty":"There is sub item inside the folder, you can't delete it.",
+    "move":"Move",
+    "unFavorite":"Remove Favorite",
+    "unFavConfirm":"Are you sure you want to remove {0} from favorite list?"
   },
   "security": {
-	"title": "Security",
-	"newPolicy":"New",
-	"reset":"Reset",
-	"roles":"Roles",
-	"desp":"Description",
-	"groupuser":"Group or User",
-	"prompt":"Select the roles you want to assign",
-	"accountMsg":"A valid group or user account name must be specified for this role assignment",
-	"editSecurity":"Edit Item Security",
-	"editConfirm":"Item security is inherited from its parent item. Do you want to apply security settings for this item that are different from those of the {0} parent item?",
-	"revertConfirm":"The security settings that are defined for this item will be replaced by the security settings of its parent {0}. Do you want to continue?",
-	"deleteConfirm":"Are you sure to delete this role assignment?",
-	"home":"Home",
-	"revert":"Revert",
-	"roleEmptyMsg":"Select a minimum of one role for this group or user.",
-	"detail":"Detail"
+    "title":"Security",
+    "newPolicy":"New",
+    "reset":"Reset",
+    "roles":"Roles",
+    "desp":"Description",
+    "groupuser":"Group or User",
+    "prompt":"Select the roles you want to assign",
+    "accountMsg":"A valid group or user account name must be specified for this role assignment",
+    "editSecurity":"Edit Item Security",
+    "editConfirm":"Item security is inherited from its parent item. Do you want to apply security settings for this item that are different from those of the {0} parent item?",
+    "revertConfirm":"The security settings that are defined for this item will be replaced by the security settings of its parent {0}. Do you want to continue?",
+    "deleteConfirm":"Are you sure to delete this role assignment?",
+    "home":"Home",
+    "revert":"Revert",
+    "roleEmptyMsg":"Select a minimum of one role for this group or user.",
+    "detail":"Detail"
   },
-  "visibility":{
-	"title":"Hidden",
-	"label":"Hidden in normal mode",
-	"prompt":"Set to hidden will not show this item in the normal mode, you can switch it back in the admin mode."
+  "visibility": {
+    "title":"Hidden",
+    "label":"Hidden in normal mode",
+    "prompt":"Set to hidden will not show this item in the normal mode, you can switch it back in the admin mode."
   },
-  "linkedReport":{
-	"title":"Linked Report",
-	"create":"Create a new linked report for {0}",
-	"edit":"Edit linked report {0}, select the report you want to link",
-	"location":"Location",
-	"report":"Report"
+  "linkedReport": {
+    "title":"Linked Report",
+    "create":"Create a new linked report for {0}",
+    "edit":"Edit linked report {0}, select the report you want to link",
+    "location":"Location",
+    "report":"Report"
   },
   "dialogBase": {
     "title":"Dialog",
@@ -362,13 +366,13 @@
     "title":"New Folder",
     "description":"Create a new folder in: {0}",
     "name":"Name",
-    "descriptionLabel": "Description",
+    "descriptionLabel":"Description",
     "hide":"Hidden in normal mode",
     "fileExists":"A folder that name already exists"
   },
-  "move":{
-	"title":"Move",
-	"location":"Location",
-	"prompt":"Select the folder that you want to include this item"
+  "move": {
+    "title":"Move",
+    "location":"Location",
+    "prompt":"Select the folder that you want to include this item"
   }
 }

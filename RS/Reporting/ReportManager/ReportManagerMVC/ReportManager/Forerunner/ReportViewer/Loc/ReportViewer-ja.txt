@@ -130,7 +130,11 @@
     "ViewStyleLarge":"大",
     "ViewStyleSmall":"スモール",
     "ViewStyleList":"リスト",
-    "ViewStyle":"ビュースタイル"
+    "ViewStyle":"ビュースタイル",
+    "ParamLayout":"Parameter Layout",
+    "ParamLayoutTop":"Top",
+    "ParamLayoutRight":"Right",
+    "ParamLayoutTopPrompt":"Width Requirement: 1024px or Higher"
   },
   "paramPane": {
     "nullField":"ゼロ",

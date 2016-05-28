@@ -131,7 +131,11 @@
     "ViewStyleLarge":"grande",
     "ViewStyleSmall":"pequeño",
     "ViewStyleList":"lista",
-    "ViewStyle":"Ver Estilo"
+    "ViewStyle":"Ver Estilo",
+    "ParamLayout":"Parameter Layout",
+    "ParamLayoutTop":"Top",
+    "ParamLayoutRight":"Right",
+    "ParamLayoutTopPrompt":"Width Requirement: 1024px or Higher"
   },
   "paramPane": {
     "nullField":"cero",

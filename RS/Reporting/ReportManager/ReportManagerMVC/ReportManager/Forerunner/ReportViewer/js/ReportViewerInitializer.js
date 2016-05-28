@@ -63,6 +63,10 @@ $(function () {
             var $viewer = me.options.$viewer;
             var userSettings = me.options.userSettings;
 
+            if ((me.options.isReportManager || me.options.useReportManagerSettings) && !userSettings) {
+                userSettings = forerunner.ajax.getUserSetting(me.options.rsInstance);
+            }
+
             if (me.options.dbConfig.UseMobilizerDB === true && (me.options.isReportManager || me.options.useReportManagerSettings)) {
                 // Create the parameter model object for this report
                 me.parameterModel = $({}).parameterModel({ rsInstance: me.options.rsInstance });
@@ -83,14 +87,8 @@ $(function () {
                 showSubscriptionOnOpen: me.options.showSubscriptionOnOpen,
                 $ReportViewerInitializer: this
             });
-               
 
-            if ((me.options.isReportManager || me.options.useReportManagerSettings) && !userSettings) {
-                userSettings = forerunner.ajax.getUserSetting(me.options.rsInstance);
-            }
-
-            me.options.$docMap.hide();
-               
+            me.options.$docMap.hide();               
 
             // Create / render the toolbar
             var $toolbar = me.options.$toolbar;

@@ -130,7 +130,11 @@
     "ViewStyleLarge":"mare",
     "ViewStyleSmall":"mic",
     "ViewStyleList":"listă",
-    "ViewStyle":"Vezi Stil"
+    "ViewStyle":"Vezi Stil",
+    "ParamLayout":"Parameter Layout",
+    "ParamLayoutTop":"Top",
+    "ParamLayoutRight":"Right",
+    "ParamLayoutTopPrompt":"Width Requirement: 1024px or Higher"
   },
   "paramPane": {
     "nullField":"nul",

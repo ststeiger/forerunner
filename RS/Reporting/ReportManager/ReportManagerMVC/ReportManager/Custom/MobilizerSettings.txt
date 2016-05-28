@@ -24,6 +24,5 @@
 	"BigTablixBatchSize":3000,
 	"AppleFixedToolbarBug":"on",
 	"DefaultViewStyle":"list",
-	"FastPrint":"on",
-	"TopParameterLayoutOnBigScreen":"on"
+	"FastPrint":"on"
 }

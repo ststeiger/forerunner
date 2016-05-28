@@ -138,7 +138,11 @@
     "ViewStyle" : "View Style",
     "ViewStyleLarge" : "Large",
 	"ViewStyleSmall" : "Small",
-	"ViewStyleList" : "List"
+	"ViewStyleList" : "List",
+	"ParamLayout": "Parameter Layout",
+	"ParamLayoutTop": "Top",
+	"ParamLayoutRight": "Right",
+	"ParamLayoutTopPrompt": "Width Requirement: 1024px or Higher"
   },
   "subscription": {
     "email": "Email",

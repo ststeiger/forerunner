@@ -2234,8 +2234,9 @@ $(function () {
                     }
                 });
             }
-            else if (done)
+            else if (done) {
                 done(me._userSetting);
+            }
 
             return me._userSetting;
         },

@@ -32,18 +32,12 @@ $(function () {
         },
         _init: function () {
             var me = this;
-            
-            
+            me._reset();
            
             var locData = forerunner.localize;
             var userSettings = locData.getLocData().userSettings;
-            var unit = locData.getLocData().unit;
-
-            me.element.html("");
-            me.element.off(events.modalDialogGenericSubmit);
-            me.element.off(events.modalDialogGenericCancel);
-
             var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-setup", userSettings.title, "fr-us-cancel", userSettings.cancel);
+
             var $theForm = new $(
             "<div class='fr-core-dialog-innerPage fr-core-center'>" +
                 headerHtml +
@@ -63,19 +57,35 @@ $(function () {
                                 "<label class='fr-us-label'>" + userSettings.AdminUI + "</label>" +
                             "</td>" +
                             "<td>" +
-                                "<input class='fr-us-admin-ui-id fr-us-checkbox'  name='adminUI' type='checkbox'/>" +
+                                "<input class='fr-us-admin-ui-id fr-us-checkbox' name='adminUI' type='checkbox'/>" +
                             "</td>" +
                         "</tr>" +
-                            "<tr>" +
+                        "<tr>" +
                             "<td>" +
                                 "<label class='fr-us-label'>" + userSettings.ViewStyle + "</label>" +
                             "</td>" +
                             "<td>" +
-                                "<select class='fr-us-viewStyle-id fr-us-dropdown  '  name='viewStyle' list='viewStyles'>" +
-                                "<option value='" + "large" + "'>" + userSettings.ViewStyleLarge + "</option>" +
-                                "<option value='" + "small" + "'>" + userSettings.ViewStyleSmall + "</option>" +
-                                    "<option value='" + "list" + "'>" + userSettings.ViewStyleList + "</option>" +
-                                "</select" +
+                                "<select class='fr-us-viewStyle-id fr-us-dropdown' name='viewStyle' list='viewStyles'>" +
+                                    "<option value='large'>" + userSettings.ViewStyleLarge + "</option>" +
+                                    "<option value='small'>" + userSettings.ViewStyleSmall + "</option>" +
+                                    "<option value='list'>" + userSettings.ViewStyleList + "</option>" +
+                                "</select>" +
+                            "</td>" +
+                        "</tr>" +
+                        "<tr>" +
+                            "<td>" +
+                                "<label class='fr-us-label'>" + userSettings.ParamLayout + "</label>" +
+                            "</td>" +
+                            "<td>" +
+                                "<select class='fr-us-paramLayout-id fr-us-dropdown' name='paramLayout' list='paramLayout'>" +
+                                    "<option value='right'>" + userSettings.ParamLayoutRight + "</option>" +
+                                    "<option value='top'>" + userSettings.ParamLayoutTop + "</option>" +
+                                "</select>" +
+                            "</td>" +
+                        "</tr>" +
+                        "<tr class='param-toplayout-prompt fr-hide'>" +
+                            "<td colspan='2'>" +
+                                "<span class='fr-us-prompt'>"+ userSettings.ParamLayoutTopPrompt + "</span>" +
                             "</td>" +
                         "</tr>" +
                     "</table>" +
@@ -89,21 +99,29 @@ $(function () {
                 "</div>" +
             "</div>");
 
-            me.element.append($theForm);
+            me.element.append($theForm);            
 
             //Set build number            
             forerunner.ajax.getBuildVersion(function (version) {
                 me.element.find(".fr-buildversion-container").html(version);
             });
 
+            me.$paramLayout = me.element.find(".fr-us-paramLayout-id");
+            me.$paramLayout.on("change", function () {
+                var $option = $(this),
+                    $prompt = $option.closest("tr").siblings(".param-toplayout-prompt");
+
+                $option.val().toLowerCase() === "top" ? $prompt.removeClass("fr-hide"): $prompt.addClass("fr-hide");
+            });
+
             //disable form auto submit when click enter on the keyboard
             me.element.find(".fr-us-form").on("submit", function () { return false; });
 
-            me.element.find(".fr-us-submit-id").on("click", function (e) {
+            me.element.on("click", ".fr-us-submit-id", function (e) {
                 me._saveSettings();
             });
 
-            me.element.find(".fr-us-cancel").on("click", function (e) {
+            me.element.on("click", ".fr-us-cancel", function (e) {
                 me.closeDialog();
             });
 
@@ -122,16 +140,19 @@ $(function () {
             me.$resposiveUI = me.element.find(".fr-us-responsive-ui-id");
             var responsiveUI = me.settings.responsiveUI;
             me.$resposiveUI.prop("checked", responsiveUI);
+
             me.$adminUI = me.element.find(".fr-us-admin-ui-id");
             var adminUI = me.settings.adminUI;
             me.$adminUI.prop("checked", adminUI);
 
             me.$viewStyle = me.element.find(".fr-us-viewStyle-id");
+            var viewStyle = me.settings.viewStyle || "large";
+            me.$viewStyle.val(viewStyle);
 
-            if (me.settings.viewStyle)
-                me.$viewStyle.val(me.settings.viewStyle);
-            else
-                me.$viewStyle.val("large");
+            me.$paramLayout = me.element.find(".fr-us-paramLayout-id");
+            var paramLayout = me.settings.paramLayout || "right";
+            me.$paramLayout.val(paramLayout);
+            me.$paramLayout.triggerHandler("change");
         },
         _triggerClose: function (isSubmit) {
             var me = this;
@@ -139,6 +160,7 @@ $(function () {
                 isSubmit: isSubmit,
                 settings: me.settings
             };
+
             me._trigger(events.close, null, data);
             forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
         },
@@ -146,9 +168,14 @@ $(function () {
             var me = this,
                 responsiveUI = me.$resposiveUI.prop("checked"),
                 adminUI = me.$adminUI.prop("checked"),
-                viewStyle = me.$viewStyle.val();
+                viewStyle = me.$viewStyle.val(),
+                paramLayout = me.$paramLayout.val();
 
-            if (me.settings.responsiveUI === responsiveUI && me.settings.adminUI === adminUI && me.settings.viewStyle === viewStyle) {
+            if (me.settings.responsiveUI === responsiveUI
+                && me.settings.adminUI === adminUI
+                && me.settings.viewStyle === viewStyle
+                && me.settings.paramLayout === paramLayout) {
+
                 //nothing change, just close dialog
                 me.closeDialog();
                 return;
@@ -157,6 +184,7 @@ $(function () {
             me.settings.responsiveUI = responsiveUI;
             me.settings.adminUI = adminUI;
             me.settings.viewStyle = viewStyle;
+            me.settings.paramLayout = paramLayout;
             
             //update cached setting
             forerunner.ajax.setUserSetting(me.settings);
@@ -173,7 +201,6 @@ $(function () {
 
             me._getSettings();
             forerunner.dialog.showModalDialog(me.options.$appContainer, me);
-
         },
         /**
          * Close user setting dialog
@@ -183,6 +210,14 @@ $(function () {
         closeDialog: function () {
             var me = this;
             me._triggerClose(false);
+        },
+        _reset: function () {
+            var me = this;
+
+            me.element.html("");
+            me.element.off(events.modalDialogGenericSubmit);
+            me.element.off(events.modalDialogGenericCancel);
+            me.$paramLayout && me.$paramLayout.off("change");
         }
     }); //$.widget
 });

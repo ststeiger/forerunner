@@ -130,7 +130,11 @@
     "ViewStyleLarge":"大",
     "ViewStyleSmall":"小",
     "ViewStyleList":"列表",
-    "ViewStyle":"視圖模式"
+    "ViewStyle":"視圖模式",
+    "ParamLayout":"參數布局",
+    "ParamLayoutTop":"頂部",
+    "ParamLayoutRight":"右側",
+    "ParamLayoutTopPrompt":"寬度要求: 1024px或更高"
   },
   "paramPane": {
     "nullField":"空值",

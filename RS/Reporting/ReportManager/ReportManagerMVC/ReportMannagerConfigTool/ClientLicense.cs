@@ -23,7 +23,7 @@ namespace ForerunnerLicense
         private const String wow6432Node = "Wow6432Node";
         private const String forerunnerKey = "Forerunnersw";       
         private const String ProductKey = "Mobilizer";
-        private const String VersionKey = "Version5";
+        private const String VersionKey = "Version6";
         private const String LicenseDataKey = "LicenseData";
         private const String LicenseTimestampKey = "Timestamp";
         private static string url = "https://forerunnersw.com/register/api/License";
@@ -357,7 +357,7 @@ namespace ForerunnerLicense
 
             //Check Version, curretnly all other SKUs allow for version upgrade, if version upgrade occurs before subscription end.  This is checked at Activation.
             string lic = License.SKU.Substring(0, 5);
-            if (lic == "Mob10" || lic == "Mob20" || lic == "Mob30" || lic == "Mob40")
+            if (lic == "Mob10" || lic == "Mob20" || lic == "Mob30" || lic == "Mob40" || lic == "Mob50")
                 LicenseException.Throw(LicenseException.FailReason.IncorrectVersion, "License is invalid for this version of the software");
         }
 

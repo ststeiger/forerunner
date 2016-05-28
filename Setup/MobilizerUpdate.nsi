@@ -2,14 +2,14 @@
 
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "Forerunner Mobilizerfor SQL Server Reporting Services"
-!define PRODUCT_VERSION "5.0 Update"
+!define PRODUCT_VERSION "6.0 Update"
 !define PRODUCT_PUBLISHER "Forerunner Software"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\Forerunner\MobilizerV4"
 !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
 !define PRODUCT_UNINST_ROOT_KEY "HKLM"
-!define COPYRIGHT "Copyright © Forerunner Software 2015"
+!define COPYRIGHT "Copyright © Forerunner Software 2016"
 !define DESCRIPTION "Forerunner Mobilizer for SQL Server Reporting Services"
-!define VI_PRODUCT_NAME "Mobilizer 5.0 Update"
+!define VI_PRODUCT_NAME "Mobilizer 6.0 Update"
 !define COMPANY_NAME "Forerunner Software"
 !define /file BUILD_VERSION ..\build.txt
 

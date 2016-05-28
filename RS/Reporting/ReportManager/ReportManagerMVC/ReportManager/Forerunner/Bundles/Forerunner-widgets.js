@@ -15818,7 +15818,7 @@ $(function () {
                     function () {
                         forerunner.dialog.showMessageBox(me.options.$appContainer, me.localData.messages.saveParamFailed, me.localData.toolbar.saveParam);
                     }
-                )
+                );
             });
 
             // open the manage set dialog and edit
@@ -15963,7 +15963,6 @@ $(function () {
         },
         _triggerGlobalEvent: function(eventName, data) {
             var me = this;
-
             me.options.$appContainer.trigger(eventName, data);
         },
         _bindEvent: function() {
@@ -16064,7 +16063,7 @@ $(function () {
             var me = this;
             
             if (!data.ParametersList || data.ParametersList.length === 0) {
-                return
+                return;
             }
             
             if (data.Debug) {
@@ -16126,7 +16125,7 @@ $(function () {
                 if (me._numVisibleParams && me._numVisibleParams % columnCount === 0) {
                     rowWidth = Math.max(rowWidth, columnCount * me.paramUnitWidth);
                     $rows.css({
-                        width:  rowWidth + 'px'
+                        width:  rowWidth + "px"
                     });
 
                     $rows = new $("<div class='fr-param-row'></div>");                    
@@ -16136,8 +16135,8 @@ $(function () {
                 if (index === len - 1 && me._numVisibleParams < columnCount) {
                     rowWidth = Math.max(rowWidth, me._numVisibleParams * me.paramUnitWidth);
                     $rows.css({
-                        width: rowWidth + 'px'
-                    })
+                        width: rowWidth + "px"
+                    });
                 }
             }
             
@@ -16214,10 +16213,7 @@ $(function () {
                 me.options.$reportViewer.removeLoadingIndicator();
             }
 
-            me._triggerGlobalEvent(events.reportParameterRender(), {
-                isTopParamLayout: me.isTopParamLayout,
-                visibleParamCount: me._numVisibleParams
-            });
+          
 
             //jquery adds height, remove it
             var pc = me.element.find("." + paramContainerClass);
@@ -16240,6 +16236,11 @@ $(function () {
                 me._writeParamDoneCallback();
                 me._writeParamDoneCallback = null;
             }
+
+            me._triggerGlobalEvent(events.reportParameterRender(), {
+                isTopParamLayout: me.isTopParamLayout,
+                visibleParamCount: me._numVisibleParams
+            });
         },
         _generateLayoutInfo: function(paramsData) {
             var me = this,
@@ -16258,7 +16259,7 @@ $(function () {
                 layoutInfo.cells[i] = new Array(layoutInfo.columns);
 
                 for (j = 0; j < layoutInfo.columns; j++) {
-                    layoutInfo.cells[i][j] = '';
+                    layoutInfo.cells[i][j] = "";
                 }
             }
 
@@ -16317,7 +16318,7 @@ $(function () {
             }
             
             for (i = 0; i < layoutInfo.rows; i++) {
-                rows = rows.concat(layoutInfo.cells[i])
+                rows = rows.concat(layoutInfo.cells[i]);
             }
 
             for (i = 0; i < rows.length; i++) {
@@ -16632,7 +16633,7 @@ $(function () {
 
                 //Don't show nullable if has valid value list, null would have to be in the list
                 if (param.ValidValues === "") {
-                    $nullElement = me._addNullableCheckBox(param, $element, predefinedValue)
+                    $nullElement = me._addNullableCheckBox(param, $element, predefinedValue);
                     $nullElement && options.push($nullElement);
                     //Hook up null check box to dependency
                     me._checkDependencies(param);
@@ -16645,7 +16646,7 @@ $(function () {
 
                 if (options.length) {
                     if (me.isTopParamLayout) {
-                        $moreBtn = new $('<button class="fr-param-more">...</button>"');
+                        $moreBtn = new $("<button class='fr-param-more'>...</button>");
                         $optionsDiv.append($moreBtn);
                         $optionsDiv.append(me._setMoreOptionMenu($moreBtn, options));
                         $optionsDiv.addClass("fr-param-not-close");
@@ -16692,7 +16693,7 @@ $(function () {
                     me._closeAllDropdown();
                     $menu.removeClass("fr-hide");
                 } else {
-                    $menu.addClass("fr-hide")
+                    $menu.addClass("fr-hide");
                 }
             });
 
@@ -17055,7 +17056,7 @@ $(function () {
             switch (param.Type) {
                 case "DateTime":
                     //New Jquery UI uses y for 2 part date and yy for 4
-                    var dateFormat = forerunner.ssr._internal.getDateFormat(me.options.$reportViewer.locData)
+                    var dateFormat = forerunner.ssr._internal.getDateFormat(me.options.$reportViewer.locData);
                     dateFormat = dateFormat.replace("yy", "y");
 
                     $control.datepicker({
@@ -19856,7 +19857,7 @@ $(function () {
 
             var manageSetList;
             if (me.options.isTopParamLayout) {
-                $toolbar.addClass('fr-toolbar-top-param');
+                $toolbar.addClass("fr-toolbar-top-param");
                 //manageSetList = [rtb.btnSavParam, rtb.btnSelectSet, rtb.btnRTBManageSets];
                 ////set the manage set elements to hide by default, after the parameters rendered, show them after that if visibla parameter exist.
                 //$.each(manageSetList, function (i, v) {

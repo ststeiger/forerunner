@@ -11,7 +11,7 @@ namespace ReportMannagerConfigTool
     public partial class frmMain : Form
     {
         private WinFormHelper winform;
-        private string forerunnerDownload = "http://forerunnersw.com/download/mobilizer/Version5/";
+        private string forerunnerDownload = "http://forerunnersw.com/download/mobilizer/Version6/";
 
         public frmMain()
         {

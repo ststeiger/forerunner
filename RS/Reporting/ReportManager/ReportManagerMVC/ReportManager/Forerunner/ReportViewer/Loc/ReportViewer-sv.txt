@@ -132,9 +132,9 @@
     "ViewStyleList":"lista",
     "ViewStyle":"Se Stil",
     "ParamLayout":"Parameter Layout",
-    "ParamLayoutTop":"Top",
-    "ParamLayoutRight":"Right",
-    "ParamLayoutTopPrompt":"Width Requirement: 1024px or Higher"
+    "ParamLayoutTop":"Topp",
+    "ParamLayoutRight":"höger",
+    "ParamLayoutTopPrompt":"Bredd Krav: 1024px eller högre"
   },
   "paramPane": {
     "nullField":"Noll",

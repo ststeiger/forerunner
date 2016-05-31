@@ -132,10 +132,10 @@
     "ViewStyleSmall":"Petit",
     "ViewStyleList":"Liste",
     "ViewStyle":"style d'affichage",
-    "ParamLayout":"Parameter Layout",
-    "ParamLayoutTop":"Top",
-    "ParamLayoutRight":"Right",
-    "ParamLayoutTopPrompt":"Width Requirement: 1024px or Higher"
+    "ParamLayout":"Mise en page Paramètre",
+    "ParamLayoutTop":"Meilleur",
+    "ParamLayoutRight":"Droite",
+    "ParamLayoutTopPrompt":"Exigence Largeur: 1024px ou supérieur"
   },
   "paramPane": {
     "nullField":"Zéro",

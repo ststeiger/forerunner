@@ -131,10 +131,10 @@
     "ViewStyleSmall":"Beaga",
     "ViewStyleList":"liosta",
     "ViewStyle":"Féach ar Stíl",
-    "ParamLayout":"Parameter Layout",
-    "ParamLayoutTop":"Top",
-    "ParamLayoutRight":"Right",
-    "ParamLayoutTopPrompt":"Width Requirement: 1024px or Higher"
+    "ParamLayout":"Leagan Amach paraiméadar",
+    "ParamLayoutTop":"Barr",
+    "ParamLayoutRight":"Ceart",
+    "ParamLayoutTopPrompt":"Ceanglas Leithead: 1024px nó níos airde"
   },
   "paramPane": {
     "nullField":"Null",

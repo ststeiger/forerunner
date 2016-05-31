@@ -131,10 +131,10 @@
     "ViewStyleSmall":"небольшой",
     "ViewStyleList":"список",
     "ViewStyle":"Посмотреть Style",
-    "ParamLayout":"Parameter Layout",
-    "ParamLayoutTop":"Top",
-    "ParamLayoutRight":"Right",
-    "ParamLayoutTopPrompt":"Width Requirement: 1024px or Higher"
+    "ParamLayout":"Параметр Layout",
+    "ParamLayoutTop":"верхний",
+    "ParamLayoutRight":"правильно",
+    "ParamLayoutTopPrompt":"Ширина Требование: 1024px или выше"
   },
   "paramPane": {
     "nullField":"Ноль",

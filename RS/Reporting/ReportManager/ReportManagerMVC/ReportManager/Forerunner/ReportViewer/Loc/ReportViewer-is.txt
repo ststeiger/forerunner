@@ -131,10 +131,10 @@
     "ViewStyleSmall":"Small",
     "ViewStyleList":"List",
     "ViewStyle":"Skoða Style",
-    "ParamLayout":"Parameter Layout",
+    "ParamLayout":"Parameter Skipulag",
     "ParamLayoutTop":"Top",
-    "ParamLayoutRight":"Right",
-    "ParamLayoutTopPrompt":"Width Requirement: 1024px or Higher"
+    "ParamLayoutRight":"Hægri",
+    "ParamLayoutTopPrompt":"Breidd Krafa: 1024px eða Higher"
   },
   "paramPane": {
     "nullField":"Zero",

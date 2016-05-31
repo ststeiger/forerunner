@@ -1,4 +1,12 @@
 ﻿{
+"common" : {
+	"submit":"Einreichen",
+	"cancel":"Stornieren",
+	"deleteBtn":"Löschen",
+	"edit":"Bearbeiten",
+	"name":"Name",
+	"description":"Beschreibung"
+  },
   "messages": {
     "loading":"Laden...",
     "completeFind":"Der gesamte Bericht wurde durchsucht",
@@ -66,9 +74,7 @@
     "saveDashboard":"Save-Übersicht",
     "tags":"Schlagworte",
     "viewDashboard":"Dashboard-Ansicht",
-    "zoomPageWidth":"Toggle Seitenbreite",
-    "zoomPercent":"Zoom auf Prozent",
-    "zoomDropdown":"Zoom"
+    
   },
   "toolbar": {
     "back":"Zurück",
@@ -131,11 +137,12 @@
     "ViewStyleSmall":"klein",
     "ViewStyleList":"Liste",
     "ViewStyle":"Ansicht Style",
-    "ParamLayout":"Parameter Layout",
-    "ParamLayoutTop":"Top",
-    "ParamLayoutRight":"Right",
-    "ParamLayoutTopPrompt":"Width Requirement: 1024px or Higher"
+    "ParamLayout":"Parameter-Layout",
+    "ParamLayoutTop":"Oben",
+    "ParamLayoutRight":"Recht",
+    "ParamLayoutTopPrompt":"Breite Voraussetzung: 1024px oder höher"
   },
+ 
   "paramPane": {
     "nullField":"nichtig",
     "isTrue":"Wahr",
@@ -307,17 +314,10 @@
     "move":"Sich Bewegen",
     "unFavorite":"Favoriten löschen",
     "unFavConfirm":"Sind Sie sicher, dass Sie aus Favoritenliste entfernen {0} suchen?"
-  },
-  "common": {
-    "submit":"einreichen",
-    "cancel":"stornieren",
-    "deleteBtn":"löschen",
-    "edit":"bearbeiten",
-    "name":"Name",
-    "description":"Beschreibung"
+  
   },
   "security": {
-    "title":"",
+    "title":"Sicherheit",
     "newPolicy":"Neu",
     "reset":"rücksetzen",
     "roles":"Rollen",

@@ -188,6 +188,7 @@
     <Content Include="Forerunner\Common\css\ContextMenuBase.css" />
     <Content Include="Forerunner\Common\css\DialogBase.css" />
     <Content Include="Forerunner\Common\css\Forerunner-all.css" />
+    <Content Include="Forerunner\Common\images\ToolbarIcons\NotResponsive.png" />
     <Content Include="Forerunner\Lib\jQuery\js\jquery.validate.1.14.0.js" />
     <Content Include="Forerunner\Lib\jQuery\js\jquery.validate.1.14.0.min.js" />
     <Content Include="Forerunner\Lib\Misc\js\ParamUtil.js" />
@@ -276,7 +277,6 @@
     <Content Include="Forerunner\Common\images\ToolbarIcons\ForwardPageOff.png" />
     <Content Include="Forerunner\Common\images\ToolbarIcons\HomeBlue.png" />
     <Content Include="Forerunner\Common\images\ToolbarIcons\HomeOff.png" />
-    <Content Include="Forerunner\Common\images\ToolbarIcons\LastPageOff.png" />
     <Content Include="Forerunner\Common\images\ToolbarIcons\Logout.png" />
     <Content Include="Forerunner\Common\images\ToolbarIcons\MHT.png" />
     <Content Include="Forerunner\Common\images\ToolbarIcons\mhtml.png" />

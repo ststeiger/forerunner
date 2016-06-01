@@ -20196,7 +20196,7 @@ $(function () {
             // when app container width is 1024px or higher and use enable top param layout on big screen, then turn on the top param layout
             var containerWidth = layout.$container.outerWidth();
             var paramLayout = me.options.userSettings.paramLayout
-            var isTopParamLayout = containerWidth > 1023 && paramLayout.toLowerCase() === "top";
+            var isTopParamLayout = containerWidth > 1023 && paramLayout && paramLayout.toLowerCase() === "top";
 
             var initializer = new forerunner.ssr.ReportViewerInitializer({
                 $toolbar: layout.$mainheadersection,

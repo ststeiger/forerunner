@@ -68,7 +68,8 @@
     "viewDashboard":"Vezi Tablou de bord",
     "zoomPageWidth":"Toggle Page Lățime",
     "zoomPercent":"Zoom la Procent",
-    "zoomDropdown":"Zoom"
+    "zoomDropdown":"Zoom",
+    "responsiveUI":"responsiveUI"
   },
   "toolbar": {
     "back":"Înapoi",
@@ -104,7 +105,8 @@
     "editDashboard":"Edit Tablou de bord",
     "saveDashboard":"Salvați Tablou de bord",
     "searchFolder":"Folder de căutare",
-    "viewDashboard":"Vezi Tablou de bord"
+    "viewDashboard":"Vezi Tablou de bord",
+    "responsiveUI":"responsive UI"
   },
   "print": {
     "title":"imprima raportul",

@@ -534,7 +534,12 @@ div.fr-layout-position-absolute { position: absolute; }
 .fr-icons24x24-security {
     background-image:url(../images/ToolbarIcons/Security.png);
 }
-
+.fr-icons24x24-responsive {
+    background-image:url(../images/ToolbarIcons/Responsive.png);
+}
+.fr-icons24x24-notresponsive {
+    background-image:url(../images/ToolbarIcons/NotResponsive.png);
+}
 /*** IconGen - start automatically generated, do not hand modify ***/
 /*.fr-icons25x31 {
   width:25px;

@@ -69,7 +69,8 @@
     "tags":"Mots clés",
     "zoomPageWidth":"Toggle Ancho de página",
     "zoomPercent":"Zoom al porcentaje",
-    "zoomDropdown":"Zoom"
+    "zoomDropdown":"Zoom",
+    "responsiveUI":"responsiveUI"
   },
   "toolbar": {
     "back":"Retour",
@@ -105,7 +106,8 @@
     "editDashboard":"Modifier Dashboard",
     "saveDashboard":"enregistrer du tableau de bord",
     "viewDashboard":"Voir Tableau de bord",
-    "searchFolder":"dossier de recherche"
+    "searchFolder":"dossier de recherche",
+    "responsiveUI":"responsive UI"
   },
   "print": {
     "title":"Imprimer option de mise en",

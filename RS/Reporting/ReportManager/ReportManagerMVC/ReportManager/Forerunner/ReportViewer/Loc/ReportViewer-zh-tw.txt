@@ -68,7 +68,8 @@
     "viewDashboard":"查看指示板",
     "zoomPageWidth":"切換頁面寬度",
     "zoomPercent":"縮放百分比",
-    "zoomDropdown":"縮放"
+    "zoomDropdown":"縮放",
+    "responsiveUI":"響應式UI"
   },
   "toolbar": {
     "back":"返回",
@@ -104,7 +105,8 @@
     "editDashboard":"編輯指示板",
     "saveDashboard":"保存指示板",
     "searchFolder":"搜索文件夾",
-    "viewDashboard":"查看指示板"
+    "viewDashboard":"查看指示板",
+    "responsiveUI":"響應式 UI"
   },
   "print": {
     "title":"打印報表",

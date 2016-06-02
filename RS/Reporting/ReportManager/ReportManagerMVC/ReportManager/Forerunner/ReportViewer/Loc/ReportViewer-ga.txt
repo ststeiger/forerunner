@@ -68,7 +68,8 @@
     "tags":"Clibeanna",
     "zoomPageWidth":"Scoránaigh Leathanach Leithead",
     "zoomPercent":"Súmáil go Céatadán",
-    "zoomDropdown":"Zúmáil"
+    "zoomDropdown":"Zúmáil",
+    "responsiveUI":"responsiveUI"
   },
   "toolbar": {
     "back":"ar ais",
@@ -104,7 +105,8 @@
     "editDashboard":"Painéal na Eagar",
     "saveDashboard":"Sábháil Ar Phainéal",
     "searchFolder":"Cuardaigh Fillteán",
-    "viewDashboard":"Féach ar Phainéil"
+    "viewDashboard":"Féach ar Phainéil",
+    "responsiveUI":"responsive UI"
   },
   "print": {
     "title":"Imprimir páxina de opción de esquema",

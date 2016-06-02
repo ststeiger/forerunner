@@ -68,7 +68,8 @@
     "tags":"etichetta",
     "zoomPageWidth":"Toggle Larghezza pagina",
     "zoomPercent":"Zoom su Percent",
-    "zoomDropdown":"Zoom"
+    "zoomDropdown":"Zoom",
+    "responsiveUI":"responsiveUI"
   },
   "toolbar": {
     "back":"indietro",
@@ -104,7 +105,8 @@
     "editDashboard":"Modifica Dashboard",
     "saveDashboard":"Salva Dashboard",
     "viewDashboard":"Mostra Dashboard",
-    "searchFolder":"Folder ricerca"
+    "searchFolder":"Folder ricerca",
+    "responsiveUI":"responsive UI"
   },
   "print": {
     "title":"Stampa Pagina opzione di layout",

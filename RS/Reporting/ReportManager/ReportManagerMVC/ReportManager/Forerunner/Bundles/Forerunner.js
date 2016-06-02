@@ -671,6 +671,8 @@ $(function () {
             catalogSelected: "catalogSelected",
             /** @constant */
             getCatalogComplete: "getcatalogcomplete",
+            /** @constant */
+            responsiveToggle: "responsive-toggle-click",
             /** widget + event, lowercase */
             catalogTreeCatalogSelected: function () { return (forerunner.ssr.constants.widgets.catalogTree + this.catalogSelected).toLowerCase(); },
             /** widget + event, lowercase */

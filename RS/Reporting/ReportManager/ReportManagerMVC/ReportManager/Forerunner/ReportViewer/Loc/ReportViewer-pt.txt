@@ -68,7 +68,8 @@
     "viewDashboard":"Ver o Dashboard",
     "zoomPageWidth":"Alternar Largura da Página",
     "zoomPercent":"Zoom para Percent",
-    "zoomDropdown":"Zoom"
+    "zoomDropdown":"Zoom",
+    "responsiveUI":"responsiveUI"
   },
   "toolbar": {
     "back":"Volta",
@@ -104,7 +105,8 @@
     "editDashboard":"Editar o Dashboard",
     "saveDashboard":"Salve o Dashboard",
     "searchFolder":"pasta de Pesquisa",
-    "viewDashboard":"Ver o Dashboard"
+    "viewDashboard":"Ver o Dashboard",
+    "responsiveUI":"responsive UI"
   },
   "print": {
     "title":"Imprimir página de opção de layout",

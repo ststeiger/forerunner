@@ -68,7 +68,8 @@
     "editDashboard":"Edit Dashboard",
     "saveDashboard":"Save Dashboard",
     "viewDashboard":"View Dashboard",
-    "tags":"Tags"
+    "tags":"Tags",
+    "responsiveUI":"responsiveUI"
   },
   "toolbar": {
     "back":"Back",
@@ -104,7 +105,8 @@
     "editDashboard":"Edit Dashboard",
     "saveDashboard":"Save Dashboard",
     "searchFolder":"Search Folder",
-    "viewDashboard":"View Dashboard"
+    "viewDashboard":"View Dashboard",
+    "responsiveUI":"responsive UI"
   },
   "print": {
     "title":"Print Report",

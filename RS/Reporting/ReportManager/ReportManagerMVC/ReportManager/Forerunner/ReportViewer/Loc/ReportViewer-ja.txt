@@ -68,7 +68,8 @@
     "viewDashboard":"ビューダッシュボード",
     "zoomPageWidth":"トグルページ幅",
     "zoomPercent":"パーセントにズーム",
-    "zoomDropdown":"ズーム"
+    "zoomDropdown":"ズーム",
+    "responsiveUI":"responsiveUI"
   },
   "toolbar": {
     "back":"裏面",
@@ -104,7 +105,8 @@
     "editDashboard":"編集ダッシュボード",
     "saveDashboard":"ダッシュボードを保存",
     "searchFolder":"検索フォルダ",
-    "viewDashboard":"ビューダッシュボード"
+    "viewDashboard":"ビューダッシュボード",
+    "responsiveUI":"responsive UI"
   },
   "print": {
     "title":"ページレイアウトオプションを印刷",

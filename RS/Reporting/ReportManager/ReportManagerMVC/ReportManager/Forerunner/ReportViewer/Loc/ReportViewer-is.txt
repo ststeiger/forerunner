@@ -68,7 +68,8 @@
     "viewDashboard":"Skoða Mælaborð",
     "zoomPageWidth":"Víxla síðu breidd",
     "zoomPercent":"Þysja að Prósent",
-    "zoomDropdown":"Zoom"
+    "zoomDropdown":"Zoom",
+    "responsiveUI":"responsiveUI"
   },
   "toolbar": {
     "back":"Til baka",
@@ -104,7 +105,8 @@
     "editDashboard":"breyta Mælaborð",
     "saveDashboard":"vista Mælaborð",
     "searchFolder":"Leita Mappa",
-    "viewDashboard":"Skoða Mælaborð"
+    "viewDashboard":"Skoða Mælaborð",
+    "responsiveUI":"responsive UI"
   },
   "print": {
     "title":"Print Report",

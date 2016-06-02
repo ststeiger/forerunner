@@ -1,11 +1,11 @@
 ﻿{
-"common" : {
-	"submit":"Einreichen",
-	"cancel":"Stornieren",
-	"deleteBtn":"Löschen",
-	"edit":"Bearbeiten",
-	"name":"Name",
-	"description":"Beschreibung"
+  "common": {
+    "submit":"Einreichen",
+    "cancel":"Stornieren",
+    "deleteBtn":"Löschen",
+    "edit":"Bearbeiten",
+    "name":"Name",
+    "description":"Beschreibung"
   },
   "messages": {
     "loading":"Laden...",
@@ -74,7 +74,10 @@
     "saveDashboard":"Save-Übersicht",
     "tags":"Schlagworte",
     "viewDashboard":"Dashboard-Ansicht",
-    
+    "zoomPageWidth":"Toggle Page Width",
+    "zoomPercent":"Zoom to Percent",
+    "zoomDropdown":"Zoom",
+    "responsiveUI":"responsiveUI"
   },
   "toolbar": {
     "back":"Zurück",
@@ -110,7 +113,8 @@
     "editDashboard":"Dashboard-Bearbeiten",
     "saveDashboard":"Save-Übersicht",
     "searchFolder":"Suchordner",
-    "viewDashboard":"Dashboard-Ansicht"
+    "viewDashboard":"Dashboard-Ansicht",
+    "responsiveUI":"responsive UI"
   },
   "print": {
     "title":"Bericht drucken",
@@ -142,7 +146,6 @@
     "ParamLayoutRight":"Recht",
     "ParamLayoutTopPrompt":"Breite Voraussetzung: 1024px oder höher"
   },
- 
   "paramPane": {
     "nullField":"nichtig",
     "isTrue":"Wahr",
@@ -314,7 +317,6 @@
     "move":"Sich Bewegen",
     "unFavorite":"Favoriten löschen",
     "unFavConfirm":"Sind Sie sicher, dass Sie aus Favoritenliste entfernen {0} suchen?"
-  
   },
   "security": {
     "title":"Sicherheit",

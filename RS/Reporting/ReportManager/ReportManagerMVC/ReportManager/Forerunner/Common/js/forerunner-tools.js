@@ -447,13 +447,15 @@ $(function () {
         btnResponsive: {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-responsive-button",
-            imageClass: "fr-icons24x24-dataSourceCred",
-            //sharedClass: "fr-hide-if-disable",
-            tooltip: function () { return "Responsive UI" },
+            //default to not responsive
+            imageClass: "fr-icons24x24-notresponsive",
+            sharedClass: "fr-hide-if-disable",
+            tooltip: function () { return locData.getLocData().toolbar.responsiveUI; },
             visibilityOrder: 15,
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("toggleResponseUI");
+                    e.data.$appContainer.trigger(events.responsiveToggle);
                 }
             }
         }
@@ -1209,12 +1211,14 @@ $(function () {
         itemResponsive: {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-item-responsive",
-            imageClass: "fr-icons24x24-dataSourceCred",
-            text: function () { return "Responsive UI" },
+            //default to not responsive
+            imageClass: "fr-icons24x24-notresponsive",
+            text: function () { return locData.getLocData().toolPane.responsiveUI; },
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("toggleResponseUI");
                     e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-responsive"]);
+                    e.data.$appContainer.trigger(events.responsiveToggle);
                 }
             }
         }

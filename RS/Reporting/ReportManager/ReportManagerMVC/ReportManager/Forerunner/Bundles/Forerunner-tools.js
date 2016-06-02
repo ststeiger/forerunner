@@ -443,6 +443,22 @@ $(function () {
                     e.data.$reportViewer.reportViewer("showDSCredential");
                 }
             }
+        },
+        /** @member */
+        btnResponsive: {
+            toolType: toolTypes.button,
+            selectorClass: "fr-toolbar-responsive-button",
+            //default to not responsive
+            imageClass: "fr-icons24x24-notresponsive",
+            sharedClass: "fr-hide-if-disable",
+            tooltip: function () { return locData.getLocData().toolbar.responsiveUI; },
+            visibilityOrder: 15,
+            events: {
+                click: function (e) {
+                    e.data.$reportViewer.reportViewer("toggleResponseUI");
+                    e.data.$appContainer.trigger(events.responsiveToggle);
+                }
+            }
         }
     };
 
@@ -1189,6 +1205,21 @@ $(function () {
             events: {
                 click: function (e) {
                     e.data.me.options.$ReportViewerInitializer.options.navigateTo("favorites", null);
+                }
+            }
+        },
+        /** @member */
+        itemResponsive: {
+            toolType: toolTypes.containerItem,
+            selectorClass: "fr-item-responsive",
+            //default to not responsive
+            imageClass: "fr-icons24x24-notresponsive",
+            text: function () { return locData.getLocData().toolPane.responsiveUI; },
+            events: {
+                click: function (e) {
+                    e.data.$reportViewer.reportViewer("toggleResponseUI");
+                    e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-responsive"]);
+                    e.data.$appContainer.trigger(events.responsiveToggle);
                 }
             }
         }

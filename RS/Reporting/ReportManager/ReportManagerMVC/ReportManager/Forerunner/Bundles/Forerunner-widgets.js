@@ -1079,6 +1079,24 @@ $(function () {
                 me._reLayoutPage(me.curPage, force);                
             }
         },
+        /**
+         * Switch the responsive UI status
+         *
+         * @function $.forerunner.reportViewer#toggleResponseUI
+         */
+        toggleResponseUI: function() {
+            var me = this,
+                pageNum = me.getCurPage(),
+                $container = me.pages[pageNum].$container;
+            
+            me.options.userSettings.responsiveUI = !me.options.userSettings.responsiveUI;
+
+            $container.reportRender({
+                responsive: me.options.userSettings.responsiveUI
+            });
+
+            me.pages[pageNum].needsLayout = $container.reportRender("layoutReport", true, true, me.getRDLExt(), true);
+        },
 
         /**
        * Get current Scroll Position
@@ -3679,8 +3697,9 @@ $(function () {
 
         _reLayoutPage: function(pageNum,force){
             var me = this;
+
             if (me.pages[pageNum] && me.pages[pageNum].needsLayout) {
-                me.pages[pageNum].needsLayout = me.pages[pageNum].$container.reportRender("layoutReport", true, force, me.getRDLExt());                
+                me.pages[pageNum].needsLayout = me.pages[pageNum].$container.reportRender("layoutReport", true, force, me.getRDLExt());
             }
         },
         _renderPage: function (pageNum) {
@@ -8862,6 +8881,10 @@ $(function () {
                     me.showTools([rtb.btnRTBManageSets, rtb.btnSelectSet, rtb.btnSavParam]);
                 }
             });
+
+            me.options.$appContainer.on(events.responsiveToggle, function (e, data) {
+                me.element.find(".fr-toolbar-responsive-button").find("div").first().toggleClass("fr-icons24x24-responsive").toggleClass("fr-icons24x24-notresponsive");
+            });
         },
         _init: function () {
             var me = this;
@@ -8872,7 +8895,8 @@ $(function () {
            
             me.addTools(1, false, me._viewerButtons());
 
-            if (me.options.dbConfig &&  me.options.dbConfig.UseMobilizerDB === true && !me.options.$reportViewer.reportViewer("showSubscriptionUI")) {
+            if (me.options.dbConfig && me.options.dbConfig.UseMobilizerDB === true
+                && !me.options.$reportViewer.reportViewer("showSubscriptionUI")) {
                 me.hideTool(tb.btnEmailSubscription.selectorClass);
             }
 
@@ -8896,14 +8920,16 @@ $(function () {
                 listOfButtons.push(tb.btnReportBack);
             }
 
-            listOfButtons.push(tb.btnCredential, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup);
-
-            
-            listOfButtons.push(tb.btnPrint);
+            listOfButtons.push(tb.btnCredential, tb.btnNav, tb.btnRefresh,
+                tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup,
+                tg.btnFindGroup, tb.btnPrint);
 
             if (me.options.dbConfig &&  me.options.dbConfig.UseMobilizerDB === true) {
                 listOfButtons.push(tb.btnEmailSubscription);
             }
+
+            // add report responsive ui toggle button
+            listOfButtons.push(tb.btnResponsive);
 
             return listOfButtons;
         },
@@ -8917,7 +8943,6 @@ $(function () {
             else {
                 me.element.find(".fr-toolbar-numPages-button").html("?");
             }
-
 
             if (me.options.$reportViewer.reportViewer("getHasDocMap")) {
                 me.enableTools([tb.btnDocumentMap]);
@@ -8964,7 +8989,8 @@ $(function () {
         },
         _checkSubscription: function () {
             var me = this;
-            if (me.options.dbConfig &&  me.options.dbConfig.UseMobilizerDB === false || !me.options.$reportViewer.reportViewer("showSubscriptionUI")) {
+            if (me.options.dbConfig && me.options.dbConfig.UseMobilizerDB === false
+                || !me.options.$reportViewer.reportViewer("showSubscriptionUI")) {
                 return;
             }
 
@@ -9019,6 +9045,7 @@ $(function () {
         options: {
             dbConfig: {},
             $reportViewer: null,
+            $appContainer: null,
             toolClass: "fr-toolpane"
         },
         _initCallbacks: function () {
@@ -9040,7 +9067,8 @@ $(function () {
                         me.disableTools([tp.itemCredential]);
                     }
 
-                    me.element.find(".fr-item-keyword-textbox").watermark(locData.getLocData().toolbar.search, forerunner.config.getWatermarkConfig());
+                    me.element.find(".fr-item-keyword-textbox").watermark(locData.getLocData().toolbar.search,
+                        forerunner.config.getWatermarkConfig());
                 }
             });
 
@@ -9124,6 +9152,10 @@ $(function () {
             me.options.$reportViewer.on(events.reportViewerRefresh(), function (e, data) {
                 me._clearItemStates();
             });
+
+            me.options.$appContainer.on(events.responsiveToggle, function (e, data) {
+                me.element.find(".fr-item-responsive").find("div").first().toggleClass("fr-icons24x24-responsive").toggleClass("fr-icons24x24-notresponsive");
+            });
             
             // Hook up the toolbar element events
             //me.enableTools([tp.itemFirstPage, tp.itemPrev, tp.itemNext, tp.itemLastPage, tp.itemNav,
@@ -9149,7 +9181,8 @@ $(function () {
             });
 
 
-            if (me.options.dbConfig && me.options.dbConfig.UseMobilizerDB === true && !me.options.$reportViewer.reportViewer("showSubscriptionUI")) {
+            if (me.options.dbConfig && me.options.dbConfig.UseMobilizerDB === true
+                && !me.options.$reportViewer.reportViewer("showSubscriptionUI")) {
                 me.hideTool(tp.itemEmailSubscription.selectorClass);
             }
 
@@ -9181,7 +9214,7 @@ $(function () {
             }
 
             listOfItems.push(tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoomDropDown,
-                tg.itemZoomGroup, tp.itemExport, tg.itemExportGroup, tp.itemPrint);
+                tg.itemZoomGroup, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tp.itemResponsive);
 
             if (me.options.dbConfig && me.options.dbConfig.UseMobilizerDB === true) {
                 listOfItems.push(tp.itemEmailSubscription);
@@ -9254,7 +9287,8 @@ $(function () {
         _checkSubscription: function () {
             var me = this;
 
-            if (me.options.dbConfig && me.options.dbConfig.UseMobilizerDB === false || !me.options.$reportViewer.reportViewer("showSubscriptionUI")) {
+            if (me.options.dbConfig && me.options.dbConfig.UseMobilizerDB === false
+                || !me.options.$reportViewer.reportViewer("showSubscriptionUI")) {
                 return;
             }
 
@@ -13036,10 +13070,18 @@ $(function () {
         * @param {Boolean} isLoaded - Has the report been loaded in the DOM
         * @param {Boolean} force - force a re-layout
         * @param {Object} RDLExt - RDL extension object for this report
+        * @param {Object} isToggle - Is triggered by the toolbar / toolpane toggle button, true for force re-layout
         */
-        layoutReport: function (isLoaded, force, RDLExt) {
+        layoutReport: function (isLoaded, force, RDLExt, isToggle) {
             var me = this;
-           
+
+            if (me.layoutLocked) {
+                //prevent duplicate invoke
+                return
+            }
+            
+            me.layoutLocked = true;
+
             var renderWidth = me.options.reportViewer.element.width();
             if (RDLExt)
                 me.RDLExt = RDLExt;
@@ -13047,7 +13089,7 @@ $(function () {
                 return true;
 
             //Need to re-render
-            if ((Math.abs(me._currentWidth - renderWidth) > 30 || force) && me.options.responsive && me._defaultResponsizeTablix === "on") {
+            if ((Math.abs(me._currentWidth - renderWidth) > 30 || force) && (me.options.responsive || isToggle) && me._defaultResponsizeTablix === "on") {
                 me._currentWidth = renderWidth;
                 me._reRender();
             }
@@ -13119,6 +13161,12 @@ $(function () {
                 }
             }
             me.element.hide().show(0);
+
+            setTimeout(function () {
+                //reset the lock status after 100ms
+                me.layoutLocked = false;
+            }, 100);
+
             return false;
         },
         _getRectangleLayout: function (Measurements) {
@@ -13339,9 +13387,7 @@ $(function () {
                 RIContext.$HTMLParent.addClass(me._getClassName("fr-n-", RIContext.CurrObj));
             }
 
-            RIContext.$HTMLParent.attr("Style", Style);
-            RIContext.$HTMLParent.addClass("fr-r-rT");
-
+            RIContext.$HTMLParent.attr("Style", Style).addClass("fr-r-rT");
 
             Style = "";
             //Special case for RDL extension inputType
@@ -14032,9 +14078,10 @@ $(function () {
         },
         _writeAction: function (RIContext, Action, Control) {
             var me = this;
-            if (Action.HyperLink) {
-                Control.addClass("fr-core-cursorpointer");
-                Control.attr("href", "#");
+
+            Control.addClass("fr-core-cursorpointer").attr("href", "#");
+
+            if (Action.HyperLink) {                
                 Control.on("click", { HyperLink: Action.HyperLink }, function (e) {
                     me._stopDefaultEvent(e);               
                     if (forerunner.config.getCustomSettingsValue("URLActionNewTab", "off") === "on")
@@ -14042,12 +14089,9 @@ $(function () {
                     else
                         location.href = e.data.HyperLink;                    
                 });
-
             }
             else if (Action.BookmarkLink) {
                 //HRef needed for ImageMap, Class needed for non image map
-                Control.attr("href", "#");
-                Control.addClass("fr-core-cursorpointer");
                 Control.on("click", { BookmarkID: Action.BookmarkLink }, function (e) {
                     me._stopDefaultEvent(e);
                     me.options.reportViewer.navigateBookmark(e.data.BookmarkID);
@@ -14055,8 +14099,6 @@ $(function () {
             }
             else if (Action.DrillthroughId) {
                 //HRef needed for ImageMap, Class needed for non image map
-                Control.addClass("fr-core-cursorpointer");
-                Control.attr("href", "#");
                 Control.on("click", { DrillthroughId: Action.DrillthroughId }, function (e) {
                     me._stopDefaultEvent(e);
                     me.options.reportViewer.navigateDrillthrough(e.data.DrillthroughId);
@@ -19908,6 +19950,15 @@ $(function () {
                 if (me.options.dbConfig.UseMobilizerDB === true && (me.options.isReportManager || me.options.useReportManagerSettings)) {
                     $righttoolbar.rightToolbar("addTools", 2, true, [rtb.btnRTBManageSets, rtb.btnSelectSet, rtb.btnSavParam]);
                 }
+            }
+
+            // set responsive toggle button init status
+            if (userSettings.responsiveUI) {                
+                var $btnResponsive = $toolbar.find(".fr-toolbar-responsive-button").find("div").first(),
+                    $itemResponsive = $toolPane.find(".fr-item-responsive").find("div").first();
+
+                $btnResponsive.removeClass("fr-icons24x24-notresponsive").addClass("fr-icons24x24-responsive");
+                $itemResponsive.removeClass("fr-icons24x24-notresponsive").addClass("fr-icons24x24-responsive");
             }
 
             // Create / render the menu pane

@@ -178,6 +178,15 @@ $(function () {
                 }
             }
 
+            // set responsive toggle button init status
+            if (userSettings.responsiveUI) {                
+                var $btnResponsive = $toolbar.find(".fr-toolbar-responsive-button").find("div").first(),
+                    $itemResponsive = $toolPane.find(".fr-item-responsive").find("div").first();
+
+                $btnResponsive.removeClass("fr-icons24x24-notresponsive").addClass("fr-icons24x24-responsive");
+                $itemResponsive.removeClass("fr-icons24x24-notresponsive").addClass("fr-icons24x24-responsive");
+            }
+
             // Create / render the menu pane
             var mi = forerunner.ssr.tools.mergedItems;
             var $toolPane = me.options.$toolPane.toolPane({

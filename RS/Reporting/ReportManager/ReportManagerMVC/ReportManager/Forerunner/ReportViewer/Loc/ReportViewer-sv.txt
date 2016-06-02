@@ -68,7 +68,8 @@
     "viewDashboard":"Se instrumentpanel",
     "zoomPageWidth":"Växla Sidan Bredd",
     "zoomPercent":"Zooma till Procent",
-    "zoomDropdown":"Zoom"
+    "zoomDropdown":"Zoom",
+    "responsiveUI":"responsiveUI"
   },
   "toolbar": {
     "back":"bakåt",
@@ -104,7 +105,8 @@
     "editDashboard":"Redigera Instrumentbräda",
     "saveDashboard":"Spara Dashboard",
     "searchFolder":"sökmapp",
-    "viewDashboard":"Se instrumentpanel"
+    "viewDashboard":"Se instrumentpanel",
+    "responsiveUI":"responsive UI"
   },
   "print": {
     "title":"Skriv Option Sidlayout",

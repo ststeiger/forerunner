@@ -68,7 +68,8 @@
     "viewDashboard":"Посмотреть Dashboard",
     "zoomPageWidth":"Переключить Ширина страницы",
     "zoomPercent":"Увеличить до Процент",
-    "zoomDropdown":"Увеличить"
+    "zoomDropdown":"Увеличить",
+    "responsiveUI":"responsiveUI"
   },
   "toolbar": {
     "back":"Назад",
@@ -104,7 +105,8 @@
     "editDashboard":"Редактировать Dashboard",
     "saveDashboard":"Сохранить Dashboard",
     "searchFolder":"Поиск Папка",
-    "viewDashboard":"Посмотреть Dashboard"
+    "viewDashboard":"Посмотреть Dashboard",
+    "responsiveUI":"responsive UI"
   },
   "print": {
     "title":"Печать отчета",

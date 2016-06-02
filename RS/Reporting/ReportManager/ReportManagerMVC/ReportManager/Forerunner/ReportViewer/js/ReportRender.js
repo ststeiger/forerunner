@@ -474,6 +474,13 @@ $(function () {
         layoutReport: function (isLoaded, force, RDLExt, isToggle) {
             var me = this;
 
+            if (me.layoutLocked) {
+                //prevent duplicate invoke
+                return
+            }
+            
+            me.layoutLocked = true;
+
             var renderWidth = me.options.reportViewer.element.width();
             if (RDLExt)
                 me.RDLExt = RDLExt;
@@ -553,6 +560,12 @@ $(function () {
                 }
             }
             me.element.hide().show(0);
+
+            setTimeout(function () {
+                //reset the lock status after 100ms
+                me.layoutLocked = false;
+            }, 100);
+
             return false;
         },
         _getRectangleLayout: function (Measurements) {

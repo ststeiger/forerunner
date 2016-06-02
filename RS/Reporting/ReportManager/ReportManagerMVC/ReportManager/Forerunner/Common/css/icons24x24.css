@@ -351,3 +351,9 @@
 .fr-icons24x24-security {
     background-image:url(../images/ToolbarIcons/Security.png);
 }
+.fr-icons24x24-responsive {
+    background-image:url(../images/ToolbarIcons/Responsive.png);
+}
+.fr-icons24x24-notresponsive {
+    background-image:url(../images/ToolbarIcons/NotResponsive.png);
+}

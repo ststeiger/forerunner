@@ -36,6 +36,7 @@ $(function () {
         options: {
             dbConfig: {},
             $reportViewer: null,
+            $appContainer: null,
             toolClass: "fr-toolpane"
         },
         _initCallbacks: function () {
@@ -141,6 +142,10 @@ $(function () {
 
             me.options.$reportViewer.on(events.reportViewerRefresh(), function (e, data) {
                 me._clearItemStates();
+            });
+
+            me.options.$appContainer.on(events.responsiveToggle, function (e, data) {
+                me.element.find(".fr-item-responsive").find("div").first().toggleClass("fr-icons24x24-responsive").toggleClass("fr-icons24x24-notresponsive");
             });
             
             // Hook up the toolbar element events

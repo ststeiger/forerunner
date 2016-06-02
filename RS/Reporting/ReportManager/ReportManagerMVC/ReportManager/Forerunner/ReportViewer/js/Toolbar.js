@@ -171,7 +171,8 @@ $(function () {
            
             me.addTools(1, false, me._viewerButtons());
 
-            if (me.options.dbConfig &&  me.options.dbConfig.UseMobilizerDB === true && !me.options.$reportViewer.reportViewer("showSubscriptionUI")) {
+            if (me.options.dbConfig && me.options.dbConfig.UseMobilizerDB === true
+                && !me.options.$reportViewer.reportViewer("showSubscriptionUI")) {
                 me.hideTool(tb.btnEmailSubscription.selectorClass);
             }
 
@@ -195,14 +196,16 @@ $(function () {
                 listOfButtons.push(tb.btnReportBack);
             }
 
-            listOfButtons.push(tb.btnCredential, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup);
-
-            
-            listOfButtons.push(tb.btnPrint);
+            listOfButtons.push(tb.btnCredential, tb.btnNav, tb.btnRefresh,
+                tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup,
+                tg.btnFindGroup, tb.btnPrint);
 
             if (me.options.dbConfig &&  me.options.dbConfig.UseMobilizerDB === true) {
                 listOfButtons.push(tb.btnEmailSubscription);
             }
+
+            // add report responsive ui toggle button
+            listOfButtons.push(tb.btnResponsive);
 
             return listOfButtons;
         },
@@ -216,7 +219,6 @@ $(function () {
             else {
                 me.element.find(".fr-toolbar-numPages-button").html("?");
             }
-
 
             if (me.options.$reportViewer.reportViewer("getHasDocMap")) {
                 me.enableTools([tb.btnDocumentMap]);
@@ -263,7 +265,8 @@ $(function () {
         },
         _checkSubscription: function () {
             var me = this;
-            if (me.options.dbConfig &&  me.options.dbConfig.UseMobilizerDB === false || !me.options.$reportViewer.reportViewer("showSubscriptionUI")) {
+            if (me.options.dbConfig && me.options.dbConfig.UseMobilizerDB === false
+                || !me.options.$reportViewer.reportViewer("showSubscriptionUI")) {
                 return;
             }
 

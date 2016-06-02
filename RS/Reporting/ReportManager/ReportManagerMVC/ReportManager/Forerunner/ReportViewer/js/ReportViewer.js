@@ -359,6 +359,24 @@ $(function () {
                 me._reLayoutPage(me.curPage, force);                
             }
         },
+        /**
+         * Switch the responsive UI status
+         *
+         * @function $.forerunner.reportViewer#toggleResponseUI
+         */
+        toggleResponseUI: function() {
+            var me = this,
+                pageNum = me.getCurPage(),
+                $container = me.pages[pageNum].$container;
+            
+            me.options.userSettings.responsiveUI = !me.options.userSettings.responsiveUI;
+
+            $container.reportRender({
+                responsive: me.options.userSettings.responsiveUI
+            });
+
+            me.pages[pageNum].needsLayout = $container.reportRender("layoutReport", true, true, me.getRDLExt(), true);
+        },
 
         /**
        * Get current Scroll Position
@@ -2959,8 +2977,9 @@ $(function () {
 
         _reLayoutPage: function(pageNum,force){
             var me = this;
+
             if (me.pages[pageNum] && me.pages[pageNum].needsLayout) {
-                me.pages[pageNum].needsLayout = me.pages[pageNum].$container.reportRender("layoutReport", true, force, me.getRDLExt());                
+                me.pages[pageNum].needsLayout = me.pages[pageNum].$container.reportRender("layoutReport", true, force, me.getRDLExt());
             }
         },
         _renderPage: function (pageNum) {

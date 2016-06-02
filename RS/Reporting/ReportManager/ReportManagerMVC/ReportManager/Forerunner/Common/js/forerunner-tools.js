@@ -442,6 +442,20 @@ $(function () {
                     e.data.$reportViewer.reportViewer("showDSCredential");
                 }
             }
+        },
+        /** @member */
+        btnResponsive: {
+            toolType: toolTypes.button,
+            selectorClass: "fr-toolbar-responsive-button",
+            imageClass: "fr-icons24x24-dataSourceCred",
+            //sharedClass: "fr-hide-if-disable",
+            tooltip: function () { return "Responsive UI" },
+            visibilityOrder: 15,
+            events: {
+                click: function (e) {
+                    e.data.$reportViewer.reportViewer("toggleResponseUI");
+                }
+            }
         }
     };
 
@@ -1188,6 +1202,19 @@ $(function () {
             events: {
                 click: function (e) {
                     e.data.me.options.$ReportViewerInitializer.options.navigateTo("favorites", null);
+                }
+            }
+        },
+        /** @member */
+        itemResponsive: {
+            toolType: toolTypes.containerItem,
+            selectorClass: "fr-item-responsive",
+            imageClass: "fr-icons24x24-dataSourceCred",
+            text: function () { return "Responsive UI" },
+            events: {
+                click: function (e) {
+                    e.data.$reportViewer.reportViewer("toggleResponseUI");
+                    e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-responsive"]);
                 }
             }
         }

@@ -57,7 +57,8 @@ $(function () {
                         me.disableTools([tp.itemCredential]);
                     }
 
-                    me.element.find(".fr-item-keyword-textbox").watermark(locData.getLocData().toolbar.search, forerunner.config.getWatermarkConfig());
+                    me.element.find(".fr-item-keyword-textbox").watermark(locData.getLocData().toolbar.search,
+                        forerunner.config.getWatermarkConfig());
                 }
             });
 
@@ -166,7 +167,8 @@ $(function () {
             });
 
 
-            if (me.options.dbConfig && me.options.dbConfig.UseMobilizerDB === true && !me.options.$reportViewer.reportViewer("showSubscriptionUI")) {
+            if (me.options.dbConfig && me.options.dbConfig.UseMobilizerDB === true
+                && !me.options.$reportViewer.reportViewer("showSubscriptionUI")) {
                 me.hideTool(tp.itemEmailSubscription.selectorClass);
             }
 
@@ -198,7 +200,7 @@ $(function () {
             }
 
             listOfItems.push(tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoomDropDown,
-                tg.itemZoomGroup, tp.itemExport, tg.itemExportGroup, tp.itemPrint);
+                tg.itemZoomGroup, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tp.itemResponsive);
 
             if (me.options.dbConfig && me.options.dbConfig.UseMobilizerDB === true) {
                 listOfItems.push(tp.itemEmailSubscription);
@@ -271,7 +273,8 @@ $(function () {
         _checkSubscription: function () {
             var me = this;
 
-            if (me.options.dbConfig && me.options.dbConfig.UseMobilizerDB === false || !me.options.$reportViewer.reportViewer("showSubscriptionUI")) {
+            if (me.options.dbConfig && me.options.dbConfig.UseMobilizerDB === false
+                || !me.options.$reportViewer.reportViewer("showSubscriptionUI")) {
                 return;
             }
 

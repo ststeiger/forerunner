@@ -469,10 +469,11 @@ $(function () {
         * @param {Boolean} isLoaded - Has the report been loaded in the DOM
         * @param {Boolean} force - force a re-layout
         * @param {Object} RDLExt - RDL extension object for this report
+        * @param {Object} isToggle - Is triggered by the toolbar / toolpane toggle button, true for force re-layout
         */
-        layoutReport: function (isLoaded, force, RDLExt) {
+        layoutReport: function (isLoaded, force, RDLExt, isToggle) {
             var me = this;
-           
+
             var renderWidth = me.options.reportViewer.element.width();
             if (RDLExt)
                 me.RDLExt = RDLExt;
@@ -480,7 +481,7 @@ $(function () {
                 return true;
 
             //Need to re-render
-            if ((Math.abs(me._currentWidth - renderWidth) > 30 || force) && me.options.responsive && me._defaultResponsizeTablix === "on") {
+            if ((Math.abs(me._currentWidth - renderWidth) > 30 || force) && (me.options.responsive || isToggle) && me._defaultResponsizeTablix === "on") {
                 me._currentWidth = renderWidth;
                 me._reRender();
             }
@@ -772,9 +773,7 @@ $(function () {
                 RIContext.$HTMLParent.addClass(me._getClassName("fr-n-", RIContext.CurrObj));
             }
 
-            RIContext.$HTMLParent.attr("Style", Style);
-            RIContext.$HTMLParent.addClass("fr-r-rT");
-
+            RIContext.$HTMLParent.attr("Style", Style).addClass("fr-r-rT");
 
             Style = "";
             //Special case for RDL extension inputType
@@ -1465,9 +1464,10 @@ $(function () {
         },
         _writeAction: function (RIContext, Action, Control) {
             var me = this;
-            if (Action.HyperLink) {
-                Control.addClass("fr-core-cursorpointer");
-                Control.attr("href", "#");
+
+            Control.addClass("fr-core-cursorpointer").attr("href", "#");
+
+            if (Action.HyperLink) {                
                 Control.on("click", { HyperLink: Action.HyperLink }, function (e) {
                     me._stopDefaultEvent(e);               
                     if (forerunner.config.getCustomSettingsValue("URLActionNewTab", "off") === "on")
@@ -1475,12 +1475,9 @@ $(function () {
                     else
                         location.href = e.data.HyperLink;                    
                 });
-
             }
             else if (Action.BookmarkLink) {
                 //HRef needed for ImageMap, Class needed for non image map
-                Control.attr("href", "#");
-                Control.addClass("fr-core-cursorpointer");
                 Control.on("click", { BookmarkID: Action.BookmarkLink }, function (e) {
                     me._stopDefaultEvent(e);
                     me.options.reportViewer.navigateBookmark(e.data.BookmarkID);
@@ -1488,8 +1485,6 @@ $(function () {
             }
             else if (Action.DrillthroughId) {
                 //HRef needed for ImageMap, Class needed for non image map
-                Control.addClass("fr-core-cursorpointer");
-                Control.attr("href", "#");
                 Control.on("click", { DrillthroughId: Action.DrillthroughId }, function (e) {
                     me._stopDefaultEvent(e);
                     me.options.reportViewer.navigateDrillthrough(e.data.DrillthroughId);

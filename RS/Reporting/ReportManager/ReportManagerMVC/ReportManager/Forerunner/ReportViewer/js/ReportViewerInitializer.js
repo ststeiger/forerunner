@@ -178,6 +178,14 @@ $(function () {
                 }
             }
 
+            var mi = forerunner.ssr.tools.mergedItems;
+            var $toolPane = me.options.$toolPane.toolPane({
+                dbConfig: me.options.dbConfig,
+                $reportViewer: $viewer,
+                $ReportViewerInitializer: me,
+                $appContainer: me.options.$appContainer
+            });
+
             // set responsive toggle button init status
             if (userSettings.responsiveUI) {                
                 var $btnResponsive = $toolbar.find(".fr-toolbar-responsive-button").find("div").first(),
@@ -188,13 +196,7 @@ $(function () {
             }
 
             // Create / render the menu pane
-            var mi = forerunner.ssr.tools.mergedItems;
-            var $toolPane = me.options.$toolPane.toolPane({
-                dbConfig: me.options.dbConfig,
-                $reportViewer: $viewer,
-                $ReportViewerInitializer: me,
-                $appContainer: me.options.$appContainer
-            });
+ 
 
             //favoriteModel dependence on toolbar and toolpane, so run initialization after those done
             me.favoriteInstance = null;

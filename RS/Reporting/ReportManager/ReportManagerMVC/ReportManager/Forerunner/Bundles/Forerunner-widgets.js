@@ -19952,6 +19952,14 @@ $(function () {
                 }
             }
 
+            var mi = forerunner.ssr.tools.mergedItems;
+            var $toolPane = me.options.$toolPane.toolPane({
+                dbConfig: me.options.dbConfig,
+                $reportViewer: $viewer,
+                $ReportViewerInitializer: me,
+                $appContainer: me.options.$appContainer
+            });
+
             // set responsive toggle button init status
             if (userSettings.responsiveUI) {                
                 var $btnResponsive = $toolbar.find(".fr-toolbar-responsive-button").find("div").first(),
@@ -19962,13 +19970,7 @@ $(function () {
             }
 
             // Create / render the menu pane
-            var mi = forerunner.ssr.tools.mergedItems;
-            var $toolPane = me.options.$toolPane.toolPane({
-                dbConfig: me.options.dbConfig,
-                $reportViewer: $viewer,
-                $ReportViewerInitializer: me,
-                $appContainer: me.options.$appContainer
-            });
+ 
 
             //favoriteModel dependence on toolbar and toolpane, so run initialization after those done
             me.favoriteInstance = null;
@@ -20246,7 +20248,7 @@ $(function () {
 
             // when app container width is 1024px or higher and use enable top param layout on big screen, then turn on the top param layout
             var containerWidth = layout.$container.outerWidth();
-            var paramLayout = me.options.userSettings.paramLayout
+            var paramLayout = me.options.userSettings.paramLayout;
             var isTopParamLayout = containerWidth > 1023 && paramLayout && paramLayout.toLowerCase() === "top";
 
             var initializer = new forerunner.ssr.ReportViewerInitializer({

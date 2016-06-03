@@ -106,7 +106,7 @@
     "saveDashboard":"Salva Dashboard",
     "viewDashboard":"Mostra Dashboard",
     "searchFolder":"Folder ricerca",
-    "responsiveUI":"responsive UI"
+    "responsiveUI":"reattiva UI"
   },
   "print": {
     "title":"Stampa Pagina opzione di layout",

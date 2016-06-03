@@ -106,7 +106,7 @@
     "saveDashboard":"ダッシュボードを保存",
     "searchFolder":"検索フォルダ",
     "viewDashboard":"ビューダッシュボード",
-    "responsiveUI":"responsive UI"
+    "responsiveUI":"応答性のUI"
   },
   "print": {
     "title":"ページレイアウトオプションを印刷",

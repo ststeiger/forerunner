@@ -106,7 +106,7 @@
     "saveDashboard":"Salvați Tablou de bord",
     "searchFolder":"Folder de căutare",
     "viewDashboard":"Vezi Tablou de bord",
-    "responsiveUI":"responsive UI"
+    "responsiveUI":"UI receptiv"
   },
   "print": {
     "title":"imprima raportul",

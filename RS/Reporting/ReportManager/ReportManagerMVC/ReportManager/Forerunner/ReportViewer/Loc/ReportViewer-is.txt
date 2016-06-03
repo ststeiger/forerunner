@@ -106,14 +106,14 @@
     "saveDashboard":"vista Mælaborð",
     "searchFolder":"Leita Mappa",
     "viewDashboard":"Skoða Mælaborð",
-    "responsiveUI":"responsive UI"
+    "responsiveUI":"móttækilegur UI"
   },
   "print": {
-    "title":"Print Report",
+    "title":"prenta skýrslu",
     "pageHeight":"Hæð",
     "pageWidth":"breidd",
     "marginTop":"Top",
-    "marginBottom":"Bottom",
+    "marginBottom":"botn",
     "marginLeft":"vinstri",
     "marginRight":"hægri",
     "print":"Prenta",

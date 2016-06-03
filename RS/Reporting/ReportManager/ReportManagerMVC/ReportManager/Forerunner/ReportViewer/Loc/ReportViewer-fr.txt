@@ -70,7 +70,7 @@
     "zoomPageWidth":"Toggle Ancho de página",
     "zoomPercent":"Zoom al porcentaje",
     "zoomDropdown":"Zoom",
-    "responsiveUI":"responsiveUI"
+    "responsiveUI":"UI réactive"
   },
   "toolbar": {
     "back":"Retour",
@@ -107,7 +107,7 @@
     "saveDashboard":"enregistrer du tableau de bord",
     "viewDashboard":"Voir Tableau de bord",
     "searchFolder":"dossier de recherche",
-    "responsiveUI":"responsive UI"
+    "responsiveUI":"UI réactive"
   },
   "print": {
     "title":"Imprimer option de mise en",

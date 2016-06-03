@@ -106,7 +106,7 @@
     "saveDashboard":"Spara Dashboard",
     "searchFolder":"sökmapp",
     "viewDashboard":"Se instrumentpanel",
-    "responsiveUI":"responsive UI"
+    "responsiveUI":"responsiv UI"
   },
   "print": {
     "title":"Skriv Option Sidlayout",

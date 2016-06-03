@@ -60,7 +60,7 @@
     "print":"Priontáil",
     "dsCredential":"Dintiúir",
     "views":"Radhairc",
-    "addToFavorites":"Add to Favorites",
+    "addToFavorites":"cur to Favorites",
     "RDLExt":"RDL Síneadh",
     "saveDashboard":"Sábháil Ar Phainéal",
     "viewDashboard":"Féach ar Phainéil",
@@ -69,7 +69,7 @@
     "zoomPageWidth":"Scoránaigh Leathanach Leithead",
     "zoomPercent":"Súmáil go Céatadán",
     "zoomDropdown":"Zúmáil",
-    "responsiveUI":"responsiveUI"
+    "responsiveUI":"Chomhéadain sofhreagrach"
   },
   "toolbar": {
     "back":"ar ais",
@@ -80,8 +80,8 @@
     "firstPage":"chéad",
     "home":"Baile",
     "keyword":"Eochairfhocal",
-    "lastPage":"Last",
-    "logOff":"logoff",
+    "lastPage":"deireanach",
+    "logOff":"Logáil Amach",
     "menu":"roghchlár",
     "navigation":"Nascleanúint",
     "next":"Ar Aghaidh",
@@ -97,8 +97,8 @@
     "saveParam":"Sábháil Paraiméadair",
     "parameterSets":"Socraigh Bainistigh",
     "selectSet":"roghnaigh Socraigh",
-    "dsCredential":"Datasource credential",
-    "addToFavorites":"Add to Favorites",
+    "dsCredential":"credential datasource",
+    "addToFavorites":"cur to Favorites",
     "unzoom":"unzoom",
     "search":"Cuardaigh",
     "createDashboard":"Cruthaigh Phainéil",
@@ -106,7 +106,7 @@
     "saveDashboard":"Sábháil Ar Phainéal",
     "searchFolder":"Cuardaigh Fillteán",
     "viewDashboard":"Féach ar Phainéil",
-    "responsiveUI":"responsive UI"
+    "responsiveUI":"Chomhéadain sofhreagrach"
   },
   "print": {
     "title":"Imprimir páxina de opción de esquema",

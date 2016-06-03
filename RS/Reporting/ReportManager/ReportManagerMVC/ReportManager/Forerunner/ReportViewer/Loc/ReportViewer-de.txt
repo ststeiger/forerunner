@@ -74,8 +74,8 @@
     "saveDashboard":"Save-Übersicht",
     "tags":"Schlagworte",
     "viewDashboard":"Dashboard-Ansicht",
-    "zoomPageWidth":"Toggle Page Width",
-    "zoomPercent":"Zoom to Percent",
+    "zoomPageWidth":"Toggle Seitenbreite ",
+    "zoomPercent":"Zoom Prozent",
     "zoomDropdown":"Zoom",
     "responsiveUI":"responsiveUI"
   },

@@ -15844,21 +15844,14 @@ $(function () {
             var me = this,
                 reportPath = me.options.$reportViewer.getReportPath();
 
-            me.parameterModel.parameterModel("getAllParameterSets", reportPath, function (data) {
-                me.$select.html("");
-
-                $.each(data.optionArray, function (index, option) {
-                    var encodedOptionName = forerunner.helper.htmlEncode(option.name);
-                    var $option = $("<option value=" + option.id + ">" + encodedOptionName + "</option>");
-
-                    me.$select.append($option);
-
-                    option.id === data.selectedId && me.$select.prop("selectedIndex", index);
-                });
+            me.parameterModel.parameterModel("getAllParameterSets", reportPath, function (data) {               
+                me._drawSelect(data);
             });
         },
-        _onModelChange: function () {
+        _onModelChange: function (e, data) {
             var me = this;
+            
+            me._drawSelect(data);
 
             if (me.parameterModel && me.parameterModel.parameterModel("canUserSaveCurrentSet")) {
                 me.canEdit = true;
@@ -15867,6 +15860,23 @@ $(function () {
                 me.canEdit = false;
                 me.$btnBox.addClass("fr-paramset-disabled");
             }
+        },
+        _drawSelect: function(data) {
+            var me = this,
+                selectedIndex;
+
+            me.$select.html("");
+
+            $.each(data.optionArray, function (index, option) {
+                var encodedOptionName = forerunner.helper.htmlEncode(option.name);
+                var $option = $("<option value=" + option.id + ">" + encodedOptionName + "</option>");
+
+                me.$select.append($option);
+
+                option.id === data.selectedId && (selectedIndex = index);
+            });
+
+            me.$select.prop("selectedIndex", selectedIndex);
         },
         _initEvent: function () {
             var me = this;

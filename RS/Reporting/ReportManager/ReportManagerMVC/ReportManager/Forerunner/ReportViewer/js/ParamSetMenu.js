@@ -85,10 +85,10 @@ $(function () {
                 me._drawSelect(data);
             });
         },
-        _onModelChange: function (e, data) {
+        _onModelChange: function (e, data, isModelChange) {
             var me = this;
             
-            me._drawSelect(data);
+            isModelChange && me._drawSelect(data);
 
             if (me.parameterModel && me.parameterModel.parameterModel("canUserSaveCurrentSet")) {
                 me.canEdit = true;
@@ -121,7 +121,7 @@ $(function () {
             me.canEdit = me.parameterModel.parameterModel("canUserSaveCurrentSet");
 
             me.parameterModel.on(events.parameterModelChanged(), function (e, data) {
-                me._onModelChange.call(me, e, data);
+                me._onModelChange.call(me, e, data, true);
             });
 
             me.parameterModel.on(events.parameterModelSetChanged(), function (e, data) {
@@ -152,10 +152,15 @@ $(function () {
                 me.options.$ReportViewerInitializer.showManageParamSetsDialog(parameterList);
             });
 
-            // select an saved parameter 
-            me.$select.on("change", function () {
-                var id = this.value;
+            var changedHandler = function (e) {
+                var target = e.srcElement ? e.srcElement : e.target;
+                var id = target.value;
+
                 me.parameterModel.parameterModel("setCurrentSet", id);
+            }
+
+            me.$select.alwaysChange({
+                handler: changedHandler
             });
         },
         destory: function () {

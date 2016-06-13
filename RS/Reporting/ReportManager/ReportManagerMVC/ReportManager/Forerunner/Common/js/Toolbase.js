@@ -678,7 +678,9 @@ $(function () {
         },
         _create: function () {
             var me = this;
-            var $select = me.element.find("select");
+            
+            var $select = me.element.is('select') ? me.element : me.element.find("select");
+
             var focusIndex = -1;
             $select.on("change", function (e) {
                 focusIndex = -1;

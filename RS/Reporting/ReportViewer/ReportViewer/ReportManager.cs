@@ -74,7 +74,7 @@ namespace Forerunner.SSRS.Manager
     /// </summary>
     public class ReportManager : IDisposable
     {
-        RSManagementProxy rs;
+        public RSManagementProxy rs;
         Credentials WSCredentials;
         Credentials DBCredentials;
         bool useIntegratedSecurity;

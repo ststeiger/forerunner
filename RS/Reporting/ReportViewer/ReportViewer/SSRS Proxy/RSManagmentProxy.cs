@@ -76,6 +76,14 @@ namespace Forerunner.SSRS.Management
             }
         }
 
+        public void LogonUser(string userName,string password,string authority)
+        {
+
+            if (IsNative)
+                RSNative.LogonUser(userName, password, authority);
+            else
+                RSSPS.LogonUser(userName, password, authority);
+        }
 
         public void Dispose()
         {

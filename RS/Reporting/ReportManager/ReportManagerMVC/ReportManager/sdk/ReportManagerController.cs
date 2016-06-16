@@ -90,6 +90,9 @@ namespace ReportManager.Controllers
             //If you wish to use the service account
             //rm.SetCredentials(CredentialCache.DefaultCredentials);
             //rm.SetDomainUserName("Domain\\ServiceAccountName");
+            
+            // If using SSRS custom authentication
+            //rm.rs.LogonUser("CustomUserName", "CustomerPassword", "CustomAuthority or NULL");
 
             return rm;
         }

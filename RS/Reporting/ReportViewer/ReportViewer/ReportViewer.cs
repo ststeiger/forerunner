@@ -38,7 +38,7 @@ namespace Forerunner.SSRS.Viewer
     {
         private String ReportServerURL;
         private Credentials Credentials = new Credentials();
-        private ReportExecutionService rs = new ReportExecutionService();
+        public ReportExecutionService rs = new ReportExecutionService();
         private CurrentUserImpersonator impersonator = null;
         private int RSTimeOut = 100000;
         private byte[] imageResult = null;

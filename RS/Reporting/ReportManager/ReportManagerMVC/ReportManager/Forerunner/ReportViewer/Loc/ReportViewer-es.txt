@@ -69,7 +69,7 @@
     "zoomPageWidth":"Toggle Ancho de página",
     "zoomPercent":"Zoom al porcentaje",
     "zoomDropdown":"Zoom",
-    "responsiveUI":"responsiveUI"
+    "responsiveUI":"IU de respuesta"
   },
   "toolbar": {
     "back":"de vuelta",
@@ -107,7 +107,7 @@
     "saveDashboard":"Ahorra Dashboard",
     "searchFolder":"carpeta de búsqueda",
     "viewDashboard":"Ver tablero",
-    "responsiveUI":"responsive UI"
+    "responsiveUI":"IU de respuesta"
   },
   "print": {
     "title":"Imprima opción Diseño de página",

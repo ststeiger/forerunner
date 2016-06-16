@@ -74,10 +74,10 @@
     "saveDashboard":"Save-Übersicht",
     "tags":"Schlagworte",
     "viewDashboard":"Dashboard-Ansicht",
-    "zoomPageWidth":"Toggle Page Width",
-    "zoomPercent":"Zoom to Percent",
+    "zoomPageWidth":"Toggle Seitenbreite ",
+    "zoomPercent":"Zoom Prozent",
     "zoomDropdown":"Zoom",
-    "responsiveUI":"responsiveUI"
+    "responsiveUI":"ansprechende Benutzeroberfläche"
   },
   "toolbar": {
     "back":"Zurück",
@@ -114,7 +114,7 @@
     "saveDashboard":"Save-Übersicht",
     "searchFolder":"Suchordner",
     "viewDashboard":"Dashboard-Ansicht",
-    "responsiveUI":"responsive UI"
+    "responsiveUI":"ansprechende Benutzeroberfläche"
   },
   "print": {
     "title":"Bericht drucken",

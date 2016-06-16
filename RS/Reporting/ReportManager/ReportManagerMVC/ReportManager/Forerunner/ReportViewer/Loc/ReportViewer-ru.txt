@@ -106,7 +106,7 @@
     "saveDashboard":"Сохранить Dashboard",
     "searchFolder":"Поиск Папка",
     "viewDashboard":"Посмотреть Dashboard",
-    "responsiveUI":"responsive UI"
+    "responsiveUI":"отзывчивый пользовательский интерфейс"
   },
   "print": {
     "title":"Печать отчета",

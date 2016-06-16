@@ -256,10 +256,20 @@ $(function () {
                 }
 
             var $toolbar = me.getToolbar();
+            me.timer = null;
             if (widgets.hasWidget($toolbar, widgets.toolbar)) {
                 //Make sure the toolbar has the right buttons always
-                setInterval(function () {                    
-                    me.getToolbar().toolbar("windowResize");
+                me.timer && clearInterval(me.timer);
+
+                me.timer = setInterval(function () {
+                    $toolbar = $toolbar || me.getToolbar();
+                    //here need always check to make sure the toolbar is in inited status
+                    //when switch out from a dashboard without toolbar, here will always throw Error
+                    //since the toolbar is not inited
+                    if (widgets.hasWidget($toolbar, widgets.toolbar)) {
+                        $toolbar.toolbar("windowResize");
+                    }
+
                  }, 100);
             }
         },

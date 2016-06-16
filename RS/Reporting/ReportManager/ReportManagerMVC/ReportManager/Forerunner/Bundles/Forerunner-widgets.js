@@ -5146,7 +5146,9 @@ $(function () {
         },
         _create: function () {
             var me = this;
-            var $select = me.element.find("select");
+            
+            var $select = me.element.is('select') ? me.element : me.element.find("select");
+
             var focusIndex = -1;
             $select.on("change", function (e) {
                 focusIndex = -1;
@@ -15844,21 +15846,14 @@ $(function () {
             var me = this,
                 reportPath = me.options.$reportViewer.getReportPath();
 
-            me.parameterModel.parameterModel("getAllParameterSets", reportPath, function (data) {
-                me.$select.html("");
-
-                $.each(data.optionArray, function (index, option) {
-                    var encodedOptionName = forerunner.helper.htmlEncode(option.name);
-                    var $option = $("<option value=" + option.id + ">" + encodedOptionName + "</option>");
-
-                    me.$select.append($option);
-
-                    option.id === data.selectedId && me.$select.prop("selectedIndex", index);
-                });
+            me.parameterModel.parameterModel("getAllParameterSets", reportPath, function (data) {               
+                me._drawSelect(data);
             });
         },
-        _onModelChange: function () {
+        _onModelChange: function (e, data, isModelChange) {
             var me = this;
+            
+            isModelChange && me._drawSelect(data);
 
             if (me.parameterModel && me.parameterModel.parameterModel("canUserSaveCurrentSet")) {
                 me.canEdit = true;
@@ -15868,13 +15863,30 @@ $(function () {
                 me.$btnBox.addClass("fr-paramset-disabled");
             }
         },
+        _drawSelect: function(data) {
+            var me = this,
+                selectedIndex;
+
+            me.$select.html("");
+
+            $.each(data.optionArray, function (index, option) {
+                var encodedOptionName = forerunner.helper.htmlEncode(option.name);
+                var $option = $("<option value=" + option.id + ">" + encodedOptionName + "</option>");
+
+                me.$select.append($option);
+
+                option.id === data.selectedId && (selectedIndex = index);
+            });
+
+            me.$select.prop("selectedIndex", selectedIndex);
+        },
         _initEvent: function () {
             var me = this;
 
             me.canEdit = me.parameterModel.parameterModel("canUserSaveCurrentSet");
 
             me.parameterModel.on(events.parameterModelChanged(), function (e, data) {
-                me._onModelChange.call(me, e, data);
+                me._onModelChange.call(me, e, data, true);
             });
 
             me.parameterModel.on(events.parameterModelSetChanged(), function (e, data) {
@@ -15905,10 +15917,15 @@ $(function () {
                 me.options.$ReportViewerInitializer.showManageParamSetsDialog(parameterList);
             });
 
-            // select an saved parameter 
-            me.$select.on("change", function () {
-                var id = this.value;
+            var changedHandler = function (e) {
+                var target = e.srcElement ? e.srcElement : e.target;
+                var id = target.value;
+
                 me.parameterModel.parameterModel("setCurrentSet", id);
+            }
+
+            me.$select.alwaysChange({
+                handler: changedHandler
             });
         },
         destory: function () {
@@ -20424,10 +20441,20 @@ $(function () {
                 }
 
             var $toolbar = me.getToolbar();
+            me.timer = null;
             if (widgets.hasWidget($toolbar, widgets.toolbar)) {
                 //Make sure the toolbar has the right buttons always
-                setInterval(function () {                    
-                    me.getToolbar().toolbar("windowResize");
+                me.timer && clearInterval(me.timer);
+
+                me.timer = setInterval(function () {
+                    $toolbar = $toolbar || me.getToolbar();
+                    //here need always check to make sure the toolbar is in inited status
+                    //when switch out from a dashboard without toolbar, here will always throw Error
+                    //since the toolbar is not inited
+                    if (widgets.hasWidget($toolbar, widgets.toolbar)) {
+                        $toolbar.toolbar("windowResize");
+                    }
+
                  }, 100);
             }
         },

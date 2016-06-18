@@ -89,7 +89,7 @@ namespace ForerunnerBuild.Controllers
                 workingFolder = @"c:\github\forerunnerV4";
             
             if (version == 5)
-                workingFolder = @"c:\github\forerunnerV4";
+                workingFolder = @"c:\github\forerunnerV5";
             
             lock (runningBuilds)
             {

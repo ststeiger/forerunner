@@ -4,7 +4,7 @@
 .fr-dashboard-report-id { background-color: white; }
 .fr-dashboard-report-container { display: table-cell; vertical-align: top; box-shadow: 0 0 7px #545454; margin: 4px 4px 4px 4px; position:relative; }
 .fr-dashboard-placeholder-size { min-width:320px; height: 320px; min-height:320px; width: 320px; }
-.fr-dashboard-btn { height: 89px; width: 89px; background-image: url(../images/Edit_Widget.png); background-repeat: no-repeat; background-position: center; border:none; }
+.fr-dashboard-btn { height: 89px; width: 89px; background-image: url(../images/Edit_Widget.png); background-repeat: no-repeat; background-position: center; border:none; z-index: 10; }
 .fr-dashboard-mask { opacity: 0.3; filter: alpha(opacity=75); position: absolute; width: 100%; height: 100%; top: 0; left: 0; background-color: white; z-index: 2; }
 
 /* Add this style if you want to remove the UI for changing the size of a dashboard report slot */

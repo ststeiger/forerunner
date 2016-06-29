@@ -579,7 +579,7 @@ $(function () {
             if (me.zooming === true)
                 return;
 
-            me.zoooming = true;
+            me.zooming = true;
 
             if (!percent) {
                 // Reset the zoom. This happens during a page change
@@ -589,7 +589,7 @@ $(function () {
                 zoomFactor = parseFloat(percent);
                 if (isNaN(zoomFactor)) {
                     me._trigger(events.zoomChange, null, { zoomFactor: me._zoomFactor, $reportViewer: me.element });
-                    me.zoooming = false;
+                    me.zooming = false;
                     return false;
                 }
             }
@@ -609,7 +609,7 @@ $(function () {
             me.element.hide().show(0);
             if (isPageOption !== true)
                 me.options.zoom = percent;
-            me.zoooming = false;
+            me.zooming = false;
             return true;
         },
         /**

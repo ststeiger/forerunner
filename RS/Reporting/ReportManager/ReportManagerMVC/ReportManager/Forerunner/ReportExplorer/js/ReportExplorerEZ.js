@@ -491,6 +491,7 @@ $(function () {
                     }
 
                     layout.$mainviewport.reportViewerEZ({
+                        $appContainer: layout.$container,
                         DefaultAppTemplate: layout,
                         path: path,
                         navigateTo: me.options.navigateTo,

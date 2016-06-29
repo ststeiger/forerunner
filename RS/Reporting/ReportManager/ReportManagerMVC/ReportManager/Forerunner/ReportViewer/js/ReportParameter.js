@@ -585,7 +585,7 @@ $(function () {
         _topParamToggle: function () {
             var me = this;
 
-            me.$params.hasClass("fr-hide") ? me.$params.removeClass("fr-hide") : me.$params.addClass("fr-hide");
+            me.$params.toggleClass("fr-hide");
 
             me._triggerGlobalEvent(events.reportParameterRender(), {
                 isTopParamLayout: me.isTopParamLayout,

@@ -1299,7 +1299,7 @@ $(function () {
             if (me.zooming === true)
                 return;
 
-            me.zoooming = true;
+            me.zooming = true;
 
             if (!percent) {
                 // Reset the zoom. This happens during a page change
@@ -1309,7 +1309,7 @@ $(function () {
                 zoomFactor = parseFloat(percent);
                 if (isNaN(zoomFactor)) {
                     me._trigger(events.zoomChange, null, { zoomFactor: me._zoomFactor, $reportViewer: me.element });
-                    me.zoooming = false;
+                    me.zooming = false;
                     return false;
                 }
             }
@@ -1329,7 +1329,7 @@ $(function () {
             me.element.hide().show(0);
             if (isPageOption !== true)
                 me.options.zoom = percent;
-            me.zoooming = false;
+            me.zooming = false;
             return true;
         },
         /**
@@ -16014,7 +16014,7 @@ $(function () {
             me.element.children().remove();
 
             //element border: include all the param elements
-            var elementBorder = "<div class='fr-param-element-border'><input type='text' style='display:none'></div>";
+            var elementBorder = "<div class='fr-param-element-border'><div class='fr-param-innertable'></div></div>";
             //operate buttons
             var submit = "<div class='fr-param-submit-container'>" +
                                "<input name='Parameter_ViewReport' type='button' class='fr-param-viewreport fr-param-button' value='" + me.localData.paramPane.viewReport + "'/>" +
@@ -16171,7 +16171,7 @@ $(function () {
             me._loadedForDefault = true;
             me._submittedParamsList = null;
             me._numVisibleParams = 0;
-            me.paramUnitWidth = 330;
+            me.paramUnitWidth = 400;
             me.opersWidth = 200;
 
             me._render();
@@ -16186,13 +16186,14 @@ $(function () {
             var metadata = paramMetadata && paramMetadata.ParametersList;
             var savedParamMap = me._getParamMap(savedParam);
 
+            var $outerBox = me.isTopParamLayout ? $eleBorder.find(".fr-param-innertable") : $eleBorder;
             var $rows = new $("<div class='fr-param-row'></div>"),                
-                rowWidth = 0, $param;
+                $param; //rowWidth = 0,
 
             //add the first row
-            $eleBorder.append($rows);
+            $outerBox.append($rows);
 
-            for (var index = 0, len = parameters.length, param; index < len; index++) {
+            for (var index = 0, len = parameters.length, param, control; index < len; index++) {
                 param = parameters[index];
 
                 if (param) {
@@ -16202,36 +16203,37 @@ $(function () {
 
                     // Prompt === "" mean hidden parameter
                     if (mergedParam.Prompt !== "" && (mergedParam.PromptUserSpecified ? mergedParam.PromptUser : true)) {
-                        $param = me._writeParamControl(mergedParam, new $("<div class='fr-param-unit' />"), pageNum, metadata ? metadata[originIndex] : null);
+                        control = me._writeParamControl(mergedParam, $rows, pageNum, metadata ? metadata[originIndex] : null);
+                        $param = control.$element;
                         $rows.append($param);
 
                         //for the cascading tree widget layout, since we integrated the child elements in the tree, so the next element move ahead
-                        if (!$param.hasClass("fr-param-tree-hidden")) {
+                        if (control.isCascadingChild !== true) {
                             me._numVisibleParams += 1;
                         }
                     }
                 } else {
-                    $rows.append(new $("<div class='fr-param-unit'></div>"));
+                    $rows.append(new $("<div class='fr-param-unit'></div><div class='fr-param-unit'></div>"));
                     me._numVisibleParams += 1;
                 }
 
                 //if visible params count not change then that mean encounter a hidden parameter
                 if (me._numVisibleParams && me._numVisibleParams % columnCount === 0) {
-                    rowWidth = Math.max(rowWidth, columnCount * me.paramUnitWidth);
-                    $rows.css({
-                        width:  rowWidth + "px"
-                    });
+                    //rowWidth = Math.max(rowWidth, columnCount * me.paramUnitWidth);
+                    //$rows.css({
+                    //    width:  rowWidth + "px"
+                    //});
 
                     $rows = new $("<div class='fr-param-row'></div>");                    
-                    $eleBorder.append($rows);
+                    $outerBox.append($rows);
                 }
 
-                if (index === len - 1 && me._numVisibleParams < columnCount) {
-                    rowWidth = Math.max(rowWidth, me._numVisibleParams * me.paramUnitWidth);
-                    $rows.css({
-                        width: rowWidth + "px"
-                    });
-                }
+                //if (index === len - 1 && me._numVisibleParams < columnCount) {
+                //    rowWidth = Math.max(rowWidth, me._numVisibleParams * me.paramUnitWidth);
+                //    $rows.css({
+                //        width: rowWidth + "px"
+                //    });
+                //}
             }
             
             if (me._numVisibleParams > 0) {
@@ -16314,8 +16316,8 @@ $(function () {
             pc.removeAttr("style");
 
             me._setDatePicker();
-            $(document).off("click", me._checkExternalClick);
-            $(document).on("click", { me: me }, me._checkExternalClick);
+            $(document).off("mousedown", me._checkExternalClick);
+            $(document).on("mousedown", { me: me }, me._checkExternalClick);
 
 
             $(":text", me.$params).each(
@@ -16523,7 +16525,7 @@ $(function () {
         _topParamToggle: function () {
             var me = this;
 
-            me.$params.hasClass("fr-hide") ? me.$params.removeClass("fr-hide") : me.$params.addClass("fr-hide");
+            me.$params.toggleClass("fr-hide");
 
             me._triggerGlobalEvent(events.reportParameterRender(), {
                 isTopParamLayout: me.isTopParamLayout,
@@ -16653,7 +16655,7 @@ $(function () {
             var $element = null;
             var $nullElement = null;
             var useDefaultParam = paramMetadata || param;
-
+            var isCascadingChild = false;
 
             if ( me._parameterDefinitions[param.Name].isParent === true && me._parameterDefinitions[param.Name].isChild !== true && me._parameterDefinitions[param.Name].enableCascadingTree === true) {            
                 //only apply tree view to dropdown type
@@ -16662,8 +16664,10 @@ $(function () {
 
             if ( me._parameterDefinitions[param.Name].isChild === true && me._parameterDefinitions[param.Name].enableCascadingTree === true) {
                 $element = me._writeCascadingChildren(param, predefinedValue);
+                isCascadingChild = true;
                 //if not want sub parameter show then add this class
-                $parent.addClass("fr-param-tree-hidden");
+                $label.addClass("fr-param-tree-hidden");
+                $container.addClass("fr-param-tree-hidden");
             }
 
             if ($element === null) {
@@ -16723,7 +16727,7 @@ $(function () {
 
             //for cascading hidden elements, don't add null / use default checkbox constraint
             //they are assist elements to generate parameter list
-            if (!$parent.hasClass("fr-param-tree-hidden")) {
+            if (isCascadingChild === false) {
 
                 //Don't show nullable if has valid value list, null would have to be in the list
                 if (param.ValidValues === "") {
@@ -16752,11 +16756,14 @@ $(function () {
                     }
                 }
 
-                $container.append($errorMsg);
+                $container.append($optionsDiv).append($errorMsg);
             }
 
-            $parent.append($label).append($container).append($optionsDiv);
-            return $parent;
+            $parent.append($label).append($container);
+            return {
+                isCascadingChild: isCascadingChild,
+                $element: $parent
+            };
         },
         _setMoreOptionMenu: function ($moreBtn, optionList) {
             var me = this,
@@ -18851,7 +18858,7 @@ $(function () {
 
             me.removeParameter();
 
-            $(document).off("click", me._checkExternalClick);
+            $(document).off("mousedown", me._checkExternalClick);
             if (me.$datepickers.length) {
                 $(window).off("resize", me._paramWindowResize);
             }
@@ -21366,6 +21373,7 @@ $(function () {
                     }
 
                     layout.$mainviewport.reportViewerEZ({
+                        $appContainer: layout.$container,
                         DefaultAppTemplate: layout,
                         path: path,
                         navigateTo: me.options.navigateTo,

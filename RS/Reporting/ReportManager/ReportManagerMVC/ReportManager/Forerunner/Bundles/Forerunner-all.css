@@ -1645,7 +1645,6 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 .fr-param-dropdown-img { vertical-align: middle; margin-bottom: 4px; }
 .fr-param-form .fr-param-error { border-width: thin; border-color: red; }
 .fr-param-error-message { margin-left: 5px; }
-.fr-param-required{}
 .fr-param-option-container { margin-top:-6px; margin-left:4px; text-align:right; padding-right:2px; }
 .fr-param-option-checkbox{ vertical-align:middle; }
 .fr-param-option-label { font-size:12px; }
@@ -1796,16 +1795,34 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
     /*z-index: 5;*/
 }
 /*this is for jquery validate default class style, seems static*/
-.error { color: #E80C4D; }
+.error { color: #E80C4D; font-size:14px; }
 .fr-param-form{}
     .fr-param-form .fr-param-button{ width: 110px; height: 39px; margin-left: 10px; text-align: center; border: 1px solid #8c9eba; cursor: pointer; font-size: 13pt; color: #ffffff; background: #5e96cf; /* Old browsers */ background: -moz-linear-gradient(top, #5e96cf 0%, #4e70b0 100%); /* FF3.6+ */ background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#5e96cf), color-stop(100%,#4e70b0)); /* Chrome,Safari4+ */ background: -webkit-linear-gradient(top, #5e96cf 0%,#4e70b0 100%); /* Chrome10+,Safari5.1+ */ background: -o-linear-gradient(top, #5e96cf 0%,#4e70b0 100%); /* Opera 11.10+ */ background: -ms-linear-gradient(top, #5e96cf 0%,#4e70b0 100%); /* IE10+ */ background: linear-gradient(to bottom, #5e96cf 0%,#4e70b0 100%); /* W3C */ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5e96cf', endColorstr='#4e70b0',GradientType=0 ); /* IE6-9 */ }
 
+
+/*top param layout*/
 .fr-layout-param-top {
 	background:#354468;
 	width:100%;
 	color:#fff;
 	padding:0;
     position:relative;
+}
+.fr-layout-param-top .fr-param-inner {
+    display: table;
+    padding: 10px 0;
+    margin-bottom: 4px;
+}
+.fr-layout-param-top .fr-param-element-border {
+	display:table-cell;
+    margin: 0;
+    width: 100%;
+	border-right:1px solid #fff;
+    vertical-align: top;
+}
+.fr-layout-param-top .fr-param-opers {
+    display:table-cell;
+	padding:0 20px 4px;
 }
 .fr-layout-param-top .fr-core-widget {
     font-family: "Segoe UI","Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -1821,6 +1838,7 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 }
 .fr-layout-param-top .fr-param-inner-wrapper {
     position: relative;
+    line-height: 24px;
 }
 .fr-layout-param-top .ui-datepicker-trigger {
 	margin-bottom:0;
@@ -1831,21 +1849,6 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 .fr-layout-param-top .fr-param-form {
     overflow-x: auto;
 }
-.fr-layout-param-top .fr-param-inner {
-    display: table;
-    margin-bottom: 4px;
-}
-.fr-layout-param-top .fr-param-element-border {
-	display:table-cell;
-    margin: 0;
-    width: 100%;
-	border-right:1px solid #fff;
-    vertical-align: top;
-}
-.fr-layout-param-top .fr-param-opers {
-    display:table-cell;
-	padding:0 20px 4px;
-}
 .fr-layout-param-top .fr-param-opers-box {
     width: 180px;
 }
@@ -1853,37 +1856,52 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
     display: inline-block;
     margin: 0 4px 4px -4px;
 }
-.fr-layout-param-top .fr-param-unit {
-	display:inline-block;
-    width:320px;
+.fr-layout-param-top .fr-param-unit {	
     margin: 8px 0;
-    vertical-align: top;
 }
-.fr-layout-param-top .fr-param-unit.fr-param-tree-hidden {
-    display: none;
+.fr-layout-param-top .fr-param-tree-hidden {
+    display: none !important;
 }
 .fr-layout-param-top .fr-param-label {
-	width:84px;
-	text-align:left;
     margin: 4px 2px;
-    -ms-word-wrap: break-word;
-	word-wrap:break-word;
-    -ms-word-break: break-word;
-    word-break:break-word;
     vertical-align:top;
     font-size: 10pt;
 }
-.fr-layout-param-top .fr-param-option-container,.fr-layout-param-top .fr-param-item-container {
+.fr-layout-param-top .fr-param-option-container {
 	display:inline-block;
-	vertical-align:top;
+	vertical-align:middle;
 	margin:0;
 }
+.fr-layout-param-top .fr-param-item-container {
+    display:inline-block;
+	vertical-align:top;
+	margin:0;
+    min-width: 260px;
+}
+.fr-layout-param-top .fr-param-innertable {
+    display: table;
+}
+.fr-layout-param-top .fr-param-row {
+    display: table-row;
+    line-height: 30px;    
+}
+.fr-layout-param-top .fr-param-label, 
+.fr-layout-param-top .fr-param-item-container,
+.fr-layout-param-top .fr-param-unit {
+    display: table-cell;
+    padding: 0 0 5px 5px;
+}
+.fr-layout-param-top .fr-param-option-container  {
+    width: 20px;
+    display: inline-block;
+}
+
 .fr-layout-param-top .fr-param-option-container .fr-param-more {
     display: inline-block;
     padding:4px 4px 2px 4px;
-    /*border: 1px solid #1f98c7;*/
     border: none;
     margin: 3px;
+    line-height: normal;
     background-color: #eee;
 }
 .fr-layout-param-top .fr-param-option-container .fr-param-more:hover {
@@ -1891,14 +1909,8 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
     color: #1f98c7;
 }
 .fr-layout-param-top .fr-param-width {
-	width:160px;
-    max-width:160px;
 	margin:0;
 	margin-right:4px;
-    -ms-word-break: break-word;
-    word-break:break-word;
-    -ms-word-wrap: break-word;
-    word-wrap:break-word;
 }
 .fr-layout-param-top .fr-param-dropdown {
     z-index: 10;
@@ -1925,7 +1937,7 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 .fr-layout-param-top .fr-param-more-menu {    
     position: absolute;
     list-style-type: none;
-    padding: 2px 4px 0;
+    padding: 4px;
     border: 1px solid #1f98c7;
     background: #fff;
     color: #000;
@@ -1941,7 +1953,7 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
     text-align: right;
     padding: 2px 2px 0;
     margin-top: 2px;
-
+    line-height: 16px;
 }
 .fr-layout-param-top .fr-param-option-div {
     margin-left: 0;
@@ -1953,6 +1965,7 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 .fr-layout-param-top .fr-param-option-div .fr-param-option-label {
     vertical-align: top;
     margin-right: 4px;
+    line-height: 10px;
 }
 
 .fr-layout-param-top .fr-param-tree,
@@ -1965,7 +1978,9 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 .fr-layout-param-top .fr-param-error-message {
     margin-left: 0;
     margin-top: 2px;
+    line-height:14px;
 }
+/*top param layout*/
 .fr-print-section { display: none; }
 
 .fr-print-form { }
@@ -2337,7 +2352,7 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 .fr-dashboard-report-id { background-color: white; }
 .fr-dashboard-report-container { display: table-cell; vertical-align: top; box-shadow: 0 0 7px #545454; margin: 4px 4px 4px 4px; position:relative; }
 .fr-dashboard-placeholder-size { min-width:320px; height: 320px; min-height:320px; width: 320px; }
-.fr-dashboard-btn { height: 89px; width: 89px; background-image: url(../images/Edit_Widget.png); background-repeat: no-repeat; background-position: center; border:none; }
+.fr-dashboard-btn { height: 89px; width: 89px; background-image: url(../images/Edit_Widget.png); background-repeat: no-repeat; background-position: center; border:none; z-index: 10; }
 .fr-dashboard-mask { opacity: 0.3; filter: alpha(opacity=75); position: absolute; width: 100%; height: 100%; top: 0; left: 0; background-color: white; z-index: 2; }
 
 /* Add this style if you want to remove the UI for changing the size of a dashboard report slot */

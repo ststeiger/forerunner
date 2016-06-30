@@ -777,6 +777,14 @@ $(function () {
             model: 6,
             site: 7
         },
+
+        parameterDropdownMenuTypes: {
+            autoCompleteMenu: 1,
+            cascadingTreeMenu: 2,
+            checkboxMenu: 3,
+            textareaMenu: 4,
+            moreOptionMenu: 5
+        }
     };
 
     /**
@@ -1190,7 +1198,7 @@ $(function () {
                 if (target === null || target === undefined) {
                     break;
                 }
-                
+
                 $.each(classList, function (index, className) {
                     if ($(target).hasClass(className)) {
                         isContained = true;

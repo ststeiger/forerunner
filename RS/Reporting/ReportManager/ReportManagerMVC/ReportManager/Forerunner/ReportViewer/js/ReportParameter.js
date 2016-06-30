@@ -13,6 +13,8 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
+    var dpMenuTypes = forerunner.ssr.constants.parameterDropdownMenuTypes;
+
     var paramContainerClass = "fr-param-container";
     var nullPlaceHolder = "***ThisIsNull***";
 
@@ -53,7 +55,8 @@ $(function () {
         _parameterDefinitions: null,
         _hasPostedBackWithoutSubmitForm: false,
         _dependencyList: null,        
-        _writeParamDoneCallback: null,        
+        _writeParamDoneCallback: null,
+        _openedMenu: null,
 
         _init: function () {
             var me = this;
@@ -82,7 +85,7 @@ $(function () {
             var cancel = "<div class='fr-param-cancel-container'>" +
                                "<span class='fr-param-cancel'>" + me.localData.paramPane.cancel + "</span>" +
                             "</div>";
-            var paramset = "<div class='fr-param-paramset-container fr-param-not-close'></div>";
+            var paramset = "<div class='fr-param-paramset-container'></div>";
 
             var opers = "<div class='fr-param-opers'><div class='fr-param-opers-box'>" +  (me.isTopParamLayout ? paramset + submit : submit + cancel) + "</div></div>";
 
@@ -367,18 +370,13 @@ $(function () {
                     me._trigger(events.render);
                 }
                 me.options.$reportViewer.removeLoadingIndicator();
-            }
-
-          
+            }          
 
             //jquery adds height, remove it
             var pc = me.element.find("." + paramContainerClass);
             pc.removeAttr("style");
 
             me._setDatePicker();
-            $(document).off("mousedown", me._checkExternalClick);
-            $(document).on("mousedown", { me: me }, me._checkExternalClick);
-
 
             $(":text", me.$params).each(
                 function (index) {
@@ -757,7 +755,7 @@ $(function () {
                         $element = me._writeRadioButton(param, dependenceDisable, pageNum, predefinedValue);
                     }
                     else { // Textbox
-                        $element = me._writeTextArea(param, dependenceDisable, pageNum, predefinedValue);
+                        $element = me._writeInputControl(param, dependenceDisable, pageNum, predefinedValue);
                     }
                 }
             }
@@ -853,6 +851,7 @@ $(function () {
                 if ($menu.hasClass("fr-hide")) {
                     me._closeAllDropdown();
                     $menu.removeClass("fr-hide");
+                    me._bindExternalClickCheck(dpMenuTypes.moreOptionMenu);
                 } else {
                     $menu.addClass("fr-hide");
                 }
@@ -1202,7 +1201,7 @@ $(function () {
                 me.$params.scrollTop(newTop);
             }, 500);
         },
-        _writeTextArea: function (param, dependenceDisable, pageNum, predefinedValue) {
+        _writeInputControl: function (param, dependenceDisable, pageNum, predefinedValue) {
             var me = this;
             var $control = new $("<input class='fr-param fr-param-width fr-paramname-" + param.Name +
                 "' prompt='" + param.Prompt + "' name='" + param.Name + "' type='text' size='100' ismultiple='"
@@ -1331,7 +1330,11 @@ $(function () {
                 me._closeAllDropdown();
                 //pass an empty string to show all values
                 //delay 50 milliseconds to remove the blur/mousedown conflict in old browsers
-                setTimeout(function () { $control.autocomplete("search", ""); }, 50);
+                setTimeout(function () {
+                    $control.autocomplete("search", "");
+
+                    me._bindExternalClickCheck(dpMenuTypes.autoCompleteMenu);
+                }, 50);
             });
 
             for (var i = 0; i < param.ValidValues.length; i++) {
@@ -1531,9 +1534,7 @@ $(function () {
             return $container;
         },
         _showTreePanel: function ($tree, $input) {
-            var me = this;
-
-            
+            var me = this;            
 
             if ($tree.is(":visible")) {
                 me._setTreeSelectedValues($tree);
@@ -1548,6 +1549,7 @@ $(function () {
                 me._setDropdownPosition($parent, $tree, "left");
                 $tree.css({ "min-width": $parent.width() }).show();
 
+                me._bindExternalClickCheck(dpMenuTypes.cascadingTreeMenu);
                 $input.blur();
             }
         },
@@ -2121,13 +2123,18 @@ $(function () {
             me._getParameterControlProperty(param, $multipleCheckBox);
             var $hiddenCheckBox = me._createInput(param, "hidden", false, ["fr-param", "fr-paramname-" + param.Name]);
 
-            $openDropDown.on("click", function () {
-                if ($multipleCheckBox.attr("disabled"))
-                    return;
-
+            var openDpMenu = function () {
                 me._popupDropDownPanel(param);
+
+                me._bindExternalClickCheck(dpMenuTypes.checkboxMenu);
+            }
+
+            $openDropDown.on("click", function () {
+                if ($multipleCheckBox.attr("disabled")) return;
+
+                openDpMenu();
             });
-            $multipleCheckBox.on("click", function () { me._popupDropDownPanel(param); });
+            $multipleCheckBox.on("click", openDpMenu);
 
             var $dropDownContainer = me._createDiv(["fr-param-dropdown", "fr-param-not-close", "fr-paramname-" + param.Name + "-dropdown-container"]);
             $dropDownContainer.attr("data-value", param.Name);
@@ -2254,12 +2261,19 @@ $(function () {
                 return $control;
             }
             me._getParameterControlProperty(param, $multipleTextArea);
-            $multipleTextArea.on("click", function () { me._popupDropDownPanel(param); });
-            $openDropDown.on("click", function () {
-                if ($multipleTextArea.attr("disabled"))
-                    return;
 
+            var openDpMenu = function () {
                 me._popupDropDownPanel(param);
+
+                me._bindExternalClickCheck(dpMenuTypes.textareaMenu);
+            }
+
+            $multipleTextArea.on("click", openDpMenu);
+
+            $openDropDown.on("click", function () {
+                if ($multipleTextArea.attr("disabled")) return;
+
+                openDpMenu();
             });
 
             var $dropDownContainer = me._createDiv(["fr-param-dropdown", "fr-param-not-close", "fr-paramname-" + param.Name + "-dropdown-container"]);
@@ -2387,31 +2401,62 @@ $(function () {
         _closeDropDownPanel: function (param) {
             var me = this;
             me._setMultipleInputValues(param);
-            $(".fr-paramname-" + param.Name + "-dropdown-container", me.$params).removeClass("fr-param-dropdown-show").hide();
+            me.$params.find(".fr-paramname-" + param.Name + "-dropdown-container").removeClass("fr-param-dropdown-show").hide();
 
             //for dropdown textbox do focus->blur->focus to re-validate, also reset its parent container's z-index property
-            $(".fr-paramname-" + param.Name, me.$params).focus().blur().parent().css("z-index", "inherit");
+            me.$params.find(".fr-paramname-" + param.Name).focus().blur().parent().css("z-index", "inherit");
         },
-        _closeAllDropdown: function () {
+        _bindExternalClickCheck: function(newOpenMenuType) {
             var me = this;
-            $(".fr-param-dropdown-show", me.$params).filter(":visible").each(function (index, param) {
-                me._closeDropDownPanel({ Name: $(param).attr("data-value") });
-            });
-            $(".fr-param-more-menu", me.$params).filter(":visible").each(function (index, param) {
-                $(param).addClass("fr-hide");
-            });
-            
-            //close auto complete dropdown, it will be appended to the body so use $appContainer here to do select
-            $(".ui-autocomplete", me.options.$appContainer).hide();
-            //close cascading tree and set value
-            me._closeCascadingTree(false);
+
+            //only bind golbol click check when any dropdown menu open
+            me._openedMenu = newOpenMenuType;
+            $(document).off("mousedown", me._checkExternalClick);
+            $(document).on("mousedown", { me: me }, me._checkExternalClick);
         },
         _checkExternalClick: function (e) {
             var me = e.data.me;
-
-            if (!forerunner.helper.containElement(e.target, ["fr-param-not-close"])) {
+            
+            //there is no menu opened at this time, so do nothing
+            if (!me._openedMenu) {
+                return
+            }
+            
+            if (!forerunner.helper.containElement(e.target, ["fr-param-not-close"])) {                
                 me._closeAllDropdown();
             }
+        },
+        _closeAllDropdown: function () {
+            var me = this;
+
+            if (!me._openedMenu) return;
+           
+            switch (me._openedMenu) {
+                case dpMenuTypes.autoCompleteMenu:
+                    //close auto complete dropdown, it will be appended to the body so use $appContainer here to do select
+                    me.options.$appContainer.find(".ui-autocomplete").hide();
+                    break;
+                case dpMenuTypes.cascadingTreeMenu:
+                    //close cascading tree and set value
+                    me._closeCascadingTree(false);
+                    break;
+                case dpMenuTypes.checkboxMenu:                    
+                case dpMenuTypes.textareaMenu:
+                    me.$params.find(".fr-param-dropdown-show").filter(":visible").each(function (index, param) {
+                        me._closeDropDownPanel({ Name: $(param).attr("data-value") });
+                    });
+                    break;
+                case dpMenuTypes.moreOptionMenu:
+                    me.$params.find(".fr-param-more-menu").filter(":visible").each(function (index, param) {
+                        $(param).addClass("fr-hide");
+                    });
+                    break;
+                default:
+                    break;
+            }
+
+            me._openedMenu = null;
+            $(document).off("mousedown", me._checkExternalClick);
         },
         _shouldInclude: function (param, noValid) {
             if (!noValid) return true;

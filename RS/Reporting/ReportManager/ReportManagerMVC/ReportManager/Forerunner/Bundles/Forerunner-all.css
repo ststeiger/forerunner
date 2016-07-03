@@ -1662,7 +1662,6 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
     border-bottom: 1px solid black;
     min-width:178px;
     background:#fff 50% 50% repeat-x; 
-    /*z-index:5;*/
     color:black;
     font-size:13px;
     padding-bottom:4px;
@@ -1912,9 +1911,6 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 	margin:0;
 	margin-right:4px;
 }
-.fr-layout-param-top .fr-param-dropdown {
-    z-index: 10;
-}
 .fr-layout-param-top .fr-param-dropdown-input {
 	width:152px;
 }
@@ -1944,7 +1940,6 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
     -moz-border-radius: 2px;
     -webkit-border-radius: 2px;
     border-radius: 2px;
-    z-index: 10;
 }
 .fr-layout-param-top .fr-param-more-item {    
     display: block;

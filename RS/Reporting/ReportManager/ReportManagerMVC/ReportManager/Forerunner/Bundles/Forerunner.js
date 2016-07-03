@@ -21,7 +21,7 @@
  * @namespace
  */
 var forerunner = forerunner || {};
-var moment = moment || {};
+window.moment = window.moment || {};
 
 /**
  * Contains the SQL Server Report data
@@ -2949,7 +2949,7 @@ $(function () {
                     function (value, element) {
                         if ($.trim(value) === "") return true;
 
-                        return moment(value, forerunner.ssr._internal.getMomentDateFormat(locData), true).isValid();
+                        return window.moment(value, forerunner.ssr._internal.getMomentDateFormat(locData), true).isValid();
                     },
                     error.date
                 );

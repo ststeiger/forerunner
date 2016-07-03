@@ -5,12 +5,11 @@
 
 // Assign or create the single globally scoped variable
 var forerunner = forerunner || {};
-var moment = moment || {};
-
 // Forerunner SQL Server Reports
 forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
+    var moment = window.moment || {};
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
     var dpMenuTypes = forerunner.ssr.constants.parameterDropdownMenuTypes;

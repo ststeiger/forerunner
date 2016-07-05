@@ -2370,7 +2370,7 @@ $(function () {
                 var $parent = $input.parent();
 
                 $elementContainer.css({
-                    "z-index": "10"
+                    "z-index": "5"
                 });
 
                 if (me.isTopParamLayout) {

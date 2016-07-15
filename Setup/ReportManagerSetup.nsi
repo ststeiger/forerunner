@@ -221,6 +221,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\Common\images\ToolpaneIcons\ManageSubscription.png"
   File "${LOCALROOT}\Forerunner\Common\images\ToolpaneIcons\UploadFile.png"
   File "${LOCALROOT}\Forerunner\Common\images\ToolpaneIcons\NewFolder.png"
+  File "${LOCALROOT}\Forerunner\Common\images\ToolbarIcons\Responsive.png"
 
   SetOutPath "$INSTDIR\Forerunner\Lib\jQuery\css\images"
   File "${LOCALROOT}\Forerunner\Lib\jQuery\css\images\animated-overlay.gif"
@@ -1004,7 +1005,8 @@ Section Uninstall
   Delete "$INSTDIR\Forerunner\Common\images\ToolbarIcons\SearchFolder_icon.png"
   Delete "$INSTDIR\Forerunner\Common\images\ToolbarIcons\ZoomOffBlue.png"
   Delete "$INSTDIR\Forerunner\Common\images\ToolbarIcons\Security.png"
-  
+  Delete "$INSTDIR\Forerunner\Common\images\ToolbarIcons\Responsive.png"
+   
   Delete "$INSTDIR\Forerunner\Common\images\ToolpaneIcons\csv.png"
   Delete "$INSTDIR\Forerunner\Common\images\ToolpaneIcons\doc.png"
   Delete "$INSTDIR\Forerunner\Common\images\ToolpaneIcons\mhtml.png"

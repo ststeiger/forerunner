@@ -1750,6 +1750,9 @@ namespace Forerunner.SSRS.Manager
                     using (ReportViewer rep = new ReportViewer(this.URL))
                     {
                         retval = rep.GetThumbnail(Path, SessionID, "1", 1.2);
+                        //Error generating image
+                        if (retval == null) return;
+                        
                         isUserSpecific = IsUserSpecific(Path);
                         rep.Dispose();
                     }
@@ -1935,6 +1938,9 @@ namespace Forerunner.SSRS.Manager
                         rep.SetCredentials(threadContext.NetworkCredential);
                     }
                     retval = rep.GetThumbnail(path, "", "1", 1.2);
+                    //Error generating image
+                    if (retval == null) return;
+                        
                     isUserSpecific = IsUserSpecific(path);
                     rep.Dispose();
                 }

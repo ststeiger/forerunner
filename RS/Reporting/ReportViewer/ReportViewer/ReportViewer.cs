@@ -566,6 +566,7 @@ namespace Forerunner.SSRS.Viewer
             {
                 Console.WriteLine(e.Message);
                 ExceptionLogGenerator.LogException(e);
+                ExceptionLogGenerator.LogException(paramList,"Parameters");
                 Console.WriteLine("Current user:" + HttpContext.Current.User.Identity.Name);
                 JSON.Write(JsonUtility.WriteExceptionJSON(e, HttpContext.Current.User.Identity.Name));
                 return GetUTF8Bytes(JSON.ToString());

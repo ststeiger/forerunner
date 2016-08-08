@@ -367,19 +367,29 @@ $(function () {
          * @function $.forerunner.reportViewer#toggleResponseUI
          */
         toggleResponseUI: function() {
-            var me = this,
-                pageNum = me.getCurPage(),
-                $container = me.pages[pageNum].$container;
-            
-            me.options.userSettings.responsiveUI = !me.options.userSettings.responsiveUI;
+            var me = this;
 
-            $container.reportRender({
-                responsive: me.options.userSettings.responsiveUI
+            me.layoutReport(!me.options.responsiveLayout);
+        },
+        /**
+         * Re-layout the current report, with the given responsive layour directive
+         *
+         * @function $.forerunner.reportViewer#LayoutReport
+         *
+         * @param {Boolean} responsive - Layout with responsive or not.
+         */
+        layoutReport: function (responsive) {
+            var me = this;
+
+            me.options.responsiveLayout = responsive;
+
+            $.each(me.pages, function (index, page) {
+                if (page) page.needsLayout = true;
             });
 
-            me.pages[pageNum].needsLayout = $container.reportRender("layoutReport", true, true, me.getRDLExt(), true);
-        },
+            me._reLayoutPage(me.curPage);
 
+        },
         /**
        * Get current Scroll Position
        *

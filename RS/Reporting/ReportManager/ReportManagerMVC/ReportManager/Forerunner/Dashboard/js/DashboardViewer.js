@@ -45,11 +45,14 @@ $(function () {
             me.enableEdit = false;
         },
         _setWidths: function (width) {
+            var me = this;
             var updated = false;
-            $.each(arguments, function (index, item) {
-                if (index > 0 && item.css && item.css("width") !== width) {
+            me.element.find(".fr-dashboard-report-id").each(function (index, item) {
+                var $item =$(item);
+                if ($item.css("width") !== width) {
                     updated = true;
-                    item.css("width", width);
+                    $item.css("width", width);
+                    $item.css("max-width", width);
                 }
             });
 
@@ -82,10 +85,11 @@ $(function () {
 
                     if (me.element.width() < $item.width()) {
                         // Set the width of the report <div> to the viewer width
-                        updated = me._setWidths(me.element.width(), $item);
+                        updated = me._setWidths(me.element.width());
+
                     } else {
                         // Remove any explicit width
-                        updated = me._setWidths("", $item);
+                        updated = me._setWidths("");
                     }
                 } else {
                     if (currentStyle) {
@@ -95,12 +99,13 @@ $(function () {
                     }
 
                     // Remove any explicit width
-                    updated = me._setWidths("", $item);
+                    updated = me._setWidths("");
                 }
 
                 if (updated && widgets.hasWidget($item, widgets.reportViewerEZ)) {
                     // Update the viewer size
                     $item.reportViewerEZ("windowResize");
+                    
                 }
             });
 
@@ -203,6 +208,15 @@ $(function () {
                     data.reportId = reportId;
                     data.$reportViewerEZ = $item;
                     me._onAfterReportLoaded.apply(me, arguments);
+                    
+                });
+
+                $reportViewer.on(events.reportViewerSetPageDone(), function (e, data) {
+                    me._setWidths(me.element.width());
+                    setTimeout(
+                       function () {
+                           $reportViewer.reportViewer("layoutReport", true);
+                       }, 100);
                 });
 
                 //set floating header top property base on the outer header height
@@ -227,8 +241,9 @@ $(function () {
             // Meant to be overridden in the dashboard editor widget
         },
         _onAfterReportLoaded: function (e, data) {
-            if (data.$reportViewerEZ) {
-                data.$reportViewerEZ.reportViewerEZ("windowResize");
+            var me = this;
+            if (data.$reportViewerEZ) {               
+                      
             }
         },
         _loadResource: function (path) {

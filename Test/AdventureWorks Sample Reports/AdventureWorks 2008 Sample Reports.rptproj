@@ -53,7 +53,7 @@
       <Platform>Win32</Platform>
       <Options>
         <OutputPath>bin\Debug</OutputPath>
-        <TargetServerVersion>SSRS2008R2</TargetServerVersion>
+        <TargetServerVersion>SSRS2016</TargetServerVersion>
         <TargetServerURL>http://localhost/ReportServer</TargetServerURL>
         <TargetFolder>AdventureWorks 2008 Sample Reports</TargetFolder>
         <TargetDataSourceFolder>Data Sources</TargetDataSourceFolder>

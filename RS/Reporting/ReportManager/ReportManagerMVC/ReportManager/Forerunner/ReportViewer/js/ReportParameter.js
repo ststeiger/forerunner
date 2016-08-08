@@ -239,9 +239,9 @@ $(function () {
             me._render();
             me._dataPreprocess(data.ParametersList, true);
 
-            me.layoutInfo = data.Layout ? me._generateLayoutInfo(data) : null;
+            me.layoutInfo = data.Layout;
             // pre process first, and then check the sequence
-            var parameters = me.layoutInfo ? me._checkParameterShowSequence(data.ParametersList) : data.ParametersList;
+            var parameters = data.ParametersList;
 
             var $eleBorder = $(".fr-param-element-border", me.$params);
             var columnCount = me._getParamColumnCount(parameters.length);
@@ -255,8 +255,28 @@ $(function () {
             //add the first row
             $outerBox.append($rows);
 
-            for (var index = 0, len = parameters.length, param, control; index < len; index++) {
+            for (var index = 0, curRow = 0, curCol = 0, len = parameters.length, param, control; index < len; index++) {
                 param = parameters[index];
+
+                //Make sure in correct cell
+                while (data.Layout && data.Layout.Cells[index].Row > curRow) {
+                    $rows = new $("<div class='fr-param-row'></div>");
+                    $outerBox.append($rows);
+                    curRow++;
+                    curCol = 0;
+                }
+                while (data.Layout && data.Layout.Cells[index].Column > curCol) {
+                    $rows.append(new $("<div class='fr-param-unit'></div><div class='fr-param-unit'></div>"));
+                    me._numVisibleParams += 1;
+                    curCol++;
+                }
+                //If no layout then use parameter count
+                if (!data.Layou && me._numVisibleParams % columnCount === 0) {
+                    $rows = new $("<div class='fr-param-row'></div>");
+                    $outerBox.append($rows);
+                    curRow++;
+                    curCol = 0;
+                }
 
                 if (param) {
                     var originIndex = param.originIndex || index;
@@ -268,7 +288,7 @@ $(function () {
                         control = me._writeParamControl(mergedParam, $rows, pageNum, metadata ? metadata[originIndex] : null);
                         $param = control.$element;
                         $rows.append($param);
-
+                        curCol++;
                         //for the cascading tree widget layout, since we integrated the child elements in the tree, so the next element move ahead
                         if (control.isCascadingChild !== true) {
                             me._numVisibleParams += 1;
@@ -279,23 +299,7 @@ $(function () {
                     me._numVisibleParams += 1;
                 }
 
-                //if visible params count not change then that mean encounter a hidden parameter
-                if (me._numVisibleParams && me._numVisibleParams % columnCount === 0) {
-                    //rowWidth = Math.max(rowWidth, columnCount * me.paramUnitWidth);
-                    //$rows.css({
-                    //    width:  rowWidth + "px"
-                    //});
-
-                    $rows = new $("<div class='fr-param-row'></div>");                    
-                    $outerBox.append($rows);
-                }
-
-                //if (index === len - 1 && me._numVisibleParams < columnCount) {
-                //    rowWidth = Math.max(rowWidth, me._numVisibleParams * me.paramUnitWidth);
-                //    $rows.css({
-                //        width: rowWidth + "px"
-                //    });
-                //}
+               
             }
             
             if (me._numVisibleParams > 0) {
@@ -390,6 +394,10 @@ $(function () {
                 me._writeParamDoneCallback = null;
             }
 
+            if (me.isTopParamLayout && me.options.$reportViewer.isDrillThrough) {
+                me.paramAreaHide();
+            }
+
             me._triggerGlobalEvent(events.reportParameterRender(), {
                 isTopParamLayout: me.isTopParamLayout,
                 visibleParamCount: me._numVisibleParams
@@ -459,27 +467,7 @@ $(function () {
 
             return layoutInfo;
         },
-        _checkParameterShowSequence: function(Parameters) {
-            var me = this,
-                i,
-                layoutInfo = me.layoutInfo,
-                rows = [],
-                result = [];
 
-            for (i = 0; i < Parameters.length; i++) {
-                Parameters[i].originIndex = i;
-            }
-            
-            for (i = 0; i < layoutInfo.rows; i++) {
-                rows = rows.concat(layoutInfo.cells[i]);
-            }
-
-            for (i = 0; i < rows.length; i++) {
-                result[i] = rows[i] ? me._parameterDefinitions[rows[i]] : null;
-            }
-
-            return result;
-        },
         _getParamColumnCount: function (paramsCount) {
             var me = this;
 
@@ -584,6 +572,22 @@ $(function () {
 
             me.$params.toggleClass("fr-hide");
 
+            me._triggerGlobalEvent(events.reportParameterRender(), {
+                isTopParamLayout: me.isTopParamLayout,
+                visibleParamCount: me._numVisibleParams
+            });
+        },
+
+        /**
+         * Hide the paramater area
+         *
+         * @function $.forerunner.reportParameter#paramAreaHide
+         *
+         */
+        paramAreaHide: function () {
+            var me = this;
+
+            me.$params.addClass("fr-hide");
             me._triggerGlobalEvent(events.reportParameterRender(), {
                 isTopParamLayout: me.isTopParamLayout,
                 visibleParamCount: me._numVisibleParams
@@ -2126,7 +2130,7 @@ $(function () {
                 me._popupDropDownPanel(param);
 
                 me._bindExternalClickCheck(dpMenuTypes.checkboxMenu);
-            }
+            };
 
             $openDropDown.on("click", function () {
                 if ($multipleCheckBox.attr("disabled")) return;
@@ -2265,7 +2269,7 @@ $(function () {
                 me._popupDropDownPanel(param);
 
                 me._bindExternalClickCheck(dpMenuTypes.textareaMenu);
-            }
+            };
 
             $multipleTextArea.on("click", openDpMenu);
 
@@ -2418,7 +2422,7 @@ $(function () {
             
             //there is no menu opened at this time, so do nothing
             if (!me._openedMenu) {
-                return
+                return;
             }
             
             if (!forerunner.helper.containElement(e.target, ["fr-param-not-close"])) {                

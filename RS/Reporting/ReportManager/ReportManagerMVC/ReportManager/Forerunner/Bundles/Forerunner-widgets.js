@@ -767,6 +767,7 @@ $(function () {
      * @prop {String} options.zoom - Zoom factor, default to 100.
      * @prop {function (url)} options.exportCallback - call back function for all exports, will call instead of window.open
      * @prop {function (url)} options.printCallback - call back function for print, will call instead of window.open
+     * @prop {Boolean} options.isFullScreen - is the viewer in full screen mode, viewer will handle window scroll
      * @example
      * $("#reportViewerId").reportViewer();
      * $("#reportViewerId").reportViewer("loadReport", reportPath, 1, parameters);
@@ -794,7 +795,8 @@ $(function () {
             showSubscriptionUI: false,
             zoom: "100",
             exportCallback: undefined,
-            $ReportViewerInitializer: null
+            $ReportViewerInitializer: null,
+            isFullScreen: true
         },
 
         // Constructor
@@ -1111,6 +1113,10 @@ $(function () {
                 position.left = me.$reportAreaContainer.scrollLeft();
                 position.top = me.$reportAreaContainer.scrollTop();
             }
+            else if ($(me.element).css("overflow-y") === "scroll" || $(me.element).css("overflow-y") === "auto") {
+                position.left = $(me.element).scrollLeft();
+                position.top = $(me.element).scrollTop();
+            }
             else {
                 position.left = $(window).scrollLeft();
                 position.top = $(window).scrollTop();
@@ -1141,10 +1147,13 @@ $(function () {
         windowResize: function () {
             var me = this;
 
-            me.saveScrollPosition();
+            //If not full screen app needs to handle
+            if (me.options.isFullScreen) {
+                me.saveScrollPosition();
 
-            me._ReRender.call(me);
-            me.scrollReportTo();
+                me._ReRender.call(me);
+                me.scrollReportTo();
+            }
             
         },
         _removeCSS: function () {
@@ -1212,8 +1221,13 @@ $(function () {
                 me.$reportAreaContainer.scrollTop(position.top);
             }
             else {
-                $(window).scrollLeft(position.left);
-                $(window).scrollTop(position.top);
+                $(window).scrollLeft($(me.element).offset().left + position.left);
+
+                if (me.options.paramArea && me.options.paramArea.reportParameter("option", "isTopParamLayout")) {
+                    $(window).scrollTop($(me.element).offset().top + position.top - me.options.toolbarHeight - $(me.options.paramArea).height());
+                } else {
+                    $(window).scrollTop($(me.element).offset().top + position.top - me.options.toolbarHeight);
+                }
             }
 
         },
@@ -1255,7 +1269,11 @@ $(function () {
                 me._trigger(events.changePage, null, { newPageNum: pageNum, paramLoaded: me.paramLoaded, numOfVisibleParameters: me.$numOfVisibleParameters, renderError: me.renderError, credentialRequired: me.credentialDefs ? true : false });
             }
 
-            me.scrollReportTo();
+            //If not full screen app needs to handle
+            if (me.options.isFullScreen) {
+                me.scrollReportTo();
+            }
+
             me.removeLoadingIndicator();
             me.lock = 0;
 
@@ -1820,6 +1838,7 @@ $(function () {
                 me.renderTime = action.renderTime;
                 me.renderError = action.renderError;
                 me.paramMetadata = action.paramMetadata;
+                me.isDrillThrough = action.isDrillThrough;
 
                 if (action.credentialDefs !== null) {
                     me.credentialDefs = action.credentialDefs;
@@ -1863,7 +1882,7 @@ $(function () {
                     if (me.options.parameterModel && action.parameterModel)
                         me.options.parameterModel.parameterModel("setModel", action.parameterModel);
                 }
-                me._loadPage(action.CurrentPage, false, null, null, false, me.pages[me.curPage].Replay);
+                me._loadPage(action.CurrentPage, false, null, null, false, me.pages[me.curPage].Replay, null, true);
             }
 
         },
@@ -2289,18 +2308,16 @@ $(function () {
         },
 
         /**
-         * Determines if the current report being viewed is the result of a drillthough action
+         * Determines if the current report being viewed is the result of a drillthrough action
          *
-         * @function $.forerunner.reportViewer#isDrillThoughReport
+         * @function $.forerunner.reportViewer#isDrillThroughReport
          *
-         * @return {Boolean} - True if current report is the result of a drillthough action, false else
+         * @return {Boolean} - True if current report is the result of a drillthrough action, false else
          */
-        isDrillThoughReport: function () {
+        isDrillThroughReport: function () {
             var me = this;
-            if (me.origionalReportPath === me.reportPath)
-                return true;
-            else
-                return false;
+
+            return me.isDrillThrough;
         },
         /**
          * Navigate to the given drill through item
@@ -2338,6 +2355,7 @@ $(function () {
                                 me.renderError = false;
                                 me.sessionID = data.SessionID;
                                 me.RDLExtProperty = null;
+                                me.isDrillThrough = true;
                                 if (me.origionalReportPath === "")
                                     me.origionalReportPath = me.reportPath;
                                 me.reportPath = data.ReportPath;
@@ -2451,7 +2469,8 @@ $(function () {
                 savedCredential: me.datasourceCredentials,
                 renderError: me.renderError,
                 parameterModel: parameterModel,
-                paramMetadata: me.paramMetadata
+                paramMetadata: me.paramMetadata,
+                isDrillThrough : me.isDrillThrough
             });
 
             me._clearReportViewerForDrill();
@@ -2565,7 +2584,7 @@ $(function () {
             var $nextWord = me.$keywords.filter(":visible").filter(".Unread").first();
             if ($nextWord.length > 0) {
                 $nextWord.removeClass("Unread").addClass("fr-render-find-highlight").addClass("Read");
-                me._trigger(events.navToPosition, null, { top: $nextWord.offset().top - 150, left: $nextWord.offset().left - 250 });
+                me._trigger(events.navToPosition, null, { top: $nextWord.position().top - 150, left: $nextWord.position().left - 250 });
             }
             else {
                 if (me.getNumPages() === 1) {
@@ -2605,7 +2624,7 @@ $(function () {
             var $item = me.$keywords.filter(":visible").filter(".Unread").first();
             if ($item.length > 0) {
                 $item.removeClass("Unread").addClass("fr-render-find-highlight").addClass("Read");
-                me._trigger(events.navToPosition, null, { top: $item.offset().top - 150, left: $item.offset().left - 250 });
+                me._trigger(events.navToPosition, null, { top: $item.position().top - 150, left: $item.position().left - 250 });
             }
         },
         _findDone: function (me) {
@@ -2908,7 +2927,7 @@ $(function () {
             } else {
                 if (data.SessionID)
                     me.sessionID = data.SessionID;
-                me.showLoadingIndictator();
+                me.removeLoadingIndicator();
                 me._showParameters(pageNum, data);
             }
         },
@@ -3495,7 +3514,7 @@ $(function () {
                     fail: function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request); }
                 });
         },
-        _loadPage: function (newPageNum, loadOnly, bookmarkID, paramList, flushCache, respToggleReplay, scrollID) {
+        _loadPage: function (newPageNum, loadOnly, bookmarkID, paramList, flushCache, respToggleReplay, scrollID, shouldScroll) {
             var me = this;
 
             if (flushCache === true)
@@ -3516,7 +3535,9 @@ $(function () {
                         if (scrollID) {
                             var el = me.element.find("div[data-uniqName=\"" + scrollID + "\"]");
                             if (el.length ===1)
-                                $("html, body").animate({ scrollTop: el.offset().top }, 500);
+                                $("html, body").animate({ scrollTop: el.position().top }, 500);
+                        } else if (shouldScroll) {
+                            me.scrollReportTo();
                         }
 
                     }
@@ -3585,7 +3606,9 @@ $(function () {
                                     if (scrollID) {
                                         el = me.element.find("div[data-uniqName=\"" + scrollID + "\"]");
                                         if (el.length === 1)
-                                            $("html, body").animate({ scrollTop: el.offset().top - 50 }, 500);
+                                            $("html, body").animate({ scrollTop: el.position().top - 50 }, 500);
+                                    } else if (me.isDrillThrough || shouldScroll) {
+                                        me.scrollReportTo();
                                     }
                                     me._updateTableHeaders(me);
                                     me._saveThumbnail();
@@ -3832,7 +3855,7 @@ $(function () {
             var navTo = me.element.find("[data-uniqName='" + elementID + "']")[0];
             if (navTo !== undefined) {
                 //Should account for floating headers and toolbar height need to be a calculation
-                var bookmarkPosition = { top: $(navTo).offset().top - 100, left: $(navTo).offset().left };
+                var bookmarkPosition = { top: $(navTo).position().top - 100, left: $(navTo).position().left };
                 
                 //$(window).scrollTop(bookmarkPosition.top).scrollLeft(bookmarkPosition.left);
                 //me.options.$appContainer.scrollTop(bookmarkPosition.top).scrollLeft(bookmarkPosition.left);
@@ -5941,6 +5964,13 @@ $(function () {
             if (me.options.isFullScreen) {
                 me.$topdiv.css("width", $(window).width());
                 return;
+            }
+
+            if (forerunner.device.isElementInViewport(me.$container[0], me.$topdiv.height())) {
+                me._showTopDiv(false);
+            }
+            else {
+                me._showTopDiv(true);
             }
 
             var scrolledContainerTop = $(window).scrollTop() - me.$container.offset().top + me.outerToolbarHeight;
@@ -8883,10 +8913,6 @@ $(function () {
                     me.showTools([rtb.btnRTBManageSets, rtb.btnSelectSet, rtb.btnSavParam]);
                 }
             });
-
-            me.options.$appContainer.on(events.responsiveToggle, function (e, data) {
-                me.element.find(".fr-toolbar-responsive-button").find("div").first().toggleClass("fr-icons24x24-responsive").toggleClass("fr-icons24x24-notresponsive");
-            });
         },
         _init: function () {
             var me = this;
@@ -8905,7 +8931,7 @@ $(function () {
             me.addTools(1, false, [tb.btnParamarea]);
             
             me.enableTools([tb.btnMenu]);
-            if (me.options.$reportViewer) {
+            if (me.options.$reportViewer ) {          
                 me._initCallbacks();
             }
 
@@ -9155,13 +9181,7 @@ $(function () {
                 me._clearItemStates();
             });
 
-            me.options.$appContainer.on(events.responsiveToggle, function (e, data) {
-                me.element.find(".fr-item-responsive").find("div").first().toggleClass("fr-icons24x24-responsive").toggleClass("fr-icons24x24-notresponsive");
-            });
-            
-            // Hook up the toolbar element events
-            //me.enableTools([tp.itemFirstPage, tp.itemPrev, tp.itemNext, tp.itemLastPage, tp.itemNav,
-            //                tp.itemReportBack, tp.itemRefresh, tp.itemDocumentMap, tp.itemFind]);
+                      
         },
         _init: function () {
             var me = this;
@@ -16179,9 +16199,9 @@ $(function () {
             me._render();
             me._dataPreprocess(data.ParametersList, true);
 
-            me.layoutInfo = data.Layout ? me._generateLayoutInfo(data) : null;
+            me.layoutInfo = data.Layout;
             // pre process first, and then check the sequence
-            var parameters = me.layoutInfo ? me._checkParameterShowSequence(data.ParametersList) : data.ParametersList;
+            var parameters = data.ParametersList;
 
             var $eleBorder = $(".fr-param-element-border", me.$params);
             var columnCount = me._getParamColumnCount(parameters.length);
@@ -16195,8 +16215,28 @@ $(function () {
             //add the first row
             $outerBox.append($rows);
 
-            for (var index = 0, len = parameters.length, param, control; index < len; index++) {
+            for (var index = 0, curRow = 0, curCol = 0, len = parameters.length, param, control; index < len; index++) {
                 param = parameters[index];
+
+                //Make sure in correct cell
+                while (data.Layout && data.Layout.Cells[index].Row > curRow) {
+                    $rows = new $("<div class='fr-param-row'></div>");
+                    $outerBox.append($rows);
+                    curRow++;
+                    curCol = 0;
+                }
+                while (data.Layout && data.Layout.Cells[index].Column > curCol) {
+                    $rows.append(new $("<div class='fr-param-unit'></div><div class='fr-param-unit'></div>"));
+                    me._numVisibleParams += 1;
+                    curCol++;
+                }
+                //If no layout then use parameter count
+                if (!data.Layou && me._numVisibleParams % columnCount === 0) {
+                    $rows = new $("<div class='fr-param-row'></div>");
+                    $outerBox.append($rows);
+                    curRow++;
+                    curCol = 0;
+                }
 
                 if (param) {
                     var originIndex = param.originIndex || index;
@@ -16208,7 +16248,7 @@ $(function () {
                         control = me._writeParamControl(mergedParam, $rows, pageNum, metadata ? metadata[originIndex] : null);
                         $param = control.$element;
                         $rows.append($param);
-
+                        curCol++;
                         //for the cascading tree widget layout, since we integrated the child elements in the tree, so the next element move ahead
                         if (control.isCascadingChild !== true) {
                             me._numVisibleParams += 1;
@@ -16219,23 +16259,7 @@ $(function () {
                     me._numVisibleParams += 1;
                 }
 
-                //if visible params count not change then that mean encounter a hidden parameter
-                if (me._numVisibleParams && me._numVisibleParams % columnCount === 0) {
-                    //rowWidth = Math.max(rowWidth, columnCount * me.paramUnitWidth);
-                    //$rows.css({
-                    //    width:  rowWidth + "px"
-                    //});
-
-                    $rows = new $("<div class='fr-param-row'></div>");                    
-                    $outerBox.append($rows);
-                }
-
-                //if (index === len - 1 && me._numVisibleParams < columnCount) {
-                //    rowWidth = Math.max(rowWidth, me._numVisibleParams * me.paramUnitWidth);
-                //    $rows.css({
-                //        width: rowWidth + "px"
-                //    });
-                //}
+               
             }
             
             if (me._numVisibleParams > 0) {
@@ -16330,6 +16354,10 @@ $(function () {
                 me._writeParamDoneCallback = null;
             }
 
+            if (me.isTopParamLayout && me.options.$reportViewer.isDrillThrough) {
+                me.paramAreaHide();
+            }
+
             me._triggerGlobalEvent(events.reportParameterRender(), {
                 isTopParamLayout: me.isTopParamLayout,
                 visibleParamCount: me._numVisibleParams
@@ -16399,27 +16427,7 @@ $(function () {
 
             return layoutInfo;
         },
-        _checkParameterShowSequence: function(Parameters) {
-            var me = this,
-                i,
-                layoutInfo = me.layoutInfo,
-                rows = [],
-                result = [];
 
-            for (i = 0; i < Parameters.length; i++) {
-                Parameters[i].originIndex = i;
-            }
-            
-            for (i = 0; i < layoutInfo.rows; i++) {
-                rows = rows.concat(layoutInfo.cells[i]);
-            }
-
-            for (i = 0; i < rows.length; i++) {
-                result[i] = rows[i] ? me._parameterDefinitions[rows[i]] : null;
-            }
-
-            return result;
-        },
         _getParamColumnCount: function (paramsCount) {
             var me = this;
 
@@ -16524,6 +16532,22 @@ $(function () {
 
             me.$params.toggleClass("fr-hide");
 
+            me._triggerGlobalEvent(events.reportParameterRender(), {
+                isTopParamLayout: me.isTopParamLayout,
+                visibleParamCount: me._numVisibleParams
+            });
+        },
+
+        /**
+         * Hide the paramater area
+         *
+         * @function $.forerunner.reportParameter#paramAreaHide
+         *
+         */
+        paramAreaHide: function () {
+            var me = this;
+
+            me.$params.addClass("fr-hide");
             me._triggerGlobalEvent(events.reportParameterRender(), {
                 isTopParamLayout: me.isTopParamLayout,
                 visibleParamCount: me._numVisibleParams
@@ -18066,7 +18090,7 @@ $(function () {
                 me._popupDropDownPanel(param);
 
                 me._bindExternalClickCheck(dpMenuTypes.checkboxMenu);
-            }
+            };
 
             $openDropDown.on("click", function () {
                 if ($multipleCheckBox.attr("disabled")) return;
@@ -18205,7 +18229,7 @@ $(function () {
                 me._popupDropDownPanel(param);
 
                 me._bindExternalClickCheck(dpMenuTypes.textareaMenu);
-            }
+            };
 
             $multipleTextArea.on("click", openDpMenu);
 
@@ -18358,7 +18382,7 @@ $(function () {
             
             //there is no menu opened at this time, so do nothing
             if (!me._openedMenu) {
-                return
+                return;
             }
             
             if (!forerunner.helper.containElement(e.target, ["fr-param-not-close"])) {                
@@ -19882,7 +19906,8 @@ $(function () {
             $unzoomtoolbar: null,
             toolbarConfigOption: constants.toolbarConfigOption.full,
             dbConfig: {},
-            isTopParamLayout: null
+            isTopParamLayout: null,
+            isFullScreen: false
         };
 
         // Merge options with the default settings
@@ -19927,7 +19952,8 @@ $(function () {
                 showSubscriptionUI: (me.options.isReportManager || me.options.useReportManagerSettings) && forerunner.config.getCustomSettingsValue("showSubscriptionUI", "on") === "on",
                 zoom: me.options.zoom,
                 showSubscriptionOnOpen: me.options.showSubscriptionOnOpen,
-                $ReportViewerInitializer: this
+                $ReportViewerInitializer: this,                
+                isFullScreen: me.options.isFullScreen
             });
 
             me.options.$docMap.hide();               
@@ -20343,7 +20369,8 @@ $(function () {
                 toolbarConfigOption: me.options.toolbarConfigOption,
                 zoom: me.options.zoom,
                 showSubscriptionOnOpen: me.options.showSubscriptionOnOpen,
-                dbConfig: me.options.dbConfig
+                dbConfig: me.options.dbConfig,
+                isFullScreen: me.options.isFullScreen
             });
 
             initializer.render();
@@ -20473,8 +20500,8 @@ $(function () {
         windowResize: function () {            
             var me = this;
 
-            // if the viewer is not visible then do nothing
-            if (!me.$viewer || me.$viewer.is(":visible") === false) {
+            // if the viewer is not visible then do nothing, or nor full screen
+            if (!me.$viewer || me.$viewer.is(":visible") === false || !me.options.isFullScreen) {
                 return;
             }
 

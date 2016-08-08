@@ -2479,17 +2479,29 @@ $(function () {
            
           //alert(ratio);
             return ratio;
-        },
-        /** @return {Boolean} Returns a boolean that indicates if the element is inside the viewport */
-        isElementInViewport: function (el) {
-            var rect = el.getBoundingClientRect();
-             
+        },      
+        /** @return {Boolean} Returns a boolean that indicates if the element is inside the viewport, minus the y offset */
+        isElementInViewport: function (el, offsetY) {
+            var top = el.offsetTop;
+            var left = el.offsetLeft;
+            var width = el.offsetWidth;
+            var height = el.offsetHeight;
+
+            while (el.offsetParent) {
+                el = el.offsetParent;
+                top += el.offsetTop;
+                left += el.offsetLeft;
+            }
+
+            if (!offsetY)
+                offsetY = 0;
+
             return (
-                rect.top >= 0 &&
-                rect.left >= 0 &&
-                rect.bottom <= (window.innerHeight || document. documentElement.clientHeight) && /*or $(window).height() */
-                rect.right <= (window.innerWidth || document. documentElement.clientWidth) /*or $(window).width() */
-                );
+              top < (window.pageYOffset + window.innerHeight) &&
+              left < (window.pageXOffset + window.innerWidth) &&
+              (top + height - offsetY) > window.pageYOffset &&
+              (left + width) > window.pageXOffset
+            );
         },
                    
         /** @return {Boolean} Returns a boolean that indicates if device is small (I.e, height < 768) */

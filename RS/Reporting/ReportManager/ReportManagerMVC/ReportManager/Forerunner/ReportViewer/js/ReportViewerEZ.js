@@ -107,7 +107,8 @@ $(function () {
                 toolbarConfigOption: me.options.toolbarConfigOption,
                 zoom: me.options.zoom,
                 showSubscriptionOnOpen: me.options.showSubscriptionOnOpen,
-                dbConfig: me.options.dbConfig
+                dbConfig: me.options.dbConfig,
+                isFullScreen: me.options.isFullScreen
             });
 
             initializer.render();
@@ -237,8 +238,8 @@ $(function () {
         windowResize: function () {            
             var me = this;
 
-            // if the viewer is not visible then do nothing
-            if (!me.$viewer || me.$viewer.is(":visible") === false) {
+            // if the viewer is not visible then do nothing, or nor full screen
+            if (!me.$viewer || me.$viewer.is(":visible") === false || !me.options.isFullScreen) {
                 return;
             }
 

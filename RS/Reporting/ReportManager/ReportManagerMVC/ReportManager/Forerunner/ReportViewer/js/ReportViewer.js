@@ -47,6 +47,7 @@ $(function () {
      * @prop {String} options.zoom - Zoom factor, default to 100.
      * @prop {function (url)} options.exportCallback - call back function for all exports, will call instead of window.open
      * @prop {function (url)} options.printCallback - call back function for print, will call instead of window.open
+     * @prop {Boolean} options.isFullScreen - is the viewer in full screen mode, viewer will handle window scroll
      * @example
      * $("#reportViewerId").reportViewer();
      * $("#reportViewerId").reportViewer("loadReport", reportPath, 1, parameters);
@@ -74,7 +75,8 @@ $(function () {
             showSubscriptionUI: false,
             zoom: "100",
             exportCallback: undefined,
-            $ReportViewerInitializer: null
+            $ReportViewerInitializer: null,
+            isFullScreen: true
         },
 
         // Constructor
@@ -391,6 +393,10 @@ $(function () {
                 position.left = me.$reportAreaContainer.scrollLeft();
                 position.top = me.$reportAreaContainer.scrollTop();
             }
+            else if ($(me.element).css("overflow-y") === "scroll" || $(me.element).css("overflow-y") === "auto") {
+                position.left = $(me.element).scrollLeft();
+                position.top = $(me.element).scrollTop();
+            }
             else {
                 position.left = $(window).scrollLeft();
                 position.top = $(window).scrollTop();
@@ -421,10 +427,13 @@ $(function () {
         windowResize: function () {
             var me = this;
 
-            me.saveScrollPosition();
+            //If not full screen app needs to handle
+            if (me.options.isFullScreen) {
+                me.saveScrollPosition();
 
-            me._ReRender.call(me);
-            me.scrollReportTo();
+                me._ReRender.call(me);
+                me.scrollReportTo();
+            }
             
         },
         _removeCSS: function () {
@@ -492,8 +501,13 @@ $(function () {
                 me.$reportAreaContainer.scrollTop(position.top);
             }
             else {
-                $(window).scrollLeft(position.left);
-                $(window).scrollTop(position.top);
+                $(window).scrollLeft($(me.element).offset().left + position.left);
+
+                if (me.options.paramArea && me.options.paramArea.reportParameter("option", "isTopParamLayout")) {
+                    $(window).scrollTop($(me.element).offset().top + position.top - me.options.toolbarHeight - $(me.options.paramArea).height());
+                } else {
+                    $(window).scrollTop($(me.element).offset().top + position.top - me.options.toolbarHeight);
+                }
             }
 
         },
@@ -535,7 +549,11 @@ $(function () {
                 me._trigger(events.changePage, null, { newPageNum: pageNum, paramLoaded: me.paramLoaded, numOfVisibleParameters: me.$numOfVisibleParameters, renderError: me.renderError, credentialRequired: me.credentialDefs ? true : false });
             }
 
-            me.scrollReportTo();
+            //If not full screen app needs to handle
+            if (me.options.isFullScreen) {
+                me.scrollReportTo();
+            }
+
             me.removeLoadingIndicator();
             me.lock = 0;
 
@@ -1100,6 +1118,7 @@ $(function () {
                 me.renderTime = action.renderTime;
                 me.renderError = action.renderError;
                 me.paramMetadata = action.paramMetadata;
+                me.isDrillThrough = action.isDrillThrough;
 
                 if (action.credentialDefs !== null) {
                     me.credentialDefs = action.credentialDefs;
@@ -1143,7 +1162,7 @@ $(function () {
                     if (me.options.parameterModel && action.parameterModel)
                         me.options.parameterModel.parameterModel("setModel", action.parameterModel);
                 }
-                me._loadPage(action.CurrentPage, false, null, null, false, me.pages[me.curPage].Replay);
+                me._loadPage(action.CurrentPage, false, null, null, false, me.pages[me.curPage].Replay, null, true);
             }
 
         },
@@ -1569,18 +1588,16 @@ $(function () {
         },
 
         /**
-         * Determines if the current report being viewed is the result of a drillthough action
+         * Determines if the current report being viewed is the result of a drillthrough action
          *
-         * @function $.forerunner.reportViewer#isDrillThoughReport
+         * @function $.forerunner.reportViewer#isDrillThroughReport
          *
-         * @return {Boolean} - True if current report is the result of a drillthough action, false else
+         * @return {Boolean} - True if current report is the result of a drillthrough action, false else
          */
-        isDrillThoughReport: function () {
+        isDrillThroughReport: function () {
             var me = this;
-            if (me.origionalReportPath === me.reportPath)
-                return true;
-            else
-                return false;
+
+            return me.isDrillThrough;
         },
         /**
          * Navigate to the given drill through item
@@ -1618,6 +1635,7 @@ $(function () {
                                 me.renderError = false;
                                 me.sessionID = data.SessionID;
                                 me.RDLExtProperty = null;
+                                me.isDrillThrough = true;
                                 if (me.origionalReportPath === "")
                                     me.origionalReportPath = me.reportPath;
                                 me.reportPath = data.ReportPath;
@@ -1731,7 +1749,8 @@ $(function () {
                 savedCredential: me.datasourceCredentials,
                 renderError: me.renderError,
                 parameterModel: parameterModel,
-                paramMetadata: me.paramMetadata
+                paramMetadata: me.paramMetadata,
+                isDrillThrough : me.isDrillThrough
             });
 
             me._clearReportViewerForDrill();
@@ -1845,7 +1864,7 @@ $(function () {
             var $nextWord = me.$keywords.filter(":visible").filter(".Unread").first();
             if ($nextWord.length > 0) {
                 $nextWord.removeClass("Unread").addClass("fr-render-find-highlight").addClass("Read");
-                me._trigger(events.navToPosition, null, { top: $nextWord.offset().top - 150, left: $nextWord.offset().left - 250 });
+                me._trigger(events.navToPosition, null, { top: $nextWord.position().top - 150, left: $nextWord.position().left - 250 });
             }
             else {
                 if (me.getNumPages() === 1) {
@@ -1885,7 +1904,7 @@ $(function () {
             var $item = me.$keywords.filter(":visible").filter(".Unread").first();
             if ($item.length > 0) {
                 $item.removeClass("Unread").addClass("fr-render-find-highlight").addClass("Read");
-                me._trigger(events.navToPosition, null, { top: $item.offset().top - 150, left: $item.offset().left - 250 });
+                me._trigger(events.navToPosition, null, { top: $item.position().top - 150, left: $item.position().left - 250 });
             }
         },
         _findDone: function (me) {
@@ -2188,7 +2207,7 @@ $(function () {
             } else {
                 if (data.SessionID)
                     me.sessionID = data.SessionID;
-                me.showLoadingIndictator();
+                me.removeLoadingIndicator();
                 me._showParameters(pageNum, data);
             }
         },
@@ -2775,7 +2794,7 @@ $(function () {
                     fail: function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request); }
                 });
         },
-        _loadPage: function (newPageNum, loadOnly, bookmarkID, paramList, flushCache, respToggleReplay, scrollID) {
+        _loadPage: function (newPageNum, loadOnly, bookmarkID, paramList, flushCache, respToggleReplay, scrollID, shouldScroll) {
             var me = this;
 
             if (flushCache === true)
@@ -2796,7 +2815,9 @@ $(function () {
                         if (scrollID) {
                             var el = me.element.find("div[data-uniqName=\"" + scrollID + "\"]");
                             if (el.length ===1)
-                                $("html, body").animate({ scrollTop: el.offset().top }, 500);
+                                $("html, body").animate({ scrollTop: el.position().top }, 500);
+                        } else if (shouldScroll) {
+                            me.scrollReportTo();
                         }
 
                     }
@@ -2865,7 +2886,9 @@ $(function () {
                                     if (scrollID) {
                                         el = me.element.find("div[data-uniqName=\"" + scrollID + "\"]");
                                         if (el.length === 1)
-                                            $("html, body").animate({ scrollTop: el.offset().top - 50 }, 500);
+                                            $("html, body").animate({ scrollTop: el.position().top - 50 }, 500);
+                                    } else if (me.isDrillThrough || shouldScroll) {
+                                        me.scrollReportTo();
                                     }
                                     me._updateTableHeaders(me);
                                     me._saveThumbnail();
@@ -3112,7 +3135,7 @@ $(function () {
             var navTo = me.element.find("[data-uniqName='" + elementID + "']")[0];
             if (navTo !== undefined) {
                 //Should account for floating headers and toolbar height need to be a calculation
-                var bookmarkPosition = { top: $(navTo).offset().top - 100, left: $(navTo).offset().left };
+                var bookmarkPosition = { top: $(navTo).position().top - 100, left: $(navTo).position().left };
                 
                 //$(window).scrollTop(bookmarkPosition.top).scrollLeft(bookmarkPosition.left);
                 //me.options.$appContainer.scrollTop(bookmarkPosition.top).scrollLeft(bookmarkPosition.left);

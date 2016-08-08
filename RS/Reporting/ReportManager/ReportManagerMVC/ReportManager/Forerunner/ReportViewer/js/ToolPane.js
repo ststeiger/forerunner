@@ -144,13 +144,7 @@ $(function () {
                 me._clearItemStates();
             });
 
-            me.options.$appContainer.on(events.responsiveToggle, function (e, data) {
-                me.element.find(".fr-item-responsive").find("div").first().toggleClass("fr-icons24x24-responsive").toggleClass("fr-icons24x24-notresponsive");
-            });
-            
-            // Hook up the toolbar element events
-            //me.enableTools([tp.itemFirstPage, tp.itemPrev, tp.itemNext, tp.itemLastPage, tp.itemNav,
-            //                tp.itemReportBack, tp.itemRefresh, tp.itemDocumentMap, tp.itemFind]);
+                      
         },
         _init: function () {
             var me = this;

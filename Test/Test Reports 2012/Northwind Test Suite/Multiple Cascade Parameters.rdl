@@ -561,7 +561,14 @@ WHERE        OrderID IN (@Orders)</CommandText>
     </ReportParameter>
     <ReportParameter Name="Product">
       <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>="1"</Value>
+          <Value>="2"</Value>
+        </Values>
+      </DefaultValue>
       <Prompt>Product</Prompt>
+      <Hidden>true</Hidden>
       <ValidValues>
         <DataSetReference>
           <DataSetName>Products</DataSetName>

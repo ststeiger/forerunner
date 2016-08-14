@@ -264,13 +264,13 @@ $(function () {
                     var mergedParam = me._getMergedParam(param, savedParamMap);
 
                     // Prompt === "" mean hidden parameter
-                    if (mergedParam.Prompt !== "" && (mergedParam.PromptUserSpecified ? mergedParam.PromptUser : true)) {
+                    if (mergedParam.PromptUserSpecified ? mergedParam.PromptUser : true) {
                         control = me._writeParamControl(mergedParam, $rows, pageNum, metadata ? metadata[originIndex] : null);
                         $param = control.$element;
                         $rows.append($param);
 
                         //for the cascading tree widget layout, since we integrated the child elements in the tree, so the next element move ahead
-                        if (control.isCascadingChild !== true) {
+                        if (control.isCascadingChild !== true && mergedParam.Prompt !== "") {
                             me._numVisibleParams += 1;
                         }
                     }
@@ -713,6 +713,14 @@ $(function () {
             var $nullElement = null;
             var useDefaultParam = paramMetadata || param;
             var isCascadingChild = false;
+
+
+            //Hide hidden parameter
+            if (param.Prompt === "") {
+                $container.css("display", "none");
+                $optionsDiv.css("display", "none");
+            }
+
 
             if ( me._parameterDefinitions[param.Name].isParent === true && me._parameterDefinitions[param.Name].isChild !== true && me._parameterDefinitions[param.Name].enableCascadingTree === true) {            
                 //only apply tree view to dropdown type

@@ -225,17 +225,12 @@ namespace Forerunner
                                 {
                                     foreach (String value in multipleValues)
                                     {
-                                        if ((paramType != "String") && value.Trim() == "")
-                                        {
-                                            // do nothing
-                                        }
-                                        else
-                                        {
-                                            ParameterValue pv = new ParameterValue();
-                                            pv.Name = paramName;
-                                            pv.Value = value;
-                                            list.Add(pv);
-                                        }
+                                        
+                                        ParameterValue pv = new ParameterValue();
+                                        pv.Name = paramName;
+                                        pv.Value = value;
+                                        list.Add(pv);
+                                        
                                     }
                                 }
                                 else
@@ -249,18 +244,12 @@ namespace Forerunner
                         }
                         else
                         {
-                            //Handle case of invalid parameters.  Do not add invalid, get error from SSRS
-                            if ((paramType != "String") && (string)(obj["Value"]) == "")
-                            {
-                                // do nothing
-                            }
-                            else
-                            {
-                                ParameterValue pv = new ParameterValue();
-                                pv.Name = obj["Parameter"].ToString();
-                                pv.Value = obj["Value"].Type == Newtonsoft.Json.Linq.JTokenType.Null ? null : obj["Value"].ToString();
-                                list.Add(pv);
-                            }
+                            
+                            ParameterValue pv = new ParameterValue();
+                            pv.Name = obj["Parameter"].ToString();
+                            pv.Value = obj["Value"].Type == Newtonsoft.Json.Linq.JTokenType.Null ? null : obj["Value"].ToString();
+                            list.Add(pv);
+                            
                         }
                     }
                 }

@@ -1319,6 +1319,7 @@ $(function () {
                 parameterModel.parameterModel("setCurrentSet", id);
             }
         },
+
         /** @member */
         btnSavParam: {
             toolType: toolTypes.button,

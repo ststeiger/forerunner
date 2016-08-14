@@ -725,7 +725,6 @@ $(function () {
                 $optionsDiv.css("display", "none");
             }
 
-
             if ( me._parameterDefinitions[param.Name].isParent === true && me._parameterDefinitions[param.Name].isChild !== true && me._parameterDefinitions[param.Name].enableCascadingTree === true) {            
                 //only apply tree view to dropdown type
                 $element = me._writeCascadingTree(param, predefinedValue);

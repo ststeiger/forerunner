@@ -196,8 +196,10 @@ $(function () {
             var savedParamMap = me._getParamMap(savedParam);
             $.each(data.ParametersList, function (index, param) {
                 var mergedParam = me._getMergedParam(param, savedParamMap);
-                if (mergedParam.Prompt !== "" && (mergedParam.PromptUserSpecified ? mergedParam.PromptUser : true)) {
-                    me._numVisibleParams += 1;
+                if ((mergedParam.PromptUserSpecified ? mergedParam.PromptUser : true)) {
+                    if (mergedParam.Prompt !== "") {
+                        me._numVisibleParams += 1;
+                    }
                     $eleBorder.append(me._writeParamControl(mergedParam, new $("<div />"), pageNum, metadata ? metadata[index] : null));
                 }
             });
@@ -549,6 +551,13 @@ $(function () {
             var $errorMsg = new $("<div class='fr-param-error-message'/>");
             var $element = null;
             var useDefaultParam = paramMetadata || param;
+
+
+            //Hide hidden parameter
+            if (param.Prompt === "") {
+                $container.css("display", "none");
+                $optionsDiv.css("display", "none");
+            }
 
             //Add RDL Ext override for cascading tree
             if (me.options.RDLExt && me.options.RDLExt[param.Name] && me.options.RDLExt[param.Name].enableCascadingTree === false)

@@ -456,7 +456,8 @@ $(function () {
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("toggleResponseUI");
-                    e.data.$appContainer.trigger(events.responsiveToggle);
+                    e.data.$appContainer.find(".fr-toolbar-responsive-button").find("div").first().toggleClass("fr-icons24x24-responsive").toggleClass("fr-icons24x24-notresponsive");
+                    e.data.$appContainer.find(".fr-item-responsive").find("div").first().toggleClass("fr-icons24x24-responsive").toggleClass("fr-icons24x24-notresponsive");
                 }
             }
         }
@@ -1219,7 +1220,8 @@ $(function () {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("toggleResponseUI");
                     e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-responsive"]);
-                    e.data.$appContainer.trigger(events.responsiveToggle);
+                    e.data.$appContainer.find(".fr-item-responsive").find("div").first().toggleClass("fr-icons24x24-responsive").toggleClass("fr-icons24x24-notresponsive");
+                    e.data.$appContainer.find(".fr-toolbar-responsive-button").find("div").first().toggleClass("fr-icons24x24-responsive").toggleClass("fr-icons24x24-notresponsive");
                 }
             }
         }

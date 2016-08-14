@@ -373,6 +373,13 @@ $(function () {
                 return;
             }
 
+            if (forerunner.device.isElementInViewport(me.$container[0], me.$topdiv.height())) {
+                me._showTopDiv(false);
+            }
+            else {
+                me._showTopDiv(true);
+            }
+
             var scrolledContainerTop = $(window).scrollTop() - me.$container.offset().top + me.outerToolbarHeight;
             var containerHeightLessTopDiv = me.$container.height() - me.$topdiv.outerHeight();
             var diff = scrolledContainerTop;

@@ -161,10 +161,6 @@ $(function () {
                     me.showTools([rtb.btnRTBManageSets, rtb.btnSelectSet, rtb.btnSavParam]);
                 }
             });
-
-            me.options.$appContainer.on(events.responsiveToggle, function (e, data) {
-                me.element.find(".fr-toolbar-responsive-button").find("div").first().toggleClass("fr-icons24x24-responsive").toggleClass("fr-icons24x24-notresponsive");
-            });
         },
         _init: function () {
             var me = this;
@@ -183,7 +179,7 @@ $(function () {
             me.addTools(1, false, [tb.btnParamarea]);
             
             me.enableTools([tb.btnMenu]);
-            if (me.options.$reportViewer) {
+            if (me.options.$reportViewer ) {          
                 me._initCallbacks();
             }
 

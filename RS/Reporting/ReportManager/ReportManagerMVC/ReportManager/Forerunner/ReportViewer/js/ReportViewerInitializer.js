@@ -40,7 +40,8 @@ $(function () {
             $unzoomtoolbar: null,
             toolbarConfigOption: constants.toolbarConfigOption.full,
             dbConfig: {},
-            isTopParamLayout: null
+            isTopParamLayout: null,
+            isFullScreen: false
         };
 
         // Merge options with the default settings
@@ -85,7 +86,8 @@ $(function () {
                 showSubscriptionUI: (me.options.isReportManager || me.options.useReportManagerSettings) && forerunner.config.getCustomSettingsValue("showSubscriptionUI", "on") === "on",
                 zoom: me.options.zoom,
                 showSubscriptionOnOpen: me.options.showSubscriptionOnOpen,
-                $ReportViewerInitializer: this
+                $ReportViewerInitializer: this,                
+                isFullScreen: me.options.isFullScreen
             });
 
             me.options.$docMap.hide();               

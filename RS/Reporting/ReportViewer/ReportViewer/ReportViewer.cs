@@ -566,6 +566,7 @@ namespace Forerunner.SSRS.Viewer
             {
                 Console.WriteLine(e.Message);
                 ExceptionLogGenerator.LogException(e);
+                ExceptionLogGenerator.LogException(paramList,"Parameters");
                 Console.WriteLine("Current user:" + HttpContext.Current.User.Identity.Name);
                 JSON.Write(JsonUtility.WriteExceptionJSON(e, HttpContext.Current.User.Identity.Name));
                 return GetUTF8Bytes(JSON.ToString());
@@ -994,8 +995,10 @@ namespace Forerunner.SSRS.Viewer
                 String exePath = Path.Combine(start.WorkingDirectory, start.FileName);
                 if (!File.Exists(exePath))
                 {
-                    Exception e = new System.IO.FileNotFoundException(exePath);
-                    throw (e);
+                    ExceptionLogGenerator.LogException("Forerunner.Thumbnail.exe NOT FOUND", "GenerateIamge");
+                    this.imageResult = null;
+                    File.Delete(fileName);
+                    return;
                 }
                 start.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
                 start.Arguments = fileName;

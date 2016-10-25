@@ -147,7 +147,8 @@
     "cancel":"Oтменить",
     "datePicker":"дата",
     "select":"выбирать",
-    "useDefault":"Используйте умолчанию"
+    "useDefault":"Используйте умолчанию",
+ "selectAll":"Выбрать все"
   },
   "validateError": {
     "required":"Необходимый",

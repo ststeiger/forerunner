@@ -147,7 +147,8 @@
     "cancel":"キャンセル",
     "datePicker":"日付",
     "select":"選択する",
-    "useDefault":"デフォルトを使用"
+    "useDefault":"デフォルトを使用",
+ "selectAll":"すべて選択"
   },
   "validateError": {
     "required":"必修",

@@ -147,7 +147,8 @@
     "cancel":"取消",
     "datePicker":"日期",
     "select":"选择",
-    "useDefault":"使用默认值"
+    "useDefault":"使用默认值",
+ "selectAll":"Select All"
   },
   "validateError": {
     "required":"必填",

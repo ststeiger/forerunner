@@ -147,7 +147,8 @@
     "cancel":"Cancelar",
     "datePicker":"Data",
     "select":"Selecionar",
-    "useDefault":"Use padrão"
+    "useDefault":"Use padrão",
+ "selectAll":"Selecionar tudo"
   },
   "validateError": {
     "required":"Necessário",

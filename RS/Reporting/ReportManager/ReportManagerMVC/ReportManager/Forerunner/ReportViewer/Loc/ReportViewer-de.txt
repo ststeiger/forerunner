@@ -155,7 +155,8 @@
     "cancel":"Abbestellen",
     "datePicker":"Datum",
     "select":"Wählen",
-    "useDefault":"Verwenden Sie Standard-"
+    "useDefault":"Verwenden Sie Standard-",
+ "selectAll":"Alles auswählen"
   },
   "validateError": {
     "required":"Erforderlich",

@@ -148,7 +148,8 @@
     "cancel":"Résilier",
     "datePicker":"Date",
     "select":"Sélectionner",
-    "useDefault":"Utilisez par défaut"
+    "useDefault":"Utilisez par défaut",
+ "selectAll":"Sélectionner tout"
   },
   "validateError": {
     "required":"Demandé",

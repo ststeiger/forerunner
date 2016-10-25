@@ -147,7 +147,8 @@
     "cancel":"Anula",
     "datePicker":"Data",
     "select":"Selecta",
-    "useDefault":"Utilizați Implicit"
+    "useDefault":"Utilizați Implicit",
+ "selectAll":"Selectează tot"
   },
   "validateError": {
     "required":"Necesare",

@@ -147,7 +147,8 @@
     "cancel":"Cancelar",
     "datePicker":"Dáta",
     "select":"Roghnaigh",
-    "useDefault":"Bain úsáid as Réamhshocrú"
+    "useDefault":"Bain úsáid as Réamhshocrú",
+ "selectAll":"Roghnú go léir"
   },
   "validateError": {
     "required":"Riachtanach",

@@ -147,7 +147,8 @@
     "cancel":"Avbryta",
     "datePicker":"Datum",
     "select":"Välj",
-    "useDefault":"Använd standard"
+    "useDefault":"Använd standard",
+ "selectAll":"Välj alla"
   },
   "validateError": {
     "required":"krävs",

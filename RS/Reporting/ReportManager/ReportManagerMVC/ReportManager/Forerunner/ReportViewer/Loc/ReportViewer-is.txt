@@ -147,7 +147,8 @@
     "cancel":"Hætta",
     "datePicker":"dagsetning",
     "select":"Velja",
-    "useDefault":"nota sjálfgefið"
+    "useDefault":"nota sjálfgefið",
+ "selectAll":"Velja allt"
   },
   "validateError": {
     "required":"krafist",

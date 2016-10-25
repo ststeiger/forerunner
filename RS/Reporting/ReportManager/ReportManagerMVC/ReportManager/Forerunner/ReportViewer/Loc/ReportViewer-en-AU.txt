@@ -172,7 +172,8 @@
     "cancel":"Cancel",
     "datePicker":"Date",
     "select":"Select",
-    "useDefault":"Use Default"
+    "useDefault":"Use Default",
+"SelectAll":"Select All"
   },
   "validateError": {
     "required":"Required",
